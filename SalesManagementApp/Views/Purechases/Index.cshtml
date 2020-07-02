@@ -106,10 +106,10 @@
                     </div>
                     <div class="row" id="report-footer">
                         <div class="col-lg-12">
-                            <table style="width:100%;border:none;">
+                            <table style="width:100%;" >
                                 <tr>
-                                    <td style="width:80%;border:none;">
-                                        <table>
+                                    <td style="width:60%;">
+                                        <table border="1">
                                             <tr>
                                                 <td>الاجمالي</td>
                                                 <td> <span id="Total"></span></td>
@@ -125,40 +125,30 @@
                                         </table>
                                     </td>
 
-                                    <td style="width:20%;border:none;">
-                                        <table>
+                                    <td style="width:40%;">
+                                        <table border="1">
+                                            <tr>
+                                                <td> نسبة العمولة</td>
+                                                <td> <input type="number" value="9" onchange="updateTotal()" id="CommissionPercentage"   /></td>
+                                            </tr>
                                             <tr>
                                                 <td>العمولة</td>
-                                                <td> <input type="number" value="0" onchange="updateTotal()" id="Commission" style="width: 50%;border:none" /></td>
+                                                <td> <input type="number" id="Commission"  readonly="readonly"/></td>
                                             </tr>
                                             <tr>
                                                 <td> النزول</td>
-                                                <td><span id="Descent"></span></td>
+                                                <td> <input type="number" id="Descent" onchange="updateTotal()" /></td>
                                             </tr>
                                             <tr>
                                                 <td>النولون</td>
-                                                <td> <input type="number" value="0" onchange="updateTotal()" id="Nawlon" style="width: 50%;border:none" /></td>
+                                                <td> <input type="number" value="0" onchange="updateTotal()" id="Nawlon"  /></td>
                                             </tr>
                                             <tr>
                                                 <td>الوهبة </td>
-                                                <td> <span id="Gift"></span></td>
+                                                <td> <input type="number" id="Gift" onchange="updateTotal()" /></td>
                                             </tr>
                                         </table>
 
-                                        @*<ul class="px-0 list-unstyled">
-                                                <li>
-                                                    عمولة: <input type="number" value="0" onchange="updateTotal()" id="Commission" style="width: 50%;border:none" />
-                                                </li>
-                                                <li>
-                                                    نزول: <span id="Descent"></span>
-                                                </li>
-                                                <li>
-                                                    نولون: <input type="number" value="0" onchange="updateTotal()" id="Nawlon" style="width: 50%;border:none" />
-                                                </li>
-                                                <li>
-                                                    وهبة: <span id="Gift"></span>
-                                                </li>
-                                            </ul>*@
                                     </td>
                                 </tr>
                             </table>
