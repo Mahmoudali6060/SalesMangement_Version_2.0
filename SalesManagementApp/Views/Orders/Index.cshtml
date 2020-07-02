@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "البيانات";
+}
+<div class="app-content content container-fluid">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-6 col-xs-12 mb-1">
+                <h5>البيانات</h5>
+            </div>
+            <div class="content-header-right breadcrumbs-right breadcrumbs-top col-md-6 col-xs-12">
+                <div id="myTable" class="breadcrumb-wrapper col-xs-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">الرئيسية</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            البيانات
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <input type="hidden" id="today" value="@ViewBag.today" />
+            <div class="row">
+                <div id="admin" class="col s12">
+                    <div class="card material-table">
+                        <div class="table-header">
+                            <div class="actions">
+                                <a href='@Url.Action("Details","Orders")' style="margin:10px;" class="btn btn-primary"> بيان جديد</a>
+                                <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
+                            </div>
+                        </div>
+                        <table id="order-header-table" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>م </th>
+                                    <th>رقم البيان</th>
+                                    <th> تاريخ البيان</th>
+                                    <th>اسم العميل</th>
+                                    <th>ملاحظات</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="listModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <table id="order-details-table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>م </th>
+                            <th>العدد</th>
+                            <th> الوزن</th>
+                            <th>السعر</th>
+                            <th>اسم التاجر  </th>
+                        </tr>
+                    </thead>
+                    <tbody class="order-details"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">الغاء</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/Scripts/jquery-1.10.2.js"></script>
+<script src="/js/orders-index.js"></script>
+<script src="/js/shared.js"></script>

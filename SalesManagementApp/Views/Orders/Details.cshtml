@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "بيان جديد";
+}
+
+<div class="app-content content container-fluid">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-6 col-xs-12 mb-1">
+                <h2 class="content-header-title">بيان جديد</h2>
+            </div>
+            <div class="content-header-right breadcrumbs-right breadcrumbs-top col-md-6 col-xs-12">
+                <div class="breadcrumb-wrapper col-xs-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">الرئيسية</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#">البيانات</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <a href="#">بيان جديد</a>
+                        </li>
+
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <!-- Basic form layout section start -->
+            <section id="basic-form-layouts">
+                <div class="row match-height">
+                    <div class="col-md-12">
+                        <div class="card" id="sales-invoice-header">
+                            <div class="card-header">
+                                <h4 class="card-title" id="basic-layout-form">اضافة بيان جديد</h4>
+                                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                                        <li><a data-action="close"><i class="icon-cross2"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body collapse in">
+                                <div class="card-block">
+                                    <form class="form" action="" method="post">
+                                        <div class="form-body">
+                                            <div class="row">
+                                                <input type="hidden" id="Id" value="@ViewBag.Id" />
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="OrderDate">تاريخ البيان</label>
+                                                        <input type="date" id="OrderDate" class="form-control" style="height: 37px;">
+                                                    </div>
+                                                    <input type="hidden" id="CreatedDate" class="form-control" style="height: 37px;">
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <div class="form-group">
+                                                        <label for="Farmers">اسم العميل</label>
+                                                        <select theme="google" placeholder="اختر اسم العميل" data-search="true" id="Farmers" name="Farmers" class="form-control"></select>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="col-md-1">
+                                                    <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearFarmerData();"> عميل جديد</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-body">
+                                            <table id="order-details-list" class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>م</th>
+                                                        <th> عدد</th>
+                                                        <th> الوزن   </th>
+                                                        <th> سعر (الشراء)</th>
+                                                        <th>سعر (البيع)</th>
+                                                        <th>اسم التاجر</th>
+                                                        <th>حذف</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="tbody-order-details">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </form>
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <button id="btnAdd" onclick="add();" class="btn btn-primary">
+                                                <i class="icon-check2"></i> حفظ
+                                            </button>
+                                            <button id="btnUpdate" onclick="update();" class="btn btn-primary">
+                                                <i class="icon-check2"></i> تعديل
+                                            </button>
+                                            <button type="button" onclick="cancel()" class="btn btn-warning mr-1">
+                                                <i class="icon-cross2"></i> الغاء
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="formModalLabel">اضافة/تعديل عميل</h4>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="Id" placeholder="Id" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Name">اسم العميل <i style="color:red">*</i></label>
+                        <input type="text" class="form-control validate" required id="Name" placeholder="اسم العميل" />
+                        <p style="color:red" id="NameIsRequired">ادخل اسم العميل</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="Address">العنوان </label>
+                        <input type="text" class="form-control" id="Address" placeholder="عنوان العميل" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Phone">رقم الموبايل</label>
+                        <input type="text" class="form-control" id="Phone" placeholder="رقم موبايل العميل" />
+                    </div>
+                    @*<div class="form-group">
+                            <label for="OppeningBalance">الرصيد الافتتاحي </label>
+                            <input type="number" class="form-control" id="OppeningBalance" placeholder="رصيد العميل الافتتاحي" />
+                        </div>*@
+                    <div class="form-group">
+                        <label for="Notes">ملاحظات</label>
+                        <input type="text" class="form-control" id="Notes" placeholder="ملاحظات" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" id="btnAdd" onclick="addFarmer();" value="حفظ" />
+                <input type="submit" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="update();" value="تعديل" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">الغاء</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/Scripts/jquery-1.10.2.js"></script>
+<script src="/js/orders-detailes.js"></script>
+<script src="/js/shared.js"></script>
+
+

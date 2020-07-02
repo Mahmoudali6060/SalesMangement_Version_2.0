@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewData["Title"] = "التجار";
+}
+
+<div class="app-content content container-fluid">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-6 col-xs-12 mb-1">
+                <h5>التجار</h5>
+            </div>
+            <div class="content-header-right breadcrumbs-right breadcrumbs-top col-md-6 col-xs-12">
+                <div id="myTable" class="breadcrumb-wrapper col-xs-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">الرئيسية</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            التجار
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="row">
+                <div id="admin" class="col s12">
+                    <div class="card material-table">
+                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> تاجر جديد</button>
+                        <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
+                        <table id="sellers-table" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>م </th>
+                                    <th>اسم التاجر</th>
+                                    <th> العنوان</th>
+                                    <th>رقم الموبايل</th>
+                                    @*<th> الرصيد الافتتاحي  </th>*@
+                                    <th>ملاحظات</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="formModalLabel">اضافة/تعديل تاحر</h4>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="Id" placeholder="Id" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Name">اسم التاجر <i style="color:red">*</i></label>
+                        <input type="text" class="form-control validate" required id="Name" placeholder="اسم التاجر" />
+                        <p style="color:red" id="NameIsRequired">ادخل اسم التاجر</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="Address">العنوان </label>
+                        <input type="text" class="form-control" id="Address" placeholder="عنوان التاجر" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Phone">رقم الموبايل</label>
+                        <input type="text" class="form-control" id="Phone" placeholder="رقم موبايل التاجر" />
+                    </div>
+                    @*<div class="form-group">
+                        <label for="OppeningBalance">الرصيد الافتتاحي </label>
+                        <input type="number" class="form-control" id="OppeningBalance" placeholder="رصيد التاجر الافتتاحي" />
+                    </div>*@
+                    <div class="form-group">
+                        <label for="Notes">ملاحظات</label>
+                        <input type="text" class="form-control" id="Notes" placeholder="ملاحظات" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" id="btnAdd" onclick="add();" value="حفظ" />
+                <input type="submit" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="update();" value="تعديل" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">الغاء</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/Scripts/jquery-1.10.2.js"></script>
+<script src="/js/sellers.js"></script>
+<script src="/js/shared.js"></script>
+

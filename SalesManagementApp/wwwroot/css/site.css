@@ -1,0 +1,34 @@
+﻿
+thead {
+    background-color: #cfd1d1;
+}
+
+.material-table {
+    height: 600px;
+    overflow: auto;
+}
+
+.table th, .table td {
+    padding: 5.75px 8px !important;
+}
+
+.td-header {
+    width: 105px !important;
+}
+
+#FarmerName,
+#SellerName,
+#TotalAfterDiscount,
+.lablel-lg {
+    font-size: 20px;
+}
+
+.ss_ul {
+    position: fixed !important;
+    margin-right: -40px !important;
+}
+
+
+    .ss_ul li {
+        text-align: right !important;
+    }

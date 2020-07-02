@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>تبدیل اعداد 1</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="../persianNum.jquery-2.js"></script>
+</head>
+<style>
+    code{
+        background: lightgray;
+    }
+    span.label {
+        display: block;
+    }
+</style>
+<body style="text-align: center">
+    <h1>تبدیل اعداد</h1>
+    <p>
+        <span>Code:</span>
+        <code>&lt;span class="persianNum"&gt;123456789&lt;/span&gt;</code>
+    </p>
+    <p>
+        <span>Result:</span>
+        <span>123456789</span>
+        <div class="persian">
+            <p class="realtime">1234567890</p>
+            <p class="english">1234567890</p>
+            <p class="arabic">1234567890</p>
+            <div class="english">
+                <p>1234567890</p>
+                <p class="arabic">1234567890</p>
+            </div>
+            <div class="arabic">
+                <p>1234567890</p>
+                <p class="english">1234567890</p>
+            </div>
+        </div>
+    </p>
+
+    <p>
+        <span>Code:</span>
+        <code>&lt;span class="EnglishNum"&gt;123456789&lt;/span&gt;</code>
+    </p>
+    <p>
+        <span>Result:</span>
+        <span class="english">123456789</span>
+    </p>
+
+    <p>
+        <span>Code:</span>
+        <code>
+            &lt;script&gt;
+            $(document).ready(function () {
+            $('body').persianNum();
+            })
+            &lt;/script&gt;
+        </code>
+    </p>
+
+    <script>
+        $(document).ready(function () {
+            $('body').persianNum();
+        })
+    </script>
+
+</body>
+</html>

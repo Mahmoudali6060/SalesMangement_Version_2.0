@@ -1,0 +1,180 @@
+﻿@{
+    ViewBag.Title = "قواتير المشتريات";
+}
+
+<div class="app-content content container-fluid">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-6 col-xs-12 mb-1">
+                <h5>فواتير المشتريات</h5>
+            </div>
+            <div class="content-header-right breadcrumbs-right breadcrumbs-top col-md-6 col-xs-12">
+                <div id="myTable" class="breadcrumb-wrapper col-xs-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">الرئيسية</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            فواتير المشتريات
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="today" value="@ViewBag.today" />
+        <div class="content-body">
+            <div class="row">
+                <div id="admin" class="col s12">
+                    <div class="card material-table">
+                        <div class="table-header">
+                            <div class="actions">
+                                <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
+                            </div>
+                        </div>
+                        <table id="purechase-header-table" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>م </th>
+                                    <th>رقم الفاتورة</th>
+                                    <th> تاريخ الفاتورة</th>
+                                    <th>اسم العميل</th>
+                                    <th>ملاحظات</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="listModalLabel">فاتورة</h4>
+            </div>
+            <div class="modal-body">
+                <div id="Report">
+                    <div class="row" id="report-header">
+                        <div class="col-lg-12">
+                            <table style="width:100%;border:none;">
+                                <tr>
+                                    <td style="width:100%;border:none;">
+                                        <img src="~/images/a.jpg" style="width:100%;" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-lg-12">
+                            <table style="width:100%;border:none;">
+                                <tr>
+                                    <td style="width:40%;border:none;">
+                                        التاريخ: <span id="Date"></span>
+                                    </td>
+                                    <td style="width:60%;border:none;">
+                                        رقم الفاتورة: <span id="Number"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:100%;border:none;" colspan="2">
+                                        اسم العميل: <span id="FarmerName"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" id="report-content">
+                        <div class="col-lg-12">
+                            <table id="purechase-details-table" class="table table-bordered table-hover" style="margin: 50px 0px;">
+                                <thead>
+                                    <tr>
+                                        <th>العدد</th>
+                                        <th> الوزن</th>
+                                        <th>السعر</th>
+                                        <th>الاجمالي  </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="purechase-details"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" id="report-footer">
+                        <div class="col-lg-12">
+                            <table style="width:100%;border:none;">
+                                <tr>
+                                    <td style="width:80%;border:none;">
+                                        <table>
+                                            <tr>
+                                                <td>الاجمالي</td>
+                                                <td> <span id="Total"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td> اجمالي الخصومات</td>
+                                                <td><span id="TotalDiscounts"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>صافي الفاتورة</td>
+                                                <td> <span id="TotalAfterDiscount"></span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+
+                                    <td style="width:20%;border:none;">
+                                        <table>
+                                            <tr>
+                                                <td>العمولة</td>
+                                                <td> <input type="number" value="0" onchange="updateTotal()" id="Commission" style="width: 50%;border:none" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td> النزول</td>
+                                                <td><span id="Descent"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>النولون</td>
+                                                <td> <input type="number" value="0" onchange="updateTotal()" id="Nawlon" style="width: 50%;border:none" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>الوهبة </td>
+                                                <td> <span id="Gift"></span></td>
+                                            </tr>
+                                        </table>
+
+                                        @*<ul class="px-0 list-unstyled">
+                                                <li>
+                                                    عمولة: <input type="number" value="0" onchange="updateTotal()" id="Commission" style="width: 50%;border:none" />
+                                                </li>
+                                                <li>
+                                                    نزول: <span id="Descent"></span>
+                                                </li>
+                                                <li>
+                                                    نولون: <input type="number" value="0" onchange="updateTotal()" id="Nawlon" style="width: 50%;border:none" />
+                                                </li>
+                                                <li>
+                                                    وهبة: <span id="Gift"></span>
+                                                </li>
+                                            </ul>*@
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="printReport();">طباعة</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">الغاء</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/Scripts/jquery-1.10.2.js"></script>
+<script src="/js/purechases-index.js"></script>
+<script src="/js/shared.js"></script>
+<script src='/report/js/example.js'></script>
