@@ -52,9 +52,9 @@ function delele(id) {
                             text: "تم حذف السجل بنجاح !",
                             type: "success"
                         },
-                        function () {
-                            loadData();
-                        });
+                            function () {
+                                loadData();
+                            });
                 })
                 .error(function (data) {
                     swal("لم يتم الحذف", "حدث خطأ في الحذف", "خطأ");
@@ -69,13 +69,17 @@ function setSalesinvoiceHeader() {
     var html = '';
     var i = 1;
     $.each(salesinvoiceHeaders, function (key, item) {
-        html += '<tr style="cursor:pointer;" onclick="getSalesinvoiceDetails(' + item.Id + ')">';
+        html += '<tr>';
         html += '<td>' + i + '</td>';
         html += '<td>' + item.Id + '</td>';
         html += '<td>' + getLocalDate(item.SalesinvoicesDate) + '</td>';
         html += '<td>' + getSellerById(item.SellerId).Name + '</td>';
         html += '<td>' + '' + '</td>';
-        html += '<td><i style="color:blue;cursor:pointer" class="icon-search-plus"  onclick="getSalesinvoiceDetails(' + item.Id + ')"></i></td>';
+        html += '<td>';
+        html += '<i style = "color:blue;cursor:pointer" class="icon-search-plus"  onclick = "getSalesinvoiceDetails(' + item.Id + ')" ></i >';
+        html += '<i style="color:blue;cursor:pointer" class="icon-printer4" onclick="printReport(' + item.Id + ')"></i>';
+        html += '</td>';
+        html += '<td></td>';
         html += '</tr>';
         i++;
     });
@@ -87,7 +91,7 @@ function setSalesinvoiceHeader() {
 }
 //Getting Related SalesinvoiceDetails to show them in modal 
 function getSalesinvoiceDetails(id) {
-    
+
     headerId = id;
     var selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == id);
     var html = '';
@@ -99,10 +103,10 @@ function getSalesinvoiceDetails(id) {
 
         html += '<tr>';
         let subTotal = (selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + (6 * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity);
-        html += '<td>' + subTotal + '</td>';
         html += '<td style="width: 30%;">' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price + '</td>';
+        html += '<td>' + subTotal + '</td>';
         html += '</tr>';
 
         total += subTotal;
@@ -116,7 +120,7 @@ function getSalesinvoiceDetails(id) {
 }
 //Prepare Salesinvoice Header to bind it in modal
 function prepareSalesinvoiceHeader(selectedSalesinvoiceHeader) {
-    
+
     //$('#Number').text(selectedSalesinvoiceHeader.Id);
     $('#SellerName').text(getSellerById(selectedSalesinvoiceHeader.SellerId).Name);
     //$('#SellerName').val(getSellerById(selectedSalesinvoiceHeader.SellerId).Name);
@@ -125,10 +129,11 @@ function prepareSalesinvoiceHeader(selectedSalesinvoiceHeader) {
 //Prepare Salesinvoice footer to bind it in modal
 function prepareSalesinvoiceTotal(html, total, totalWight, totalQuantity) {
     html += '<tr style="background-color: #f7edbd;font-size: 20px;font-weight: bold;">';
-    html += '<td>' +  Math.ceil(total) + '</td>';
     html += '<td>' + totalQuantity + '</td>';
-    html += '<td>' +  totalWight + '</td>';
-    html += '<td>' + 'اجمالي الكشف' + '</td>';
+    html += '<td>' + totalWight + '</td>';
+    html += '<td>' + '' + '</td>';
+    html += '<td>' + Math.ceil(total) + '</td>';
+
     html += '</tr>';
     return html;
 }
@@ -145,15 +150,16 @@ function filter() {
     }
 }
 
-function printReport() {
-    debugger;
+function printReport(id) {
+    if (id != undefined)
+        headerId = id;
+
+    var selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == headerId);
+    prepareSalesinvoiceHeader(selectedSalesinvoiceHeader);
     var reportHeader = prepareReportHeader();
-    var reportContent = prepareReportContent();
-
+    var reportContent = prepareReportContent(selectedSalesinvoiceHeader);
     var newWin = window.open('', 'Print-Window');
-
     newWin.document.open();
-
     newWin.document.write(`<html>
 <head>
 <title>كشـــف</title>
@@ -194,7 +200,7 @@ function printReport() {
 
 </head>
 <body onload="window.print()">` +
-        reportHeader+   reportContent +
+        reportHeader + reportContent +
         `</body></html>`);
 
     newWin.document.close();
@@ -228,20 +234,20 @@ function prepareReportHeader() {
     return reportHeader;
 }
 
-function prepareReportContent() {
-    
-    let reportcontent= `<div class="row" id="report-content">
+function prepareReportContent(selectedSalesinvoiceHeader) {
+
+    let reportcontent = `<div class="row" id="report-content">
                         <div class="col-lg-12">
                                 <table id="salesinvoice-details-table" class="table table-bordered table-hover" style="margin: 10px 0px;">
                                 <thead>
                                     <tr>
-                                        <th>الجملة  </th>
                                         <th>العدد</th>
                                         <th> الكيلو</th>
                                         <th>السعر</th>
+                                        <th>الجملة  </th>
                                     </tr>
                                 </thead>
-                                <tbody class="salesinvoice-details" >`+ getReportContent(headerId) +`</tbody>
+                                <tbody class="salesinvoice-details" >`+ getReportContent(selectedSalesinvoiceHeader) + `</tbody>
                             </table>
                         </div>
                         </div>
@@ -258,11 +264,9 @@ function prepareReportContent() {
     return reportcontent;
 }
 
-function getReportContent(headerId) {
-    
-    var selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == headerId);
+function getReportContent(selectedSalesinvoiceHeader) {
+
     var html = '';
-    var totalQuantity = 0;
     var totalQuantity = 0;
     var totalWight = 0;
     var total = 0;
@@ -271,10 +275,10 @@ function getReportContent(headerId) {
 
         html += '<tr>';
         let subTotal = (selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + (6 * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity);
-        html += '<td>' + convertToIndiaNumbers(subTotal) + '</td>';
-        html += '<td>' + convertToIndiaNumbers( selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity) + '</td>';
         html += '<td>' + convertToIndiaNumbers(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + '</td>';
-        html += '<td>' + convertToIndiaNumbers( selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(subTotal) + '</td>';
         html += '</tr>';
 
         total += subTotal;
@@ -287,12 +291,12 @@ function getReportContent(headerId) {
 
 function prepareSalesinvoiceTotalReport(html, total, totalWight, totalQuantity) {
     html += '<tr style="background-color: #f7edbd;font-size: 20px;font-weight: bold;">';
-    html += '<td>' +convertToIndiaNumbers( Math.ceil(total)) + '</td>';
-    html += '<td>' +convertToIndiaNumbers( totalQuantity )+ '</td>';
+    html += '<td>' + convertToIndiaNumbers(totalQuantity) + '</td>';
     html += '<td>' + convertToIndiaNumbers(totalWight) + '</td>';
-    html += '<td>' + 'اجمالي الكشف' + '</td>';
+    html += '<td>' + '' + '</td>';
+    html += '<td>' + convertToIndiaNumbers(Math.ceil(total)) + '</td>';
     html += '</tr>';
     return html;
 
 }
-//>>>END Helper Methods 
+//>>>END Helper Methods

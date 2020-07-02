@@ -32,3 +32,17 @@ thead {
     .ss_ul li {
         text-align: right !important;
     }
+
+
+.icon-printer4:hover{
+    font-size:20px;
+    cursor:pointer;
+}
+
+.icon-search-plus {
+    color:green !important;
+}
+.icon-search-plus:hover {
+    font-size: 20px;
+    cursor: pointer;
+}
