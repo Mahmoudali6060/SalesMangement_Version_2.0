@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewData["Title"] = "الخزنة";
+}
+
+<div class="app-content content container-fluid">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-6 col-xs-12 mb-1">
+                <h5>الخزنة</h5>
+            </div>
+            <div class="content-header-right breadcrumbs-right breadcrumbs-top col-md-6 col-xs-12">
+                <div id="myTable" class="breadcrumb-wrapper col-xs-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">الرئيسية</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            الخزنة
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="row">
+                <div id="admin" class="col s12">
+                    <div class="card material-table">
+                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> سجل جديد</button>
+                        <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
+                        <table id="safes-table" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>م </th>
+                                    <th>التاريخ</th>
+                                    <th>صادر</th>
+                                    <th>وارد</th>
+                                    <th>نوع الحساب</th>
+                                    <th>التفاصيل</th>
+                                    <th>ملاحظات</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="formModalLabel">اضافة/تعديل سجل</h4>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="Id" placeholder="Id" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Date">التاريخ </label>
+                        <input type="date" id="Date" class="form-control" style="height: 37px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="AccountTypeId">نوع الحساب<i style="color:red">*</i></label>
+                        <select theme="google" data-search="true" id="AccountTypeId" name="AccountTypeId" class="form-control">
+                            <option value="0">اختر نوع الحساب</option>
+                            <option value="1">العملاء</option>
+                            <option value="2">التجار</option>
+                            <option value="3">سلف من الغير </option>
+                            <option value="4">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="form-group ClientId">
+                        <label for="ClientId">العملاء </label>
+                        <select theme="google" placeholder="اختر اسم العميل " data-search="true" id="ClientId" name="ClientId" class="form-control"></select>
+                    </div>
+                    <div class="form-group SellerId">
+                        <label for="SellerId">التجار </label>
+                        <select theme="google" placeholder="اختر اسم التاجر " data-search="true" id="SellerId" name="SellerId" class="form-control"></select>
+                    </div>
+                    <div class="form-group OtherAccount">
+                        <label for="OtherAccountName">أخرى </label>
+                        <input type="text" class="form-control" id="OtherAccountName" placeholder="حسابات أخرى" />
+                    </div>
+
+                    <div class="form-group Borrow">
+                        <label for="Borrow">سلف من الغير </label>
+                        <input type="text" class="form-control" id="Borrow" placeholder="سلف من الغير" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Outcoming">صادر </label>
+                        <input type="number" class="form-control" id="Outcoming" placeholder="صادر" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Incoming">وارد</label>
+                        <input type="text" class="form-control" id="Incoming" placeholder="وراد" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Notes">ملاحظات</label>
+                        <input type="text" class="form-control" id="Notes" placeholder="ملاحظات" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" id="btnAdd" onclick="add();" value="حفظ" />
+                <input type="submit" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="update();" value="تعديل" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">الغاء</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/Scripts/jquery-1.10.2.js"></script>
+<script src="/js/safes.js"></script>
+<script src="/js/shared.js"></script>

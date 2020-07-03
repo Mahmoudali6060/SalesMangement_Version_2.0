@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{1D833DAC-C850-454B-9242-76F76569E5EA}"
 EndProject
@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Purechase", "Purechase\Pure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Salesinvoice", "Salesinvoice\Salesinvoice.csproj", "{8E4B45CB-39CC-412D-BA93-639BF230BCB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Account", "Account\Account.csproj", "{9A28F65A-F5DD-4E9A-88C6-5A08569B3243}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Account", "Account\Account.csproj", "{9A28F65A-F5DD-4E9A-88C6-5A08569B3243}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Safes", "Safes\Safes.csproj", "{87E0E0FE-678C-49D5-9AC9-210B144539E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{9A28F65A-F5DD-4E9A-88C6-5A08569B3243}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A28F65A-F5DD-4E9A-88C6-5A08569B3243}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A28F65A-F5DD-4E9A-88C6-5A08569B3243}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87E0E0FE-678C-49D5-9AC9-210B144539E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87E0E0FE-678C-49D5-9AC9-210B144539E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87E0E0FE-678C-49D5-9AC9-210B144539E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87E0E0FE-678C-49D5-9AC9-210B144539E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

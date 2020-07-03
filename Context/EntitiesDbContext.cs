@@ -23,6 +23,7 @@ namespace Database
         public DbSet<Order_Purechase> Order_Purechases { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Safe> Safes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

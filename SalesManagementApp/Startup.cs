@@ -17,6 +17,7 @@ using Order.DataServiceLayer;
 using Order.IRepositories;
 using Order.Repositories;
 using Purechase;
+using Safes;
 using Salesinvoice;
 using Sellers;
 using Shared.IRepository;
@@ -62,6 +63,7 @@ namespace SalesManagementApp
             services.AddTransient<IOrder_PurechaseOperationsRepo, Order_PurechaseOperationsRepo>();
             services.AddTransient<IUserOperationsRepo, UserOperationsRepo>();
             services.AddTransient<IAccountRepo, AccountRepo>();
+            services.AddTransient<ISafeOperationsRepo, SafeOperationsRepo>();
 
             services.AddTransient<IRoleOperationsRepo, RoleOperationsRepo>();
 

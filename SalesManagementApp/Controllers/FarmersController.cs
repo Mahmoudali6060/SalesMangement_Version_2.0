@@ -18,24 +18,13 @@ namespace SalesManagementApp.Controllers
 
         public ActionResult Index()
         {
-            //BackupService backupService = new BackupService("Server=.\\SQLEXPRESS;Database=TabarakDb;Trusted_Connection=True;", @"F:\Backup");
-            //backupService.BackupDatabase("TabarakDb");
             return View();
         }
 
         public JsonResult List()
         {
-            //try
-            //{
-                var farmerList = Helper.SerializeObject(_farmerOperationsRepo.GetAll());
-                return Json(farmerList);
-            //}
-            //catch (Exception ex)
-            //{
-            //    System.IO.File.WriteAllText(@"e:\errorLog.txt", ex.Message);
-            //    throw ex;
-            //}
-
+            var farmerList = Helper.SerializeObject(_farmerOperationsRepo.GetAll());
+            return Json(farmerList);
         }
 
         public JsonResult GetById(long id)
@@ -46,7 +35,6 @@ namespace SalesManagementApp.Controllers
 
         public JsonResult Add(Farmer farmer)
         {
-          
             return Json(_farmerOperationsRepo.Add(farmer));
         }
 

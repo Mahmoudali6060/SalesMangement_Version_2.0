@@ -1347,6 +1347,7 @@
     <ProjectReference Include="..\Context\Database.csproj" />
     <ProjectReference Include="..\Order\Order.csproj" />
     <ProjectReference Include="..\Purechase\Purechase.csproj" />
+    <ProjectReference Include="..\Safes\Safes.csproj" />
     <ProjectReference Include="..\Salesinvoice\Salesinvoice.csproj" />
     <ProjectReference Include="..\Seller\Sellers.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
