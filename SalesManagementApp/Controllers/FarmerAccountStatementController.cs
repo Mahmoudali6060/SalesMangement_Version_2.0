@@ -11,12 +11,10 @@ namespace SalesManagementApp.Controllers
 {
     public class FarmerAccountStatementController : Controller
     {
-        private IPurechasesOperationsRepo _purechasesOperationsRepo;
         private ISafeOperationsRepo _safeOperationsRepo;
 
-        public FarmerAccountStatementController(IPurechasesOperationsRepo purechasesHeaderOperationsRepo, ISafeOperationsRepo safeOperationsRepo)
+        public FarmerAccountStatementController(ISafeOperationsRepo safeOperationsRepo)
         {
-            this._purechasesOperationsRepo = purechasesHeaderOperationsRepo;
             _safeOperationsRepo = safeOperationsRepo;
         }
 
@@ -28,12 +26,15 @@ namespace SalesManagementApp.Controllers
 
         public JsonResult List(long farmerId)
         {
-            //FarmerAccountStatementDTO farmerAccountStatement = new FarmerAccountStatementDTO()
-            //{
-            var safeList = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(farmerId,AccountTypesEnum.Clients));
-            //    PurechasesHeaderList = _purechasesOperationsRepo.GetPurchaseHeaderListByFarmerId(farmerId)
-            //};
+            var safeList = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(farmerId, AccountTypesEnum.Clients));
             return Json(safeList);
         }
+
+        public JsonResult GetPagedList(long farmerId, int currentPage)
+        {
+            var safeDto = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(farmerId, AccountTypesEnum.Clients, currentPage));
+            return Json(safeDto);
+        }
+
     }
 }

@@ -21,10 +21,15 @@ namespace SalesManagementApp.Controllers
             return View();
         }
 
-        public JsonResult List(int currentPage)
-       {
-            var farmerList = Helper.SerializeObject(_farmerOperationsRepo.GetAll(currentPage));
+        public JsonResult List()
+        {
+            var farmerList = Helper.SerializeObject(_farmerOperationsRepo.GetAll());
             return Json(farmerList);
+        }
+
+        public JsonResult GetPagedList(int currentPage)
+        {
+            return Json(Helper.SerializeObject(_farmerOperationsRepo.GetAll(currentPage)));
         }
 
         public JsonResult GetById(long id)

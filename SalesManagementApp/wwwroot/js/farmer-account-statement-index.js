@@ -1,17 +1,44 @@
 ﻿$(document).ready(function () {
-    let farmerId = parseInt($("#farmerId").val());
-    $("#farmerName").text(getFarmerById(farmerId).Name);
-    loadData(farmerId);
+    setFarmerData();
+    getAll(farmerId);
 });
 
-
-
-var safeList = [];
-let headerId;
-var total = 0;
+var safeList = [];//Display the Safe in tables (for pgination)
+var incomingTotal = 0;// اجمالي الواردات
+var outcomingTotal = 0;//اجمالي المدفوعات
+var currentPage = 1;//For set and get current page
+var allSafeList = [];//For displaying all data in report
+var farmerId;
+//Set Label of farmer Data
+function setFarmerData() {
+    farmerId = parseInt($("#farmerId").val());
+    $("#farmerName").text(getFarmerById(farmerId).Name);
+}
 //>>>CRUD Operations Methods
-//Loading Purechase Header Data
-function loadData(farmerId) {
+//Loading  All Data based on current page
+function getAll() {
+    var url = `/FarmerAccountStatement/GetPagedList?farmerId=${farmerId}&&currentPage=${currentPage}`;
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            var safeListDto = JSON.parse(result);//Set Data in safeListDto
+            safeList = safeListDto.List;//set List of safe
+            preparePagination(safeListDto);//prepare pagination labels(Current Page and number of records)
+            setFarmerAccountStatement();//Draw content of table(safe table body)
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
+
+//Get All for report
+function getAllSafeList() {
+    farmerId = parseInt($("#farmerId").val());
+    allSafeList = [];
     var url = "/FarmerAccountStatement/List?farmerId=" + farmerId;
     $.ajax({
         url: url,
@@ -19,13 +46,14 @@ function loadData(farmerId) {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (result) {
-            safeList = JSON.parse(result);
-            setFarmerAccountStatement();
+            allSafeList = JSON.parse(result);
+            printReport(allSafeList);
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
         }
     });
+    //return allSafeList;
 }
 //>>>END CRUD Operations Methods
 
@@ -34,6 +62,8 @@ function loadData(farmerId) {
 function setFarmerAccountStatement() {
     var html = '';
     var i = 1;
+    incomingTotal = 0;
+    outcomingTotal = 0;
     $.each(safeList, function (key, item) {
         html += '<tr>';
         html += '<td>' + i + '</td>';
@@ -43,7 +73,14 @@ function setFarmerAccountStatement() {
         html += '<td>' + item.Notes + '</td>';
         html += '</tr>';
         i++;
+        incomingTotal += item.Incoming;
+        outcomingTotal += item.Outcoming;
     });
+
+    $("#incomingTotal").text(incomingTotal);
+    $("#outcomingTotal").text(outcomingTotal);
+    $("#balance").text((Math.abs(incomingTotal - outcomingTotal)).toFixed(2));
+
     $('.tbody').html(html);
     var value = $("#search").val();
     if (value !== "") {
@@ -51,12 +88,6 @@ function setFarmerAccountStatement() {
     }
 }
 
-//Prepare Purechase Header to bind it in modal
-function preparePurechaseHeader(selectedPurechaseHeader) {
-    $('#Number').text(selectedPurechaseHeader.Id);
-    $('#FarmerName').text(getFarmerById(selectedPurechaseHeader.FarmerId).Name);
-    $('#Date').text(getLocalDate(selectedPurechaseHeader.PurechasesDate));
-}
 //Filtering
 function filter() {
     var value = $("#search").val();
@@ -66,73 +97,26 @@ function filter() {
         });
     }
     else {
-        loadData();
+        getAll();
     }
 }
 
 
-//print report
-function printReport() {
 
-    var reportHeader = prepareReportHeader();
-    var reportContent = prepareReportContent();
+function printReport(safeList) {
+    var reportHeader = prepareReportHeader();//Client Name 
+    var reportContent = prepareReportContent(safeList);//Draw content of report 
     var reportFooter = prepareReportFooter();
-
     var newWin = window.open('', 'Print-Window');
-
     newWin.document.open();
-
-    newWin.document.write(`<html>
-<head>
-<title>فاتورة</title>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content="Robust admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
-    <meta name="keywords" content="admin template, robust admin template, dashboard template, flat admin template, responsive admin template, web app">
-    <meta name="author" content="PIXINVENT">
-    <title>Sales Management</title>
-    <link rel="apple-touch-icon" sizes="60x60" href="/Content/app-assets/images/ico/apple-icon-60.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/Content/app-assets/images/ico/apple-icon-76.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/Content/app-assets/images/ico/apple-icon-120.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/Content/app-assets/images/ico/apple-icon-152.png">
-    <link rel="shortcut icon" type="image/x-icon" href="/Content/app-assets/images/ico/favicon.ico">
-    <link rel="shortcut icon" type="image/png" href="/Content/app-assets/images/ico/favicon-32.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-touch-fullscreen" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/fonts/icomoon.css">
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/fonts/flag-icon-css/css/flag-icon.min.css">
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/vendors/css/extensions/pace.css">
-  
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/bootstrap-extended.css">
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/app.css">
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/colors.css">
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/custom-rtl.css">
-   
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/core/menu/menu-types/vertical-menu.css">
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/core/menu/menu-types/vertical-overlay-menu.css">
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/core/colors/palette-gradient.css">
-    
-    <link rel="stylesheet" type="text/css" href="/css/site.css">
-    <link rel='stylesheet' href='/report/css/style.css'>
-    <link rel='stylesheet' href='/report/css/print.css' media="print">
-
-</head>
-<body onload="window.print()">` +
+    var reportHead = getReportHead(' كشف حساب عميل');
+    newWin.document.write(reportHead +
         reportHeader + reportContent + reportFooter +
         `</body></html>`);
 
     newWin.document.close();
 
-    //setTimeout(function () {
-    //    debugger;
-    //    newWin.close();
-    //    let isToday = parseInt($("#today").val());
-    //    loadData(isToday);
-    //}, 300);
+    //setTimeout(function () { newWin.close(); }, 300);
 
 }
 
@@ -141,25 +125,8 @@ function prepareReportHeader() {
                         <div class="col-lg-12">
                             <table style="width:100%;border:none;">
                                 <tr>
-                                    <td style="width:100%;border:none;">
-                                        <img src="/images/a.jpg" style="width:100%;" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-lg-12">
-                            <table style="width:100%;border:none;">
-                                <tr>
-                                    <td style="width:40%;border:none;">
-                                        التاريخ:`+ convertToIndiaNumbers($('#Date').text()) + `
-                                    </td>
-                                    <td style="width:60%;border:none;">
-                                        رقم الفاتورة:`+ convertToIndiaNumbers($('#Number').text()) + `
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width:100%;border:none;font-size:24px;font-weight:bold;" colspan="2">
-                                        اسم العميل:`+ $('#FarmerName').text() + `
+                                    <td style="width:100%;border:none;font-size:24px;font-weight:bold;text-align: center;">
+                                        اسم العميل:`+ $('#farmerName').text() + `
                                     </td>
                                 </tr>
                             </table>
@@ -168,46 +135,37 @@ function prepareReportHeader() {
     return reportHeader;
 }
 
-function prepareReportContent() {
+function prepareReportContent(safeList) {
     return `<div class="row" id="report-content">
                         <div class="col-lg-12">
                             <table id="purechase-details-table" class="table table-bordered table-hover" style="margin: 50px 0px;">
                                 <thead>
                                     <tr>
-                                        <th>العدد</th>
-                                        <th> الوزن</th>
-                                        <th>السعر</th>
-                                        <th>الاجمالي  </th>
+                                        <th>م</th>
+                                        <th>التاريخ</th>
+                                        <th> المدفوع</th>
+                                        <th>الوارد</th>
+                                        <th>التفاصيل  </th>
                                     </tr>
                                 </thead>
-                                <tbody class="purechase-details">`+ getReportContent(headerId) + `</tbody>
+                                <tbody class="farm-details">`+ getReportContent(safeList) + `</tbody>
                             </table>
                         </div>
                     </div>`;
 }
 
-function getReportContent(headerId) {
-    var selectedPurechaseHeader = purechaseHeaders.find(x => x.Id == headerId);
+function getReportContent(safeList) {
+
     var html = '';
-    var totalQuantity = 0;
-    var total = 0;
-    for (var i = 0; i < selectedPurechaseHeader.PurechasesDetialsList.length; i++) {
+    for (var i = 0; i < safeList.length; i++) {
         let rowNumber = i + 1;
-
-        let quantity = convertToIndiaNumbers(selectedPurechaseHeader.PurechasesDetialsList[i].Quantity);
-        let weight = convertToIndiaNumbers(selectedPurechaseHeader.PurechasesDetialsList[i].Weight);
-        let price = convertToIndiaNumbers(selectedPurechaseHeader.PurechasesDetialsList[i].Price);
-
         html += '<tr>';
-        html += '<td>' + quantity + '</td>';
-        html += '<td>' + weight + '</td>';
-        html += '<td>' + price + '</td>';
-        html += '<td>' + convertToIndiaNumbers(selectedPurechaseHeader.PurechasesDetialsList[i].Weight * selectedPurechaseHeader.PurechasesDetialsList[i].Price) + '</td>';
+        html += '<td>' + rowNumber + '</td>';
+        html += '<td>' + getLocalDate(safeList[i].Date) + '</td>';
+        html += '<td>' + safeList[i].Outcoming + '</td>';
+        html += '<td>' + safeList[i].Incoming + '</td>';
+        html += '<td>' + safeList[i].Notes + '</td>';
         html += '</tr>';
-
-        totalQuantity += selectedPurechaseHeader.PurechasesDetialsList[i].Quantity;
-        total += (selectedPurechaseHeader.PurechasesDetialsList[i].Price * selectedPurechaseHeader.PurechasesDetialsList[i].Weight);
-
     }
     return html;
 }
@@ -220,37 +178,16 @@ function prepareReportFooter() {
                                     <td style="width:70%;border:none;">
                                         <table>
                                             <tr>
-                                                <td>الاجمالي</td>
-                                                <td>`+ convertToIndiaNumbers($("#Total").text()) + `</td>
+                                                <td>اجمالي المدفوعات</td>
+                                                <td>اجمالي الورادات</td>
+                                                <td>الرصيد</td>
+                                                <td>بيان</td>
                                             </tr>
                                             <tr>
-                                                <td> اجمالي الخصومات</td>
-                                                <td>`+ convertToIndiaNumbers($("#TotalDiscounts").text()) + `</td>
-                                            </tr>
-                                            <tr style="font-size:24px;font-weight:bold;">
-                                                <td> الصافي</td>
-                                                <td>`+ convertToIndiaNumbers($("#TotalAfterDiscount").text()) + `</td>
-                                            </tr>
-                                        </table>
-                                    </td>
-
-                                    <td style="width:30%;border:none;">
-                                        <table>
-                                            <tr>
-                                                <td>العمولة</td>
-                                                <td>`+ convertToIndiaNumbers($("#Commission").val()) + `</td>
-                                            </tr>
-                                            <tr>
-                                                <td> النزول</td>
-                                                <td>`+ convertToIndiaNumbers($("#Descent").val()) + `</td>
-                                            </tr>
-                                            <tr>
-                                                <td>النولون</td>
-                                                <td>`+ convertToIndiaNumbers($("#Nawlon").val()) + `</td>
-                                            </tr>
-                                            <tr>
-                                                <td>الوهبة </td>
-                                                <td>`+ convertToIndiaNumbers($('#Gift').val()) + `</td>
+                                                <td>1000 </td>
+                                                <td> 800 </td>
+                                                <td> 200</td>
+                                                <td> عليه</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -269,6 +206,35 @@ function prepareReportFooter() {
                     </div>`;
     reportFooter += author;
     return reportFooter;
+}
+
+
+function next() {
+    currentPage++;
+    getAll();
+}
+
+function back() {
+    currentPage--;
+    if (currentPage <= 0) {
+        $("#pageNumber").val(1);
+        currentPage = 1;
+        return;
+    }
+
+    getAll();
+}
+
+function getToPageNumber() {
+    currentPage = $("#pageNumber").val();
+    if (currentPage > 0)
+        this.getAll();
+}
+
+function preparePagination(safeListDto) {
+    recordsTotal = safeListDto.Total;
+    $("#recordsTotal").text(recordsTotal);
+    $("#pageNumber").val(this.currentPage);
 }
 
 //>>>END Helper Methods 

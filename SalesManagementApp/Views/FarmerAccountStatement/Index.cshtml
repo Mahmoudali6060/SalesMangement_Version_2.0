@@ -31,15 +31,15 @@
                                     <th>اجمالي مدفوعات</th>
                                     <th>اجمالي الواردات</th>
                                     <th>الرصيد</th>
-                                    <th>بيان</th>
+                                    @*<th>بيان</th>*@
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1000</td>
-                                    <td>860</td>
-                                    <td>140</td>
-                                    <td>عليه</td>
+                                    <td><span id="outcomingTotal"></span></td>
+                                    <td><span id="incomingTotal"></span></td>
+                                    <td><span id="balance"></span></td>
+                                    @*<td></td>*@
                                 </tr>
                             </tbody>
                         </table>
@@ -66,6 +66,20 @@
                             </thead>
                             <tbody class="tbody"></tbody>
                         </table>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <button onclick="next()">التالي</button>
+                                <input id="pageNumber" value="1" onchange="getToPageNumber()" />
+                                <button onclick="back()">السابق</button>
+                            </div>
+                            <div class="col-lg-4">
+                                <span>عدد السجلات</span>:
+                                <span id="recordsTotal"></span>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="getAllSafeList();">طباعة</button>
+
                     </div>
                 </div>
             </div>

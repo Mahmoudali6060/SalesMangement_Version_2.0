@@ -5,6 +5,7 @@ using System.Text;
 using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Safes.DTOs;
 using Shared.Enums;
 
 namespace Safes
@@ -93,6 +94,19 @@ namespace Safes
                 return true;
             }
             return false;
+        }
+
+        public SafeDTO GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, int currentPage)
+        {
+            return new SafeDTO()
+            {
+                Total = safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).Count(),
+                List = safeEntity
+                 .Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum)
+                .Skip((currentPage - 1) * PageSettings.PageSize)
+                .Take(PageSettings.PageSize)
+               .AsEnumerable()
+            };
         }
     }
 }

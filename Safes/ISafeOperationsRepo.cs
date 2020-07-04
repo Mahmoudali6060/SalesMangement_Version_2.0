@@ -1,4 +1,5 @@
 ﻿using Database.Entities;
+using Safes.DTOs;
 using Shared.Enums;
 using Shared.IRepository;
 using System;
@@ -15,6 +16,7 @@ namespace Safes
         bool Update(Safe entity);
         bool Delete(long id);
         IEnumerable<Safe> GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
+        SafeDTO GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, int currentPage);
         bool DeleteByHeaderId(long header, AccountTypesEnum accountTypesEnum);
         bool DeleteByOrderId(long orderId);
     }

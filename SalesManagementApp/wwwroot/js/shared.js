@@ -36,9 +36,15 @@ function turnOnTab(elementId) {
 }
 
 function getAllFarmers(currentPage) {
+    var url;
+    if (currentPage == undefined)
+        url = "/Farmers/List";
+    else
+        url = "/Farmers/GetPagedList?currentPage=" + currentPage;
+
     var farmers = [];
     $.ajax({
-        url: "/Farmers/List?currentPage=" + currentPage,
+        url: url,
         type: "GET",
         contentType: "application/json;charset=utf-8",
         dataType: "json",
@@ -267,6 +273,51 @@ function loadDatabaseEntity() {
     $('#ConnectionString').val("Server =.\\SQLEXPRESS; Database = TabarakDbV2; Trusted_Connection = True;");
     $('#DatabaseName').val("TabarakDbV2");
     $("#FilePath").val("E://Backup_Dabase");
+}
+
+
+function getReportHead(title) {
+    var html = `<html>
+<head>
+<title>`+ title + `</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="Robust admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, robust admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Sales Management</title>
+    <link rel="apple-touch-icon" sizes="60x60" href="/Content/app-assets/images/ico/apple-icon-60.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/Content/app-assets/images/ico/apple-icon-76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/Content/app-assets/images/ico/apple-icon-120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/Content/app-assets/images/ico/apple-icon-152.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/Content/app-assets/images/ico/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="/Content/app-assets/images/ico/favicon-32.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/fonts/icomoon.css">
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/fonts/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/vendors/css/extensions/pace.css">
+  
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/bootstrap-extended.css">
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/app.css">
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/colors.css">
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/custom-rtl.css">
+   
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/core/menu/menu-types/vertical-menu.css">
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/core/menu/menu-types/vertical-overlay-menu.css">
+    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/core/colors/palette-gradient.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/site.css">
+    <link rel='stylesheet' href='/report/css/style.css'>
+    <link rel='stylesheet' href='/report/css/print.css' media="print">
+
+</head>
+<body onload="window.print()">`;
+    return html;
 }
 
 
