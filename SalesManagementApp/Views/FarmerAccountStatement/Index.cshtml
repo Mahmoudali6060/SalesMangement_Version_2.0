@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "كشف حساب عميل";
+}
+<div class="app-content content container-fluid">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-6 col-xs-12 mb-1">
+                <h5>كشف حساب العميل:  <span id="farmerName"></span></h5>
+            </div>
+            <div class="content-header-right breadcrumbs-right breadcrumbs-top col-md-6 col-xs-12">
+                <div id="myTable" class="breadcrumb-wrapper col-xs-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">الرئيسية</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            كشف حساب عميل
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="farmerId" value="@ViewBag.farmerId" />
+        <div class="content-body">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card">
+                        <table id="total-table" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>اجمالي مدفوعات</th>
+                                    <th>اجمالي الواردات</th>
+                                    <th>الرصيد</th>
+                                    <th>بيان</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1000</td>
+                                    <td>860</td>
+                                    <td>140</td>
+                                    <td>عليه</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="admin" class="col s12">
+                    <div class="card material-table">
+                        <div class="table-header">
+                            <div class="actions">
+                                <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
+                            </div>
+                        </div>
+                        <table id="farmer-account-statement-header-table" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>م </th>
+                                    <th>التاريخ</th>
+                                    <th>المدفوع</th>
+                                    <th>الوارد</th>
+                                    <th>تفاصيل</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<script src="/Scripts/jquery-1.10.2.js"></script>
+<script src="/js/farmer-account-statement-index.js"></script>
+<script src="/js/shared.js"></script>
+<script src='/report/js/example.js'></script>

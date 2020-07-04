@@ -35,10 +35,10 @@ function turnOnTab(elementId) {
     });
 }
 
-function getAllFarmers() {
+function getAllFarmers(currentPage) {
     var farmers = [];
     $.ajax({
-        url: "/Farmers/List",
+        url: "/Farmers/List?currentPage=" + currentPage,
         type: "GET",
         contentType: "application/json;charset=utf-8",
         dataType: "json",
@@ -232,7 +232,7 @@ function backupDatabase() {
         },
         error: function () {
             debugger;
-            alert( "حدث خطأ في نسخ قاعدة البيانات ");
+            alert("حدث خطأ في نسخ قاعدة البيانات ");
         }
     });
 }

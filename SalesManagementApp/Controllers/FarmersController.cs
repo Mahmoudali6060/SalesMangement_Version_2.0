@@ -21,9 +21,9 @@ namespace SalesManagementApp.Controllers
             return View();
         }
 
-        public JsonResult List()
-        {
-            var farmerList = Helper.SerializeObject(_farmerOperationsRepo.GetAll());
+        public JsonResult List(int currentPage)
+       {
+            var farmerList = Helper.SerializeObject(_farmerOperationsRepo.GetAll(currentPage));
             return Json(farmerList);
         }
 

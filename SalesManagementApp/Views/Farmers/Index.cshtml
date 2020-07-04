@@ -26,8 +26,8 @@
             <div class="row">
                 <div id="admin" class="col s12">
                     <div class="card material-table">
-                                <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> عميل جديد</button>
-                                <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
+                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> عميل جديد</button>
+                        <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
                         <table id="farmers-table" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -35,7 +35,6 @@
                                     <th>اسم العميل</th>
                                     <th> العنوان</th>
                                     <th>رقم الموبايل</th>
-                                    @*<th> الرصيد الافتتاحي  </th>*@
                                     <th>ملاحظات</th>
                                     <th>الرصيد(اجمالي الفواتير)</th>
                                     <th></th>
@@ -43,6 +42,27 @@
                             </thead>
                             <tbody class="tbody"></tbody>
                         </table>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <button onclick="next()">التالي</button>
+                                <input id="pageNumber" value="1" onchange="getToPageNumber()" />
+                                <button onclick="back()">السابق</button>
+                            </div>
+                            @*<div class="col-lg-4">
+                                <span>يعرض</span>
+                                <span>من</span>
+                                <span id="pageFrom">1</span>
+                                <span>الى</span>
+                                <span id="pageTo">20</span>
+                                <span>سجل</span>
+                            </div>*@
+                            <div class="col-lg-4">
+                                <span>عدد السجلات</span>:
+                                <span id="recordsTotal">40</span>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
@@ -77,9 +97,9 @@
                         <input type="text" class="form-control" id="Phone" placeholder="رقم موبايل العميل" />
                     </div>
                     @*<div class="form-group">
-                        <label for="OppeningBalance">الرصيد الافتتاحي </label>
-                        <input type="number" class="form-control" id="OppeningBalance" placeholder="رصيد العميل الافتتاحي" />
-                    </div>*@
+                            <label for="OppeningBalance">الرصيد الافتتاحي </label>
+                            <input type="number" class="form-control" id="OppeningBalance" placeholder="رصيد العميل الافتتاحي" />
+                        </div>*@
                     <div class="form-group">
                         <label for="Notes">ملاحظات</label>
                         <input type="text" class="form-control" id="Notes" placeholder="ملاحظات" />

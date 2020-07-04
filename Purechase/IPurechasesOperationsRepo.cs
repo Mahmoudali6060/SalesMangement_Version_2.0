@@ -17,5 +17,6 @@ namespace Purechase
         bool Delete(long id);
         void DeleteRelatedPurechase(long orderHeaderId);
         DashboardViewModel GetDashboardData();
+        IEnumerable<PurechasesHeader> GetPurchaseHeaderListByFarmerId(long farmerId);
     }
 }

@@ -85,6 +85,10 @@ namespace Purechase
             };
         }
 
+        public IEnumerable<PurechasesHeader> GetPurchaseHeaderListByFarmerId(long farmerId)
+        {
+            return purechasesHeaderEntity.Where(x => x.FarmerId == farmerId).Include("PurechasesDetialsList").AsEnumerable().OrderByDescending(x => x.PurechasesDate);
+        }
         #region Helper
         private IEnumerable<PurechasesDetials> SetPurechasesHeaderId(long purechasesHeaderId, IEnumerable<PurechasesDetials> purechasesDetails)
         {

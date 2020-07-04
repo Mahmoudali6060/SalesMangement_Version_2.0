@@ -13,5 +13,8 @@ namespace Database.Entities
         public decimal Incoming { get; set; }
         public decimal Outcoming { get; set; }
         public string Notes { get; set; }
+        public bool IsHidden { get; set; }
+        public long HeaderId { get; set; }
+        public long OrderId { get; set; }
     }
 }

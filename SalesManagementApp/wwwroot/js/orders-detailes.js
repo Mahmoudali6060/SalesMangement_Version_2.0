@@ -11,13 +11,12 @@ $(document).ready(function () {
         $('#btnAdd').hide();
     }
     else {
-        addOrderDetailsRow(1, 1, 1, 0);
+        addOrderDetailsRow(1, 1, 1, 1, 0);
         $('#btnUpdate').hide();
         $('#btnAdd').show();
     }
 
     $("#select_style_ul li").click(function () {
-        debugger;
         $("#Farmers").val($(this).attr("value"));
     });
 
@@ -74,7 +73,7 @@ function addFarmer() {
         type: "POST",
         success: function (result) {
             $('#formModal').modal('hide');
-            entity.id = result;
+            entity.Id = result;
             addFarmerToDropDownList(entity);
             //clearData();
             //getAll();
@@ -108,7 +107,6 @@ function fillFarmerEntity() {
         Name: $('#Name').val(),
         Address: $('#Address').val(),
         Phone: $('#Phone').val(),
-        //OppeningBalance: $('#OppeningBalance').val(),
         Notes: $('#Notes').val(),
     };
     return entity;
@@ -120,14 +118,12 @@ function clearFarmerData() {
     $('#Name').val("");
     $('#Address').val("");
     $('#Phone').val("");
-    //$('#OppenningBalance').val("");
     $('#Notes').val("");
-    $('#btnUpdate').hide();
-    $('#btnAdd').show();
+    //$('#btnUpdate').hide();
+    //$('#btnAdd').show();
     $('#Name').css('border-color', 'lightgrey');
     $('#Address').css('border-color', 'lightgrey');
     $('#Mobile').css('border-color', 'lightgrey');
-    //$('#OppenningBalance').css('border-color', 'lightgrey');
     $('#Notes').css('border-color', 'lightgrey');
     hideFarmerValidationMessage();
 }
@@ -169,7 +165,7 @@ function fillOrderHeaderData(orderHeader) {
 //Bindign Order Details in table
 function fillOrderDetailsData(orderDetails) {
     for (let item of orderDetails) {
-        addOrderDetailsRow(item.Quantity, item.Weight, item.Price, item.SellerId);
+        addOrderDetailsRow(item.Quantity, item.Weight, item.Price, item.SellingPrice, item.SellerId);
     }
 }
 function addFarmerToDropDownList(farmer) {
@@ -218,7 +214,6 @@ function fillEntity() {
 }
 //Preparing Order Header to send it to Back End
 function getOrderHeader() {
-    debugger;
     var orderHeader = {
         Id: $('#Id').val(),
         OrderDate: $('#OrderDate').val(),
@@ -251,7 +246,7 @@ function getOrderDetails() {
     return orderDetails;
 }
 //Adding Row in Order Details
-function addOrderDetailsRow(quantity, weight, price, sellerId) {
+function addOrderDetailsRow(quantity, weight, price, sellingPrice, sellerId) {
     orderDetailsRowNum += 1;
     orderDetailsNumList.push({ row: orderDetailsRowNum });
     html = '';
@@ -260,11 +255,11 @@ function addOrderDetailsRow(quantity, weight, price, sellerId) {
     html += '<td>' + '<input type="number" id="Quantity' + orderDetailsRowNum + '" value="' + quantity + '" >' + '</td>';
     html += '<td>' + '<input type="number" id="Weight' + orderDetailsRowNum + '"  value="' + weight + '" >' + '</td>';
     html += '<td>' + '<input type="number" id="Price' + orderDetailsRowNum + '"  value="' + price + '" >' + '</td>';
-    html += '<td>' + '<input type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + price + '" >' + '</td>';
+    html += '<td>' + '<input type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + sellingPrice + '" >' + '</td>';
     html += '<td>' + setSellersInOrderDetails(); + '</td>';
     html += '<td>' +
         '<i style="color:red;cursor:pointer" class="icon-trash"  onclick="removeOrderDetailsRow(' + orderDetailsRowNum + ')"></i>' +
-        '<i style="color:green;cursor:pointer" class="icon-plus-circle"  onclick="addOrderDetailsRow(' + 1 + ',' + 1 + ',' + 1 + ',' + 0 + ')"></i>' +
+        '<i style="color:green;cursor:pointer" class="icon-plus-circle"  onclick="addOrderDetailsRow(' + 1 + ',' + 1 + ',' + 1 + ',' + 1 + ',' + 0 + ')"></i>' +
         '</td>';
     html += '</tr>';
     $('.tbody-order-details').append(html); // Append new row of selected product

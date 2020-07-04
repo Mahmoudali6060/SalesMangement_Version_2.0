@@ -51,7 +51,7 @@ namespace Salesinvoice
         {
             context.Entry(salesinvoicesHeader).State = EntityState.Modified;
             context.SaveChanges();
-            DeletePurchaseDetails(salesinvoicesHeader.Id);
+            DeleteSalesinvoicesDetials(salesinvoicesHeader.Id);
             SetSalesinvoicesHeaderId(salesinvoicesHeader.Id, salesinvoicesHeader.SalesinvoicesDetialsList);
             AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList);
             return true;
@@ -60,7 +60,7 @@ namespace Salesinvoice
         public bool Delete(long id)
         {
             SalesinvoicesHeader salesinvoicesHeader = GetById(id);
-            DeletePurchaseDetails(id);
+            DeleteSalesinvoicesDetials(id);
             salesinvoicesHeaderEntity.Remove(salesinvoicesHeader);
             context.SaveChanges();
             return true;
@@ -99,7 +99,7 @@ namespace Salesinvoice
             context.SaveChanges();
         }
 
-        private void DeletePurchaseDetails(long headerId)
+        private void DeleteSalesinvoicesDetials(long headerId)
         {
             IEnumerable<SalesinvoicesDetials> purchaseDetails = context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == headerId).AsEnumerable();
             context.SalesinvoicesDetials.RemoveRange(purchaseDetails);

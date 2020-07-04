@@ -5,6 +5,7 @@ using System.Text;
 using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.Enums;
 
 namespace Safes
 {
@@ -22,12 +23,17 @@ namespace Safes
 
         public IEnumerable<Safe> GetAll()
         {
-            return safeEntity.AsEnumerable();
+            return safeEntity.Where(x => x.IsHidden == false).AsEnumerable();
         }
 
         public Safe GetById(long id)
         {
             return safeEntity.SingleOrDefault(s => s.Id == id);
+        }
+
+        public IEnumerable<Safe> GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum)
+        {
+            return safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).AsEnumerable();
         }
 
         public long Add(Safe safe)
@@ -56,9 +62,37 @@ namespace Safes
         public bool Delete(long id)
         {
             Safe safe = GetById(id);
-            safeEntity.Remove(safe);
-            context.SaveChanges();
-            return true;
+            if (safe != null)
+            {
+                safeEntity.Remove(safe);
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool DeleteByHeaderId(long header, AccountTypesEnum accountTypesEnum)
+        {
+            Safe safe = safeEntity.SingleOrDefault(x => x.HeaderId == header && x.AccountTypeId == (int)accountTypesEnum);
+            if (safe != null)
+            {
+                safeEntity.Remove(safe);
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool DeleteByOrderId(long orderId)
+        {
+            List<Safe> safes = safeEntity.Where(x => x.OrderId == orderId).ToList();
+            if (safes != null)
+            {
+                safeEntity.RemoveRange(safes);
+                context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using Database;
 using Database.Entities;
+using Farmers.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Shared.Enums;
 
 namespace Farmers
 {
@@ -24,7 +26,14 @@ namespace Farmers
         {
             return farmerEntity.Include("PurechasesHeader").AsEnumerable();
         }
-
+        public FarmListDTO GetAll(int currentPage)
+        {
+            return new FarmListDTO()
+            {
+                Total = farmerEntity.Count(),
+                List = farmerEntity.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).Include("PurechasesHeader").AsQueryable()
+            };
+        }
         public Farmer GetById(long id)
         {
             return farmerEntity.SingleOrDefault(s => s.Id == id);
@@ -60,5 +69,7 @@ namespace Farmers
             context.SaveChanges();
             return true;
         }
+
+
     }
 }

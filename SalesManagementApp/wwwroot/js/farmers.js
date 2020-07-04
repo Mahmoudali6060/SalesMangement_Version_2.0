@@ -2,12 +2,15 @@
     getAll();//Load Data in Table when documents is ready
     turnOnTab('formModal');//to allow tab in form modal >>>is called From shared.js
 });
-
+var farmersList = [];
+var currentPage = 1;
+var recordsTotal;
 //////////////////////////////////////CRUD Operations Methods
 //Loading data (list of entity)
 function getAll() {
-    debugger;
-    var farmersList = getAllFarmers();
+    var farmerDto = getAllFarmers(this.currentPage);
+    farmersList = farmerDto.List;
+    preparePagination(farmerDto);
     if (farmersList == []) return;
     var html = '';
     var i = 1;
@@ -22,7 +25,11 @@ function getAll() {
         //html += '<td>' + item.OppeningBalance + '</td>';
         html += '<td>' + item.Notes + '</td>';
         html += '<td>' + getFarmerBalance(item.PurechasesHeader) + '</td>';
-        html += '<td><i  style="color:red;cursor:pointer" class="icon-trash"  onclick="delele(' + item.Id + ')"></i>  <i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i></td>';
+        html += '<td>';
+        html += '<i style="color:red;cursor:pointer" class="icon-trash"  onclick = "delele(' + item.Id + ')"></i>';
+        html += '<i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i>';
+        html += '<i style="color:green;cursor:pointer" class="icon-paper" onclick="openAccountStatement(' + item.Id + ')"></i>';
+        html += '</td>';
         html += '</tr>';
         i++;
     });
@@ -33,6 +40,12 @@ function getAll() {
     }
 }
 
+function openAccountStatement(farmerId) {
+    //window.location.replace("http:");
+
+    var url = "/FarmerAccountStatement/Index?farmerId=" + farmerId;
+    window.location.href = url;
+}
 function getFarmerBalance(purechasesHeaderList) {
     let sum = 0;
     for (let item of purechasesHeaderList) {
@@ -195,7 +208,33 @@ function fillEntity() {
     return entity;
 }
 
+function next() {
+    currentPage++;
+    getAll();
+}
 
-////////////////////////////End Helper Methods 
+function back() {
+    currentPage--;
+    if (currentPage <= 0) {
+        $("#pageNumber").val(1);
+        currentPage = 1;
+        return;
+    }
+
+    getAll();
+}
+
+function getToPageNumber() {
+    currentPage = $("#pageNumber").val();
+    if (currentPage > 0)
+        this.getAll();
+}
+
+function preparePagination(farmerDto) {
+    recordsTotal = farmerDto.Total;
+    $("#recordsTotal").text(recordsTotal);
+    $("#pageNumber").val(this.currentPage);
+}
+////////////////////////////End Helper Methods
 
 

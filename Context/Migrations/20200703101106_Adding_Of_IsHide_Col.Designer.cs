@@ -4,14 +4,16 @@ using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Database.Migrations
 {
     [DbContext(typeof(EntitiesDbContext))]
-    partial class EntitiesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200703101106_Adding_Of_IsHide_Col")]
+    partial class Adding_Of_IsHide_Col
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,8 +207,6 @@ namespace Database.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<long>("HeaderId");
-
                     b.Property<decimal>("Incoming");
 
                     b.Property<bool>("IsHidden");
@@ -214,8 +214,6 @@ namespace Database.Migrations
                     b.Property<DateTime>("Modified");
 
                     b.Property<string>("Notes");
-
-                    b.Property<long>("OrderId");
 
                     b.Property<string>("OtherAccountName");
 

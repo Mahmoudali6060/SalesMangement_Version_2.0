@@ -25,17 +25,8 @@ namespace SalesManagementApp.Controllers
 
         public JsonResult List()
         {
-            //try
-            //{
-                var safeList = Helper.SerializeObject(_safeOperationsRepo.GetAll());
-                return Json(safeList);
-            //}
-            //catch (Exception ex)
-            //{
-            //    System.IO.File.WriteAllText(@"e:\errorLog.txt", ex.Message);
-            //    throw ex;
-            //}
-
+            var safeList = Helper.SerializeObject(_safeOperationsRepo.GetAll());
+            return Json(safeList);
         }
 
         public JsonResult GetById(long id)
@@ -44,9 +35,14 @@ namespace SalesManagementApp.Controllers
             return Json(safe);
         }
 
+        //public JsonResult GetByAccountId(long accountId)
+        //{
+        //    var safe = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(accountId));
+        //    return Json(safe);
+        //}
+
         public JsonResult Add(Safe safe)
         {
-          
             return Json(_safeOperationsRepo.Add(safe));
         }
 

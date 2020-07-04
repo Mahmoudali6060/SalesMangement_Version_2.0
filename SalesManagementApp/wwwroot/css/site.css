@@ -4,8 +4,8 @@ thead {
 }
 
 .material-table {
-    height: 600px;
-    overflow: auto;
+    /*height: 600px;
+    overflow: auto;*/
 }
 
 .table th, .table td {

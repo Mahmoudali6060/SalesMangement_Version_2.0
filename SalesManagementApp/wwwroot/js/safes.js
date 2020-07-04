@@ -89,8 +89,8 @@ function getAll() {
         html += '<tr>';
         html += '<td>' + i + '</td>';
         html += '<td>' + getLocalDate(item.Date) + '</td>';
-        html += '<td>' + item.Incoming + '</td>';
         html += '<td>' + item.Outcoming + '</td>';
+        html += '<td>' + item.Incoming + '</td>';
         html += '<td>' + setAccountTypeName(item) + '</td>';
         html += '<td>' + setAccountName(item) + '</td>';
         html += '<td>' + item.Notes + '</td>';
