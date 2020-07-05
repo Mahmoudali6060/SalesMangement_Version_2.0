@@ -106,6 +106,8 @@ function getSalesinvoiceDetails(id) {
         html += '<td style="width: 30%;">' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price + '</td>';
+        html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price + '</td>';//بياعة
+        html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price + '</td>';//مشال
         html += '<td>' + subTotal + '</td>';
         html += '</tr>';
 

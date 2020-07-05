@@ -80,6 +80,12 @@ function setFarmerAccountStatement() {
     $("#incomingTotal").text(incomingTotal);
     $("#outcomingTotal").text(outcomingTotal);
     $("#balance").text((Math.abs(incomingTotal - outcomingTotal)).toFixed(2));
+    if (incomingTotal > outcomingTotal) {
+        $("#balance-description").text("جملة ما له");
+    }
+    else {
+        $("#balance-description").text("جملة ما عليه");
+    }
 
     $('.tbody').html(html);
     var value = $("#search").val();
