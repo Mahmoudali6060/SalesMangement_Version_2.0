@@ -25,14 +25,14 @@ namespace SalesManagementApp.Controllers
 
         public JsonResult List(long sellerId)
         {
-            var safeList = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(sellerId, AccountTypesEnum.Clients));
+            var safeList = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(sellerId, AccountTypesEnum.Sellers));
             return Json(safeList);
         }
 
-        public JsonResult List(long sellerId, int currentPage)
+        public JsonResult GetPagedList(long sellerId, int currentPage)
         {
-            var safeList = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(sellerId, AccountTypesEnum.Clients, currentPage));
-            return Json(safeList);
+            var safeDto = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(sellerId, AccountTypesEnum.Sellers, currentPage));
+            return Json(safeDto);
         }
 
     }

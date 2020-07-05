@@ -1,11 +1,11 @@
 ﻿@{
-    ViewBag.Title = "كشف حساب عميل";
+    ViewBag.Title = "كشف حساب تاجر";
 }
 <div class="app-content content container-fluid">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-6 col-xs-12 mb-1">
-                <h5>كشف حساب العميل:  <span id="farmerName"></span></h5>
+                <h5>كشف حساب التاجر:  <span id="sellerName"></span></h5>
             </div>
             <div class="content-header-right breadcrumbs-right breadcrumbs-top col-md-6 col-xs-12">
                 <div id="myTable" class="breadcrumb-wrapper col-xs-12">
@@ -14,13 +14,13 @@
                             <a href="index.html">الرئيسية</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            كشف حساب عميل
+                            كشف حساب تاجر
                         </li>
                     </ol>
                 </div>
             </div>
         </div>
-        <input type="hidden" id="farmerId" value="@ViewBag.farmerId" />
+        <input type="hidden" id="sellerId" value="@ViewBag.sellerId" />
         <div class="content-body">
             <div class="row">
                 <div class="col s12">
@@ -54,7 +54,7 @@
                                 <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
                             </div>
                         </div>
-                        <table id="farmer-account-statement-header-table" class="table table-bordered table-hover">
+                        <table id="seller-account-statement-header-table" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>م </th>
@@ -91,6 +91,6 @@
 </div>
 
 <script src="/Scripts/jquery-1.10.2.js"></script>
-<script src="/js/farmer-account-statement-index.js"></script>
+<script src="/js/seller-account-statement-index.js"></script>
 <script src="/js/shared.js"></script>
 <script src='/report/js/example.js'></script>

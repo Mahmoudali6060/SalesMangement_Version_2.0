@@ -20,7 +20,11 @@ function getAll() {
         html += '<td>' + item.Phone + '</td>';
         //html += '<td>' + item.OppeningBalance + '</td>';
         html += '<td>' + item.Notes + '</td>';
-        html += '<td><i  style="color:red;cursor:pointer" class="icon-trash"  onclick="delele(' + item.Id + ')"></i>  <i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i></td>';
+        html += '<td>';
+        html += '<i style="color:red;cursor:pointer" class="icon-trash" onclick="delele(' + item.Id + ')"></i>';
+        html += '<i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i>';
+        html += '<i style="color:green;cursor:pointer" class="icon-paper" onclick="openAccountStatement(' + item.Id + ')"></i>';
+        html += '</td >';
         html += '</tr>';
         i++;
     });
@@ -30,6 +34,12 @@ function getAll() {
         filter();
     }
 }
+
+function openAccountStatement(sellerId) {
+    var url = "/SellerAccountStatement/Index?sellerId=" + sellerId;
+    window.location.href = url;
+}
+
 //Loading the data(entity) based upon entityId
 function getById(id) {
     hideAllValidationMessage();
@@ -64,7 +74,7 @@ function add() {
 }
 //Updating exsited entity by entityId
 function update() {
-    
+
     if (!validateForm()) return false;
     var entity = fillEntity();
 
@@ -110,9 +120,9 @@ function delele(id) {
                             text: "تم حذف السجل بنجاح !",
                             type: "success"
                         },
-                        function () {
-                            getAll();
-                        });
+                            function () {
+                                getAll();
+                            });
                 })
                 .error(function (data) {
                     swal("لم يتم الحذف", "حدث خطأ في الحذف", "خطأ");
@@ -183,5 +193,5 @@ function fillEntity() {
     };
     return entity;
 }
-////////////////////////////End Helper Methods 
+////////////////////////////End Helper Methods
 

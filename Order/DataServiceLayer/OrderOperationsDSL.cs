@@ -76,7 +76,7 @@ namespace Order.DataServiceLayer
                 AccountId = entity.FarmerId,
                 AccountTypeId = (int)AccountTypesEnum.Clients,
                 Incoming = entity.Total,
-                Notes = $"فاتورة رقم :{entity.Id}",
+                Notes = $"الفاتورة رقم :{entity.Id}",
                 IsHidden = true,
                 HeaderId = entity.Id,
                 OrderId = orderId
@@ -90,7 +90,7 @@ namespace Order.DataServiceLayer
                 Date = entity.SalesinvoicesDate,
                 AccountId = entity.SellerId,
                 AccountTypeId = (int)AccountTypesEnum.Sellers,
-                Incoming = total,
+                Outcoming = total,
                 Notes = $"كشف رقم :{entity.Id}",
                 IsHidden = true,
                 HeaderId = entity.Id,
@@ -111,7 +111,9 @@ namespace Order.DataServiceLayer
             _purechasesOperationsRepo.Update(purechasesHeader);
 
             //[3] Update Safe 
-            _safeOperationsRepo.DeleteByHeaderId(purechasesHeader.Id, AccountTypesEnum.Clients);
+            _safeOperationsRepo.DeleteByOrderId(entity.OrderHeader.Id);
+
+            //_safeOperationsRepo.DeleteByHeaderId(purechasesHeader.Id, AccountTypesEnum.Clients);
             var safe = PrepareFarmerSafeEntity(purechasesHeader, entity.OrderHeader.Id);
             _safeOperationsRepo.Add(safe);
 
@@ -191,6 +193,7 @@ namespace Order.DataServiceLayer
             decimal total = 0;
             foreach (OrderDetails item in orderHeader.OrderDetails)
             {
+                total = 0;
                 sellerId = item.SellerId;
                 ICollection<SalesinvoicesDetials> salesinvoicesDetials = new List<SalesinvoicesDetials>();
                 salesinvoicesDetials.Add(new SalesinvoicesDetials()
@@ -209,7 +212,6 @@ namespace Order.DataServiceLayer
                     SalesinvoicesDetialsList = salesinvoicesDetials
                 };
                 _salesinvoicesOperationsRepo.Add(salesinvoicesHeader);
-
                 _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers);
                 var sellerSafe = PrepareSellerSafeEntity(salesinvoicesHeader, total, orderHeader.OrderHeader.Id);
                 _safeOperationsRepo.Add(sellerSafe);

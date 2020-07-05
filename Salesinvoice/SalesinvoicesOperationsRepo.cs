@@ -5,6 +5,7 @@ using System.Text;
 using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Safes;
 
 namespace Salesinvoice
 {
@@ -12,11 +13,12 @@ namespace Salesinvoice
     {
         private EntitiesDbContext context;
         private DbSet<SalesinvoicesHeader> salesinvoicesHeaderEntity;
-
-        public SalesinvoicesOperationsRepo(EntitiesDbContext context)
+        private ISafeOperationsRepo safeOperationsRepo;
+        public SalesinvoicesOperationsRepo(EntitiesDbContext context, ISafeOperationsRepo safeOperationsRepo)
         {
             this.context = context;
             salesinvoicesHeaderEntity = context.Set<SalesinvoicesHeader>();
+            this.safeOperationsRepo = safeOperationsRepo;
         }
 
         public IEnumerable<SalesinvoicesHeader> GetAll()
