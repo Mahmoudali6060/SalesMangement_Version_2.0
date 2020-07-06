@@ -76,20 +76,24 @@
                                                         <th>م</th>
                                                         <th> عدد</th>
                                                         <th> الوزن   </th>
-                                                        <th> سعر (الشراء)</th>
-                                                        <th>سعر (البيع)</th>
-                                                        <th>اسم التاجر</th>
+                                                        <th>  سعر الشراء(للعميل)</th>
+                                                        <th> سعر البيع (للتاجر)</th>
+                                                        <th style="width: 40%;">اسم التاجر</th>
                                                         <th>حذف</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody class="tbody-order-details">
                                                 </tbody>
                                             </table>
+                                            <i class="icon-plus-circle" onclick="addOrderDetailsRow(' + 1 + ',' + 1 + ',' + 1 + ',' + 1 + ',' + 0 + ')">اضافة صف جديد</i>'
                                         </div>
                                     </form>
 
                                     <div class="row">
+                                        <br />
+
                                         <div class="col-lg-12">
+
                                             <button id="btnAdd" onclick="add();" class="btn btn-primary">
                                                 <i class="icon-check2"></i> حفظ
                                             </button>
@@ -117,7 +121,7 @@
             <div class="modal-header">
 
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title" id="formModalLabel">اضافة/تعديل عميل</h4>
+                <h4 class="modal-title" id="formModalLabel">اضافة عميل</h4>
             </div>
             <div class="modal-body">
                 <form action="" method="post">
@@ -129,7 +133,7 @@
                         <input type="text" class="form-control validate" required id="Name" placeholder="اسم العميل" />
                         <p style="color:red" id="NameIsRequired">ادخل اسم العميل</p>
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <label for="Address">العنوان </label>
                         <input type="text" class="form-control" id="Address" placeholder="عنوان العميل" />
                     </div>
@@ -140,12 +144,51 @@
                     <div class="form-group">
                         <label for="Notes">ملاحظات</label>
                         <input type="text" class="form-control" id="Notes" placeholder="ملاحظات" />
-                    </div>
+                    </div>*@
                 </form>
             </div>
             <div class="modal-footer">
                 <input type="submit" class="btn btn-primary" id="btnAdd" onclick="addFarmer();" value="حفظ" />
-                <input type="submit" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="update();" value="تعديل" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">الغاء</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="formSellerModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="formModalLabel">اضافة تاجر</h4>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="Id" placeholder="Id" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="SellerName">اسم التاجر <i style="color:red">*</i></label>
+                        <input type="text" class="form-control validate" required id="SellerName-input" placeholder="اسم التاجر" />
+                        <p style="color:red" id="SellerNameIsRequired">ادخل اسم التاجر</p>
+                    </div>
+                    @*<div class="form-group">
+                        <label for="Address">العنوان </label>
+                        <input type="text" class="form-control" id="Address" placeholder="عنوان التاجر" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Phone">رقم الموبايل</label>
+                        <input type="text" class="form-control" id="Phone" placeholder="رقم موبايل التاجر" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Notes">ملاحظات</label>
+                        <input type="text" class="form-control" id="Notes" placeholder="ملاحظات" />
+                    </div>*@
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" id="btnAdd" onclick="addSeller();" value="حفظ" />
                 <button type="button" class="btn btn-default" data-dismiss="modal">الغاء</button>
             </div>
         </div>

@@ -1,10 +1,39 @@
 ﻿
 $(document).ready(function () {
     fillFarmersDropDownList(); //to fill farmers select
-    $('#OrderDate').val(getLocalDateForInput(new Date().toUTCString()));
-    var sellers;
-    var farmers;
-    let orderHeaderId = $('#Id').val();
+    $('#OrderDate').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
+
+    let orderHeaderId = parseInt($('#Id').val());
+    manageActionButtonsAppearance(orderHeaderId);
+
+    $("#select_style_ul li").click(function () {
+        $("#Farmers").val($(this).attr("value"));
+    });
+
+});
+
+//////////////////Variables
+var sellers;
+var farmers;
+orderDetailsRowNum = 0;
+orderDetailsNumList = [];//to fill rowIds list
+///>>>END Variables
+
+//Setting of Farmer in select 
+function fillFarmersDropDownList() {
+    this.farmers = getAllFarmers();
+    var options = ''; //For farmer dropdownList
+    options += '<option>اختر اسم العميل</option>';
+    var i = 1;
+    $.each(this.farmers, function (key, item) {
+        options += '<option value="' + item.Id + '">' + item.Name + '</option>';//Add Option to Client DropDownList
+        i++;
+    });
+    $('#Farmers').html(options);
+    //$('#Farmers').selectstyle();///Make a selecte seachable
+}
+//Show/Hide Add and Update buttons
+function manageActionButtonsAppearance(orderHeaderId) {
     if (orderHeaderId > 0) {
         getById(orderHeaderId);
         $('#btnUpdate').show();
@@ -15,20 +44,11 @@ $(document).ready(function () {
         $('#btnUpdate').hide();
         $('#btnAdd').show();
     }
+}
 
-    $("#select_style_ul li").click(function () {
-        $("#Farmers").val($(this).attr("value"));
-    });
-
-
-});
-
-orderDetailsRowNum = 0;
-orderDetailsNumList = [];//to fill rowIds list
 //>>>CRUD Operations Methods
 //Loading the data(entity) based upon entityId
 function getById(id) {
-    ;
     $.ajax({
         url: "/Orders/GetById/" + id,
         type: "GET",
@@ -38,7 +58,6 @@ function getById(id) {
             var orderHeader = JSON.parse(result);
             fillOrderHeaderData(orderHeader);
             fillOrderDetailsData(orderHeader.OrderDetails);
-
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -62,76 +81,6 @@ function add() {
         }
     });
 }
-
-//Adding new entity
-function addFarmer() {
-    if (!validateFarmForm()) return false;
-    var entity = fillFarmerEntity();
-    $.ajax({
-        url: "/Farmers/Add",
-        data: entity,
-        type: "POST",
-        success: function (result) {
-            $('#formModal').modal('hide');
-            entity.Id = result;
-            addFarmerToDropDownList(entity);
-            //clearData();
-            //getAll();
-        },
-        error: function (errormessage) {
-            alert(errormessage.responseText);
-        }
-    });
-}
-
-//Valdidation using jquery
-function validateFarmForm() {
-    var isValid = true;
-    if ($('#Name').val().trim() == "") {
-        $('#Name').css('border-color', 'Red');
-        $('#NameIsRequired').show();
-        isValid = false;
-    }
-    else {
-        $('#Name').css('border-color', 'lightgrey');
-        $('#NameIsRequired').hide();
-    }
-
-    return isValid;
-}
-
-
-function fillFarmerEntity() {
-    var entity = {
-        Id: $('#Id').val(),
-        Name: $('#Name').val(),
-        Address: $('#Address').val(),
-        Phone: $('#Phone').val(),
-        Notes: $('#Notes').val(),
-    };
-    return entity;
-}
-
-//Clearing the textboxes
-function clearFarmerData() {
-    $('#Id').val("");
-    $('#Name').val("");
-    $('#Address').val("");
-    $('#Phone').val("");
-    $('#Notes').val("");
-    //$('#btnUpdate').hide();
-    //$('#btnAdd').show();
-    $('#Name').css('border-color', 'lightgrey');
-    $('#Address').css('border-color', 'lightgrey');
-    $('#Mobile').css('border-color', 'lightgrey');
-    $('#Notes').css('border-color', 'lightgrey');
-    hideFarmerValidationMessage();
-}
-
-function hideFarmerValidationMessage() {
-    $('#NameIsRequired').hide();
-}
-
 //Updating exsited entity by entityId
 function update() {
     var entity = fillEntity();
@@ -147,14 +96,12 @@ function update() {
         }
     });
 }
-//Deleteing entity by Id
-//>>>End CRUD Operations Methods
 
+//>>>End CRUD Operations Methods
 
 //>>>Helper Methods 
 //Binding Order Header
 function fillOrderHeaderData(orderHeader) {
-    debugger;
     $('#Id').val(orderHeader.Id);
     var orderDate = getLocalDateForInput(orderHeader.OrderDate);
     $('#OrderDate').val(orderDate);
@@ -168,40 +115,39 @@ function fillOrderDetailsData(orderDetails) {
         addOrderDetailsRow(item.Quantity, item.Weight, item.Price, item.SellingPrice, item.SellerId);
     }
 }
-function addFarmerToDropDownList(farmer) {
-    var option = '<option selected="selected" value="' + farmer.Id + '">' + farmer.Name + '</option>';//Add Option to Client DropDownList
-    $('#Farmers').append(option);
-    //$('#Farmers').selectstyle();///Make a selecte seachable
+//Adding Row in Order Details
+function addOrderDetailsRow(quantity, weight, price, sellingPrice, sellerId) {
+    orderDetailsRowNum += 1;
+    orderDetailsNumList.push({ row: orderDetailsRowNum });
+    html = '';
+    html += '<tr id="orderDetailsRow' + orderDetailsRowNum + '">';
+    html += '<td>' + orderDetailsRowNum + '</td>';
+    html += '<td>' + '<input class="form-control" type="number" id="Quantity' + orderDetailsRowNum + '" value="' + quantity + '" >' + '</td>';
+    html += '<td>' + '<input class="form-control" type="number" id="Weight' + orderDetailsRowNum + '"  value="' + weight + '" >' + '</td>';
+    html += '<td>' + '<input class="form-control" type="number" id="Price' + orderDetailsRowNum + '"  value="' + price + '" >' + '</td>';
+    html += '<td>' + '<input class="form-control" type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + sellingPrice + '" >' + '</td>';
+    html += '<td>' + setSellersInOrderDetails(orderDetailsRowNum); + '</td>';
+    html += '<td>' +
+        '<i class="icon-trash"  onclick="removeOrderDetailsRow(' + orderDetailsRowNum + ')"></i>' +
+        '</td>';
+    html += '</tr>';
+    $('.tbody-order-details').append(html); // Append new row of selected product
+    fillSellersDropDownList(sellerId);
 }
 
-
-
-function fillFarmersDropDownList() {
-    this.farmers = getAllFarmers();
-    var options = ''; //For farmer dropdownList
-    //options += '<option>اختر اسم العميل</option>';
-    var i = 1;
-    $.each(this.farmers, function (key, item) {
-        options += '<option value="' + item.Id + '">' + item.Name + '</option>';//Add Option to Client DropDownList
-        i++;
-    });
-    $('#Farmers').html(options);
-    //$('#Farmers').selectstyle();///Make a selecte seachable
-}
-//Adding All Sellers to select in Order Detials 
+//Adding All Sellers to select in Order Detials
 function fillSellersDropDownList(sellerId) {
     sellers = getAllSellers();
     var options = ''; //For sellers dropdownList
     var i = 1;
-    //options += '<option>اختر اسم التاجر</option>';
-
+    options += '<option>اختر اسم التاجر</option>';
     $.each(sellers, function (key, item) {
         options += '<option value="' + item.Id + '">' + item.Name + '</option>';//Add Option to sellers DropDownList
         i++;
     });
     $('#Sellers' + orderDetailsRowNum + '').html(options);
     if (sellerId > 0) $('#Sellers' + orderDetailsRowNum + '').val(sellerId);
-    $('#Sellers').selectstyle();
+    //$('#Sellers').selectstyle();
 
 }
 //Filling entity for (Add or Update)
@@ -223,14 +169,8 @@ function getOrderHeader() {
     };
     return orderHeader;
 }
-
-function getFarmerById() {
-    debugger;
-    console.log($('#Farmers').val());
-}
 //Preparing Order Details 
 function getOrderDetails() {
-
     var orderDetails = [];
     for (let orderDetailsNum of orderDetailsNumList) {
         var orderDetailsRow = [];
@@ -245,26 +185,6 @@ function getOrderDetails() {
     }
     return orderDetails;
 }
-//Adding Row in Order Details
-function addOrderDetailsRow(quantity, weight, price, sellingPrice, sellerId) {
-    orderDetailsRowNum += 1;
-    orderDetailsNumList.push({ row: orderDetailsRowNum });
-    html = '';
-    html += '<tr id="orderDetailsRow' + orderDetailsRowNum + '">';
-    html += '<td>' + orderDetailsRowNum + '</td>';
-    html += '<td>' + '<input type="number" id="Quantity' + orderDetailsRowNum + '" value="' + quantity + '" >' + '</td>';
-    html += '<td>' + '<input type="number" id="Weight' + orderDetailsRowNum + '"  value="' + weight + '" >' + '</td>';
-    html += '<td>' + '<input type="number" id="Price' + orderDetailsRowNum + '"  value="' + price + '" >' + '</td>';
-    html += '<td>' + '<input type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + sellingPrice + '" >' + '</td>';
-    html += '<td>' + setSellersInOrderDetails(); + '</td>';
-    html += '<td>' +
-        '<i style="color:red;cursor:pointer" class="icon-trash"  onclick="removeOrderDetailsRow(' + orderDetailsRowNum + ')"></i>' +
-        '<i style="color:green;cursor:pointer" class="icon-plus-circle"  onclick="addOrderDetailsRow(' + 1 + ',' + 1 + ',' + 1 + ',' + 1 + ',' + 0 + ')"></i>' +
-        '</td>';
-    html += '</tr>';
-    $('.tbody-order-details').append(html); // Append new row of selected product
-    fillSellersDropDownList(sellerId);
-}
 //Removing Selected row in Order Detials
 function removeOrderDetailsRow(rowNum) {
     ;
@@ -272,23 +192,160 @@ function removeOrderDetailsRow(rowNum) {
     $('table#order-details-list tr#orderDetailsRow' + rowNum + '').remove();
 }
 //Preparing a selection of Seller included in Order Details
-function setSellersInOrderDetails() {
-    var html = '<select id="Sellers' + orderDetailsRowNum + '">';
-    html += '</select>';
+function setSellersInOrderDetails(orderDetailsRowNum) {
+    var html = '<div class="row"><div class="col-lg-8">';
+    html += '<select  class="form-control" id="Sellers' + orderDetailsRowNum + '">';
+    html += '</select></div>';
+    html += '<div class="col-lg-4"><button type="button"  class="btn btn-info" data-toggle="modal" data-target="#formSellerModal" onclick="clearSellerData(' + orderDetailsRowNum + ');"> تاجر جديد</button></div>';
+
     return html;
 }
-$(".ss_ul li").click(function () {
-    alert(this.id); // id of clicked li by directly accessing DOMElement property
-    alert($(this).attr('id')); // jQuery's .attr() method, same but more verbose
-    alert($(this).html()); // gets innerHTML of clicked li
-    alert($(this).text()); // gets text contents of clicked li
-});
 //Routing to Index Page
 function cancel() {
-    debugger;
     window.location.href = '/Orders/Index?today=1';
 }
 //>>>End Helper Methods
 
 
+///>>>Farm Methods
+//Adding new farm entity
+function addFarmer() {
+    if (!validateFarmForm()) return false;
+    var entity = fillFarmerEntity();
+    $.ajax({
+        url: "/Farmers/Add",
+        data: entity,
+        type: "POST",
+        success: function (result) {
+            $('#formModal').modal('hide');
+            entity.Id = result;
+            addFarmerToDropDownList(entity);
+            //clearData();
+            //getAll();
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
+//Valdidation using jquery
+function validateFarmForm() {
+    var isValid = true;
+    if ($('#Name').val().trim() == "") {
+        $('#Name').css('border-color', 'Red');
+        $('#NameIsRequired').show();
+        isValid = false;
+    }
+    else {
+        $('#Name').css('border-color', 'lightgrey');
+        $('#NameIsRequired').hide();
+    }
 
+    return isValid;
+}
+//Fill Farm entity for adding and updating
+function fillFarmerEntity() {
+    var entity = {
+        //Id: $('#Id').val(),
+        Name: $('#Name').val(),
+        //Address: $('#Address').val(),
+        //Phone: $('#Phone').val(),
+        //Notes: $('#Notes').val(),
+    };
+    return entity;
+}
+//Clearing the textboxes
+function clearFarmerData() {
+    //$('#Id').val("");
+    $('#Name').val("");
+    //$('#Address').val("");
+    //$('#Phone').val("");
+    //$('#Notes').val("");
+    $('#Name').css('border-color', 'lightgrey');
+    //$('#Address').css('border-color', 'lightgrey');
+    //$('#Mobile').css('border-color', 'lightgrey');
+    //$('#Notes').css('border-color', 'lightgrey');
+    hideFarmerValidationMessage();
+}
+function hideFarmerValidationMessage() {
+    $('#NameIsRequired').hide();
+}
+
+function addFarmerToDropDownList(farmer) {
+    var option = '<option selected="selected" value="' + farmer.Id + '">' + farmer.Name + '</option>';//Add Option to Client DropDownList
+    $('#Farmers').append(option);
+    //$('#Farmers').selectstyle();///Make a selecte seachable
+}
+
+//>>>END Farm Methods
+
+
+///>>>Seller Methods
+//Adding new seller entity
+function addSeller() {
+    if (!validateSellerForm()) return false;
+    var entity = fillSellerEntity();
+    $.ajax({
+        url: "/Sellers/Add",
+        data: entity,
+        type: "POST",
+        success: function (result) {
+            $('#formSellerModal').modal('hide');
+            entity.Id = result;
+            addSellerToDropDownList(entity);
+            //clearData();
+            //getAll();
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
+//Valdidation using jquery
+function validateSellerForm() {
+    var isValid = true;
+    if ($('#SellerName-input').val().trim() == "") {
+        $('#SellerName-input').css('border-color', 'Red');
+        $('#NameIsRequired').show();
+        isValid = false;
+    }
+    else {
+        $('#SellerName-input').css('border-color', 'lightgrey');
+        $('#NameIsRequired').hide();
+    }
+
+    return isValid;
+}
+//Fill Farm entity for adding and updating
+function fillSellerEntity() {
+    var entity = {
+        Id: $('#Id').val(),
+        Name: $('#SellerName-input').val()
+    };
+    return entity;
+}
+selectedRowNumber = 0;
+//Clearing the textboxes
+function clearSellerData(rowNumber) {
+    selectedRowNumber = rowNumber;
+    //$('#Id').val("");
+    $('#SellerName-input').val("");
+    //$('#Address').val("");
+    //$('#Phone').val("");
+    //$('#Notes').val("");
+    $('#SellerName-input').css('border-color', 'lightgrey');
+    //$('#Address').css('border-color', 'lightgrey');
+    //$('#Mobile').css('border-color', 'lightgrey');
+    //$('#Notes').css('border-color', 'lightgrey');
+    hideSellerValidationMessage();
+}
+function hideSellerValidationMessage() {
+    $('#SellerNameIsRequired').hide();
+}
+
+function addSellerToDropDownList(seller) {
+    var option = '<option selected="selected" value="' + seller.Id + '">' + seller.Name + '</option>';//Add Option to Seller DropDownList
+    $('#Sellers' + selectedRowNumber).append(option);
+    //$('#Farmers').selectstyle();///Make a selecte seachable
+}
+//>>>END Farm Methods

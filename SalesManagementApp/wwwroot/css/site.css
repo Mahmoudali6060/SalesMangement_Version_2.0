@@ -34,15 +34,36 @@ thead {
     }
 
 
-.icon-printer4:hover{
-    font-size:20px;
-    cursor:pointer;
-}
-
-.icon-search-plus {
-    color:green !important;
-}
-.icon-search-plus:hover {
+.icon-printer4:hover {
     font-size: 20px;
     cursor: pointer;
 }
+
+.icon-search-plus {
+    color: green !important;
+}
+
+    .icon-search-plus:hover {
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+.icon-trash {
+    color: red;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+    .icon-trash:hover {
+        font-size: 25px;
+    }
+
+.icon-plus-circle {
+    color: green;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+    .icon-plus-circle:hover {
+        font-size: 25px;
+    }

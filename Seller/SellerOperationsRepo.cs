@@ -30,11 +30,11 @@ namespace Sellers
             return sellerEntity.SingleOrDefault(s => s.Id == id);
         }
 
-        public bool Add(Seller seller)
+        public long Add(Seller seller)
         {
             context.Entry(seller).State = EntityState.Added;
             context.SaveChanges();
-            return true;
+            return seller.Id;
         }
 
         public bool Update(Seller seller)
