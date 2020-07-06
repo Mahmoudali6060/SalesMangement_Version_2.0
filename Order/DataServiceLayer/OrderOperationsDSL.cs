@@ -201,6 +201,8 @@ namespace Order.DataServiceLayer
                     Quantity = item.Quantity,
                     Weight = item.Weight,
                     Price = item.SellingPrice,
+                    Byaa = 3 * item.Quantity,
+                    Mashal = 3 * item.Quantity,
                     OrderDate = orderHeader.OrderHeader.Created
                 });
                 total += (item.Weight * item.SellingPrice) + 6 * item.Quantity;
@@ -209,7 +211,8 @@ namespace Order.DataServiceLayer
                 {
                     SalesinvoicesDate = orderHeader.OrderHeader.OrderDate,
                     SellerId = sellerId,
-                    SalesinvoicesDetialsList = salesinvoicesDetials
+                    SalesinvoicesDetialsList = salesinvoicesDetials,
+                    Total=total
                 };
                 _salesinvoicesOperationsRepo.Add(salesinvoicesHeader);
                 _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers);

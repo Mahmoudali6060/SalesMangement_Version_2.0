@@ -4,6 +4,12 @@
 });
 var salesinvoiceHeaders = [];
 var headerId;
+var selectedSalesinvoiceHeader;
+var totalQuantity = 0;
+var totalWight = 0;
+var totalByaa = 0;
+var totalMashal = 0;
+
 //>>>CRUD Operations Methods
 //Loading Salesinvoice Header Data
 function loadData(isToday) {
@@ -62,7 +68,70 @@ function delele(id) {
         });
 }
 //>>>END CRUD Operations Methods
+function update() {
+    var entity = selectedSalesinvoiceHeader;
+    $.ajax({
+        url: "/Salesinvoices/Update",
+        data: entity,
+        type: "POST",
+        success: function (result) {
+            $('#listModal').modal('hide');
+            //cancel();
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
 
+function onSelectedMashalChange(rowNumber) {
+    var index = rowNumber - 1;
+    selectedSalesinvoiceHeader.SalesinvoicesDetialsList[index].Mashal = parseInt($("#Mashal" + rowNumber).val());
+    updateTotal();
+}
+
+function onSelectedByaaChange(rowNumber) {
+    var index = rowNumber - 1;
+    selectedSalesinvoiceHeader.SalesinvoicesDetialsList[index].Byaa = parseInt($("#Byaa" + rowNumber).val());
+    updateTotal();
+}
+
+function onTotalMashalChange() {
+    totalMashal = parseInt($("#totalMashal").val());
+    updateTotal(null, totalMashal);
+}
+
+function onTotalByaaChange() {
+    totalByaa = parseInt($("#totalByaa").val());
+    updateTotal(totalByaa, null);
+}
+
+function updateTotal(updatedTotalByaa, updatedTotalMashal) {
+    var subTotal;
+    var total = 0;
+    var totalByaa = 0;
+    var totalMashal = 0;
+
+    var i = 1;
+    for (let item of selectedSalesinvoiceHeader.SalesinvoicesDetialsList) {
+        subTotal = 0;
+        subTotal += (item.Price * item.Weight);
+        $("#SubTotal" + i).text(Math.ceil(subTotal));
+        i++;
+        total += subTotal;
+        totalByaa = updatedTotalByaa == undefined ? totalByaa += item.Byaa : updatedTotalByaa;
+        totalMashal = updatedTotalMashal == undefined ? totalMashal += item.Mashal : updatedTotalMashal;
+    }
+    total += totalByaa + totalMashal;
+    $("#total").text(Math.ceil(total));
+    $("#totalByaa").val(Math.ceil(totalByaa));
+    $("#totalMashal").val(Math.ceil(totalMashal));
+
+    selectedSalesinvoiceHeader.Total = total;
+    selectedSalesinvoiceHeader.ByaaTotal = totalByaa;
+    selectedSalesinvoiceHeader.MashalTotal = totalMashal;
+
+}
 //>>>Helper Methods 
 //Binding Salesinvoice Header --LoadData() call it
 function setSalesinvoiceHeader() {
@@ -93,29 +162,32 @@ function setSalesinvoiceHeader() {
 function getSalesinvoiceDetails(id) {
 
     headerId = id;
-    var selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == id);
+    selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == id);
     var html = '';
-    var totalQuantity = 0;
-    var totalWight = 0;
+    totalQuantity = 0;
+    totalWight = 0;
+    totalByaa = 0;
+    totalMashal = 0;
     var total = 0;
     for (var i = 0; i < selectedSalesinvoiceHeader.SalesinvoicesDetialsList.length; i++) {
         let rowNumber = i + 1;
-
         html += '<tr>';
-        let subTotal = (selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + (6 * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity);
+        let subTotal = (selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal;
         html += '<td style="width: 30%;">' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price + '</td>';
-        html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price + '</td>';//بياعة
-        html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price + '</td>';//مشال
-        html += '<td>' + subTotal + '</td>';
+        html += '<td>' + '<input class="form-control" type="number" id="Byaa' + rowNumber + '" value="' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa + '"  onchange="onSelectedByaaChange(' + rowNumber + ')">' + '</td>';
+        html += '<td>' + '<input readonly="readonly" class="form-control" type="number" id="Mashal' + rowNumber + '" value="' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal + '" onchange="onSelectedMashalChange(' + rowNumber + ')">' + '</td>';
+        html += '<td id="SubTotal' + rowNumber + '">' + subTotal + '</td>';
         html += '</tr>';
 
         total += subTotal;
         totalQuantity += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity;
         totalWight += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight;
+        totalByaa += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa;
+        totalMashal += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal;
     }
-    html = prepareSalesinvoiceTotal(html, total, totalWight, totalQuantity);
+    html = prepareSalesinvoiceTotal(html, selectedSalesinvoiceHeader, totalWight, totalQuantity );
     $('tbody.salesinvoice-details').html(html);
     prepareSalesinvoiceHeader(selectedSalesinvoiceHeader);
     $('#listModal').modal('show');
@@ -129,13 +201,14 @@ function prepareSalesinvoiceHeader(selectedSalesinvoiceHeader) {
     $('#Date').text(getLocalDate(selectedSalesinvoiceHeader.SalesinvoicesDate));
 }
 //Prepare Salesinvoice footer to bind it in modal
-function prepareSalesinvoiceTotal(html, total, totalWight, totalQuantity) {
+function prepareSalesinvoiceTotal(html, selectedSalesinvoiceHeader, totalWight, totalQuantity) {
     html += '<tr style="background-color: #f7edbd;font-size: 20px;font-weight: bold;">';
     html += '<td>' + totalQuantity + '</td>';
     html += '<td>' + totalWight + '</td>';
     html += '<td>' + '' + '</td>';
-    html += '<td>' + Math.ceil(total) + '</td>';
-
+    html += '<td>' + '<input readonly="readonly" class="form-control" type="number" id="totalByaa" value="' + selectedSalesinvoiceHeader.ByaaTotal + '"  onchange="onTotalByaaChange()" >' + '</td>';
+    html += '<td>' + '<input class="form-control" type="number" id="totalMashal" value="' + selectedSalesinvoiceHeader.MashalTotal + '" onchange="onTotalMashalChange()" >' + '</td>';
+    html += '<td><span id="total">' + Math.ceil(selectedSalesinvoiceHeader.Total) + '</span></td>';
     html += '</tr>';
     return html;
 }
@@ -233,12 +306,14 @@ function getReportContent(selectedSalesinvoiceHeader) {
     var html = '';
     var totalQuantity = 0;
     var totalWight = 0;
+
+
     var total = 0;
     for (var i = 0; i < selectedSalesinvoiceHeader.SalesinvoicesDetialsList.length; i++) {
         let rowNumber = i + 1;
 
         html += '<tr>';
-        let subTotal = (selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + (6 * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity);
+        let subTotal = (selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal;
         html += '<td>' + convertToIndiaNumbers(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity) + '</td>';
         html += '<td>' + convertToIndiaNumbers(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + '</td>';
         html += '<td>' + convertToIndiaNumbers(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price) + '</td>';
@@ -248,6 +323,8 @@ function getReportContent(selectedSalesinvoiceHeader) {
         total += subTotal;
         totalQuantity += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity;
         totalWight += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight;
+
+
     }
     html = prepareSalesinvoiceTotalReport(html, total, totalWight, totalQuantity);
     return html;

@@ -91,6 +91,7 @@ namespace Salesinvoice
             foreach (var item in salesinvoicesDetails)
             {
                 item.SalesinvoicesHeaderId = salesinvoicesHeaderId;
+                item.Id = 0;
             }
             return salesinvoicesDetails;
         }
