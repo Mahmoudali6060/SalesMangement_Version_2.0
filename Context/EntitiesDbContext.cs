@@ -24,6 +24,7 @@ namespace Database
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Safe> Safes { get; set; }
+        public DbSet<Company> Companys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,13 @@ namespace Database
             modelBuilder.Entity<Order_Purechase>();
             modelBuilder.Entity<User>();
             modelBuilder.Entity<Role>();
+            modelBuilder.Entity<Company>();
+
+
+            modelBuilder.Entity<User>()
+            .HasOne(a => a.Company)
+            .WithOne(a => a.User)
+            .HasForeignKey<Company>(c => c.UserId);
 
             base.OnModelCreating(modelBuilder);
         }

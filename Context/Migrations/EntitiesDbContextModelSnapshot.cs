@@ -15,10 +15,41 @@ namespace Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("TabarakV2")
+                .HasDefaultSchema("SalesManagement")
                 .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Database.Entities.Company", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address");
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<string>("LogoUrl");
+
+                    b.Property<DateTime>("Modified");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<long?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("Companys");
+                });
 
             modelBuilder.Entity("Database.Entities.Farmer", b =>
                 {
@@ -321,6 +352,8 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long?>("CompanyId");
+
                     b.Property<DateTime>("Created");
 
                     b.Property<string>("FirstName");
@@ -340,6 +373,13 @@ namespace Database.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Database.Entities.Company", b =>
+                {
+                    b.HasOne("Database.Entities.User", "User")
+                        .WithOne("Company")
+                        .HasForeignKey("Database.Entities.Company", "UserId");
                 });
 
             modelBuilder.Entity("Database.Entities.OrderDetails", b =>

@@ -35,6 +35,7 @@ namespace SalesManagementApp.Controllers
 
                 HttpContext.Session.SetString("_LoggedUserRole", user.Role.Name);
                 HttpContext.Session.SetString("_LoggedUserName", user.Username);
+                HttpContext.Session.SetString("_UserData", user.ToString());
 
                 return RedirectToAction(loggedUser.ActionName, loggedUser.ControllerName);
             }
@@ -43,7 +44,7 @@ namespace SalesManagementApp.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("Login","Account");
+            return RedirectToAction("Login", "Account");
         }
 
     }

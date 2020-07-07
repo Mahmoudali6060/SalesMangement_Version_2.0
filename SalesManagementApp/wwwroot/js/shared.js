@@ -269,9 +269,8 @@ function fillDatabaseEntity() {
 }
 
 function loadDatabaseEntity() {
-    debugger;
-    $('#ConnectionString').val("Server =.\\SQLEXPRESS; Database = TabarakDbV2; Trusted_Connection = True;");
-    $('#DatabaseName').val("TabarakDbV2");
+    $('#ConnectionString').val("Server =.\\SQLEXPRESS; Database = SalesManagement; Trusted_Connection = True;");
+    $('#DatabaseName').val("SalesManagement");
     $("#FilePath").val("E://Backup_Dabase");
 }
 

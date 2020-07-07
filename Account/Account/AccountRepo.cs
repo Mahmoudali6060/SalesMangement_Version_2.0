@@ -21,7 +21,7 @@ namespace Account.Account
         }
         public User Login(string username, string password)
         {
-            return context.Users.Include("Role").FirstOrDefault(x => x.Username == username && x.Password == password);
+            return context.Users.Include("Role").Include("Company").FirstOrDefault(x => x.Username == username && x.Password == password);
         }
 
         public LoggedUser RedirectLoggedUser(User user)

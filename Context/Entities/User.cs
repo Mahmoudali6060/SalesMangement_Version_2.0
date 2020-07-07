@@ -11,6 +11,9 @@ namespace Database.Entities
         public string Username { get; set; }
         public string Password { get; set; }
         public long RoleId { get; set; }
+        public long? CompanyId { get; set; }
         public virtual Role Role { get; set; }
+        public virtual Company Company { get; set; }
+
     }
 }

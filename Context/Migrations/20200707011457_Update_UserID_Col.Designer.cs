@@ -10,17 +10,48 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(EntitiesDbContext))]
-    [Migration("20200703141252_Adding_Of_HeaderId_Co")]
-    partial class Adding_Of_HeaderId_Co
+    [Migration("20200707011457_Update_UserID_Col")]
+    partial class Update_UserID_Col
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("TabarakV2")
+                .HasDefaultSchema("SalesManagement")
                 .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Database.Entities.Company", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address");
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<string>("LogoUrl");
+
+                    b.Property<DateTime>("Modified");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<long?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("Companys");
+                });
 
             modelBuilder.Entity("Database.Entities.Farmer", b =>
                 {
@@ -155,9 +186,15 @@ namespace Database.Migrations
 
                     b.Property<decimal>("Commission");
 
+                    b.Property<decimal>("CommissionRate");
+
                     b.Property<DateTime>("Created");
 
+                    b.Property<decimal>("Descent");
+
                     b.Property<long>("FarmerId");
+
+                    b.Property<decimal>("Gift");
 
                     b.Property<DateTime>("Modified");
 
@@ -217,6 +254,8 @@ namespace Database.Migrations
 
                     b.Property<string>("Notes");
 
+                    b.Property<long>("OrderId");
+
                     b.Property<string>("OtherAccountName");
 
                     b.Property<decimal>("Outcoming");
@@ -232,7 +271,11 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Byaa");
+
                     b.Property<DateTime>("Created");
+
+                    b.Property<decimal>("Mashal");
 
                     b.Property<DateTime>("Modified");
 
@@ -259,7 +302,11 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("ByaaTotal");
+
                     b.Property<DateTime>("Created");
+
+                    b.Property<decimal>("MashalTotal");
 
                     b.Property<DateTime>("Modified");
 
@@ -268,6 +315,8 @@ namespace Database.Migrations
                     b.Property<DateTime>("SalesinvoicesDate");
 
                     b.Property<long>("SellerId");
+
+                    b.Property<decimal>("Total");
 
                     b.HasKey("Id");
 
@@ -305,6 +354,8 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long?>("CompanyId");
+
                     b.Property<DateTime>("Created");
 
                     b.Property<string>("FirstName");
@@ -324,6 +375,13 @@ namespace Database.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Database.Entities.Company", b =>
+                {
+                    b.HasOne("Database.Entities.User", "User")
+                        .WithOne("Company")
+                        .HasForeignKey("Database.Entities.Company", "UserId");
                 });
 
             modelBuilder.Entity("Database.Entities.OrderDetails", b =>
