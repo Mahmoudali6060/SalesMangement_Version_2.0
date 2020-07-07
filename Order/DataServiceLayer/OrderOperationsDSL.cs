@@ -7,6 +7,7 @@ using Order.Models;
 using Purechase;
 using Safes;
 using Salesinvoice;
+using Shared.Classes;
 using Shared.Enums;
 
 namespace Order.DataServiceLayer
@@ -19,7 +20,6 @@ namespace Order.DataServiceLayer
         private ISalesinvoicesOperationsRepo _salesinvoicesOperationsRepo;
         private IOrder_PurechaseOperationsRepo _order_PurechaseOperationsRepo;
         private ISafeOperationsRepo _safeOperationsRepo;
-
 
         public OrderOperationsDSL(IOrderHeaderOperationsRepo orderHeaderOperationsRepo, IOrderDetailsOperationsRepo orderDetailsOperationsRepo, IPurechasesOperationsRepo purechasesOperationsRepo, ISalesinvoicesOperationsRepo salesinvoicesOperationsRepo, IOrder_PurechaseOperationsRepo order_PurechaseOperationsRepo, ISafeOperationsRepo safeOperationsRepo)
         {
@@ -154,6 +154,8 @@ namespace Order.DataServiceLayer
             List<OrderDetails> orderDetails = new List<OrderDetails>();
             orderDetails = (List<OrderDetails>)orderHeader.OrderDetails;
             decimal total = 0;
+            int totalQuantity = 0;
+
             for (int i = 0; i < orderDetails.Count; i++)
             {
                 if (purechasesDetials.Find(x => x.Price == orderDetails[i].Price) == null)
@@ -172,8 +174,9 @@ namespace Order.DataServiceLayer
                     purechasesDetials.Find(x => x.Price == orderDetails[i].Price).Weight += orderDetails[i].Weight;
                 }
                 decimal decent = (orderDetails[i].Quantity);
-                decimal gift = decimal.Parse((0.5 * orderDetails[i].Quantity).ToString());
+                decimal gift = decimal.Parse((AppSettings.GiftRate * orderDetails[i].Quantity).ToString());
                 total += orderDetails[i].Weight * orderDetails[i].Price - (gift + decent);//
+                totalQuantity += orderDetails[i].Quantity;
             }
             ///Prepare purechase Header
             return new PurechasesHeader()
@@ -182,8 +185,11 @@ namespace Order.DataServiceLayer
                 FarmerId = orderHeader.OrderHeader.FarmerId,
                 PurechasesDetialsList = purechasesDetials,
                 Created = orderHeader.OrderHeader.Created,
-                Total = total - total * 0.09M,//صافي الفاتورة
-                Commission = total * 0.09M
+                Total = total - total * AppSettings.CommissionRate,//صافي الفاتورة
+                Commission = total * AppSettings.CommissionRate,
+                CommissionRate = AppSettings.CommissionRate * 100,
+                Gift = decimal.Parse((AppSettings.GiftRate * totalQuantity).ToString()),
+                Descent = totalQuantity
             };
         }
         private void AddSalesinvoicesEntity(OrderDTO orderHeader)
@@ -212,7 +218,7 @@ namespace Order.DataServiceLayer
                     SalesinvoicesDate = orderHeader.OrderHeader.OrderDate,
                     SellerId = sellerId,
                     SalesinvoicesDetialsList = salesinvoicesDetials,
-                    Total=total
+                    Total = total
                 };
                 _salesinvoicesOperationsRepo.Add(salesinvoicesHeader);
                 _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers);

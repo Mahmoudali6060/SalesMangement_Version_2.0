@@ -5,6 +5,7 @@
 var purechaseHeaders = [];
 let headerId;
 var total = 0;
+var selectedPurechaseHeader;
 //>>>CRUD Operations Methods
 //Loading Purechase Header Data
 function loadData(isToday) {
@@ -27,6 +28,22 @@ function loadData(isToday) {
 function getById(id) {
     window.location.href = '/Purechases/Details/' + id + '';
 }
+function update() {
+    var entity = selectedPurechaseHeader;
+    $.ajax({
+        url: "/Purechases/Update",
+        data: entity,
+        type: "POST",
+        success: function (result) {
+            $('#listModal').modal('hide');
+            //cancel();
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
+
 //Deletig Purechase (Header and Details)
 function delele(id) {
     swal({
@@ -88,9 +105,8 @@ function setPurechaseHeader() {
 }
 //Getting Related PurechaseDetails to show them in modal 
 function getPurechaseDetails(id) {
-    debugger;
     headerId = id;
-    var selectedPurechaseHeader = purechaseHeaders.find(x => x.Id == id);
+    selectedPurechaseHeader = purechaseHeaders.find(x => x.Id == id);
     var html = '';
     var totalQuantity = 0;
     total = 0;
@@ -112,7 +128,7 @@ function getPurechaseDetails(id) {
 
     preparePurechaseHeader(selectedPurechaseHeader);
 
-    preparePurechaseFooter(totalQuantity, total, selectedPurechaseHeader);
+    preparePurechaseFooter(total, selectedPurechaseHeader);
     $('#listModal').modal('show');
     return html;
 }
@@ -123,22 +139,17 @@ function preparePurechaseHeader(selectedPurechaseHeader) {
     $('#Date').text(getLocalDate(selectedPurechaseHeader.PurechasesDate));
 }
 //Prepare Purechase footer to bind it in modal
-function preparePurechaseFooter(totalQuantity, total, selectedPurechaseHeader) {
-    if (selectedPurechaseHeader.Commission == 0)
-        selectedPurechaseHeader.Commission = Math.ceil(total * .09);
-
+function preparePurechaseFooter(total, selectedPurechaseHeader) {
+    
+    $('#CommissionPercentage').val(selectedPurechaseHeader.CommissionRate);
     $('#Commission').val(selectedPurechaseHeader.Commission);
-
     $('#Nawlon').val(selectedPurechaseHeader.Nawlon);
-
-    $('#Descent').val(totalQuantity);
-    let gift = Math.ceil(totalQuantity * .5);
-    $('#Gift').val(gift);
-
+    $('#Descent').val(Math.ceil(selectedPurechaseHeader.Descent));
+    $('#Gift').val(Math.ceil(selectedPurechaseHeader.Gift));
     $('#Total').text(Math.ceil(total));
-    let totalDiscounts = Math.ceil(totalQuantity + selectedPurechaseHeader.Commission + selectedPurechaseHeader.Nawlon + gift);
+    let totalDiscounts = Math.ceil(parseInt(selectedPurechaseHeader.Commission) + parseInt(selectedPurechaseHeader.Descent) + parseInt(selectedPurechaseHeader.Nawlon) + parseInt(selectedPurechaseHeader.Gift));
     $('#TotalDiscounts').text(totalDiscounts);
-    $('#TotalAfterDiscount').text(Math.ceil(total - totalDiscounts));
+    $('#TotalAfterDiscount').text(Math.ceil(selectedPurechaseHeader.Total));
 }
 //Filtering
 function filter() {
@@ -178,6 +189,7 @@ function updateTotalDiscounts() {
         totalDiscounts = parseFloat(commission) + parseFloat(descent) + parseFloat(gift) + parseFloat(nawlon);
     }
     $("#TotalDiscounts").text(Math.ceil(totalDiscounts));
+
 }
 //Updating Total After Discount
 function updateTotalAfterDiscount() {
@@ -187,6 +199,12 @@ function updateTotalAfterDiscount() {
     let totalAfterDiscount = parseFloat(total) - parseFloat(totalDiscounts);
 
     $("#TotalAfterDiscount").text(Math.ceil(totalAfterDiscount));
+    selectedPurechaseHeader.Total = $("#TotalAfterDiscount").text();
+    selectedPurechaseHeader.Gift = $("#Gift").val();
+    selectedPurechaseHeader.Descent = $("#Descent").val();
+    selectedPurechaseHeader.Commission = $("#Commission").val();
+    selectedPurechaseHeader.Nawlon = $("#Nawlon").val();
+    selectedPurechaseHeader.CommissionRate = $("#CommissionPercentage").val();
 }
 
 function updateInPrinting() {
@@ -216,7 +234,7 @@ function preparePurechasesEntity() {
 }
 //print report
 function printReport() {
-   
+
     updateInPrinting();
 
     var reportHeader = prepareReportHeader();

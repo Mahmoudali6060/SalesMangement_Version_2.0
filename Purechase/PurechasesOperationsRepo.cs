@@ -95,6 +95,7 @@ namespace Purechase
             foreach (var item in purechasesDetails)
             {
                 item.PurechasesHeaderId = purechasesHeaderId;
+                item.Id = 0;
             }
             return purechasesDetails;
         }
