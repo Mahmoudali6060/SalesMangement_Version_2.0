@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
     let isToday = parseInt($("#today").val());
     loadData(isToday);
 });
@@ -130,6 +131,7 @@ function getPurechaseDetails(id) {
 
     preparePurechaseFooter(total, selectedPurechaseHeader);
     $('#listModal').modal('show');
+    $("#purchase-header").attr("src", getImagesUrl() + "purchase-header.jpg");
     return html;
 }
 //Prepare Purechase Header to bind it in modal
@@ -140,7 +142,7 @@ function preparePurechaseHeader(selectedPurechaseHeader) {
 }
 //Prepare Purechase footer to bind it in modal
 function preparePurechaseFooter(total, selectedPurechaseHeader) {
-    
+
     $('#CommissionPercentage').val(selectedPurechaseHeader.CommissionRate);
     $('#Commission').val(selectedPurechaseHeader.Commission);
     $('#Nawlon').val(selectedPurechaseHeader.Nawlon);
@@ -267,7 +269,7 @@ function prepareReportHeader() {
                             <table style="width:100%;border:none;">
                                 <tr>
                                     <td style="width:100%;border:none;">
-                                        <img src="/images/a.jpg" style="width:100%;" />
+                                        <img src="`+ `/images/El_Senosy/` + `/purchase-header.jpg" style="width:100%;" />
                                     </td>
                                 </tr>
                             </table>

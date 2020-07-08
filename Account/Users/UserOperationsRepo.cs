@@ -37,12 +37,12 @@ namespace Account.Users
                 context.SaveChanges();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 System.IO.File.WriteAllText(@"e:\errorLog.txt", ex.Message);
                 throw ex;
             }
-          
+
         }
 
         public bool Update(User user)
@@ -60,7 +60,7 @@ namespace Account.Users
             return true;
         }
 
-        public User Login(string username,string password)
+        public User Login(string username, string password)
         {
             return context.Users.Include("Role").FirstOrDefault(x => x.Username == username && x.Password == username);
         }

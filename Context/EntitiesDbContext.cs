@@ -42,12 +42,6 @@ namespace Database
             modelBuilder.Entity<Role>();
             modelBuilder.Entity<Company>();
 
-
-            modelBuilder.Entity<User>()
-            .HasOne(a => a.Company)
-            .WithOne(a => a.User)
-            .HasForeignKey<Company>(c => c.UserId);
-
             base.OnModelCreating(modelBuilder);
         }
 

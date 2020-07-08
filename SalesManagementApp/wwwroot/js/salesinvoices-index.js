@@ -252,7 +252,7 @@ function prepareReportHeader() {
                             <table style="width:100%;border:none;">
                                 <tr>
                                     <td style="width:100%;border:none;" align="center">
-                                        <img src="/images/salesinvoice-Header.jpg" />
+                                        <img src="/images/El_Senosy//salesinvoice-Header.jpg" />
                                     </td>
                                 </tr>
                                 <tr>

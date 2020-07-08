@@ -80,6 +80,12 @@ function getFarmerById(farmerId) {
     return farmer;
 }
 
+
+function getImagesUrl() {
+    var imagesUrl = $("#imagesUrl").val();
+    return imagesUrl;
+}
+
 function getAllSellers() {
     var sellers = [];
     $.ajax({

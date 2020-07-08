@@ -35,8 +35,7 @@ namespace SalesManagementApp.Controllers
 
                 HttpContext.Session.SetString("_LoggedUserRole", user.Role.Name);
                 HttpContext.Session.SetString("_LoggedUserName", user.Username);
-                HttpContext.Session.SetString("_UserData", user.ToString());
-
+                HttpContext.Session.SetString("_ImagesUrl", user.Company.LogoUrl);
                 return RedirectToAction(loggedUser.ActionName, loggedUser.ControllerName);
             }
         }
