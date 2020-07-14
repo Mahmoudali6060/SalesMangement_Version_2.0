@@ -8,7 +8,7 @@ var recordsTotal;
 //////////////////////////////////////CRUD Operations Methods
 //Loading data (list of entity)
 function getAll() {
-    var farmerDto = getAllFarmers(this.currentPage);
+    var farmerDto = getPagedFarmers(this.currentPage);
     farmersList = farmerDto.List;
     preparePagination(farmerDto);
     if (farmersList == []) return;
@@ -34,10 +34,34 @@ function getAll() {
         i++;
     });
     $('.tbody').html(html);
-    var value = $("#search").val().toLowerCase();
-    if (value != "") {
-        filter();
-    }
+    //var value = $("#search").val().toLowerCase();
+    //if (value != "") {
+    //    filter();
+    //}
+}
+
+function getPagedFarmers(currentPage) {
+    var keyword = $("#search").val().toLowerCase();
+    var url = "/Farmers/GetPagedList?currentPage=" + currentPage;
+    if (!isEmpty(keyword))
+        url = url + "&&keyword=" + keyword;
+
+    var farmers = [];
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        cache: false,
+        success: function (result) {
+            farmers = JSON.parse(result);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    return farmers;
 }
 
 function openAccountStatement(farmerId) {
@@ -181,15 +205,15 @@ function validateForm() {
 }
 //Filtering data
 function filter() {
-    var value = $("#search").val().toLowerCase();
-    if (value != "") {
-        $("#farmers-table tbody tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-    }
-    else {
-        getAll();
-    }
+    //var value = $("#search").val().toLowerCase();
+    //if (value != "") {
+    //    $("#farmers-table tbody tr").filter(function () {
+    //        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    //    });
+    //}
+    //else {
+    getAll();
+    //}
 }
 //Hide validation messages
 function hideAllValidationMessage() {

@@ -27,7 +27,14 @@
                 <div id="admin" class="col s12">
                     <div class="card material-table">
                         <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> عميل جديد</button>
-                        <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control col-lg-6" id="search" name="search" placeholder="ادخل كلمة البحث" />
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="button" class="btn btn-info" onclick="filter();" value="بحث" />
+                            </div>
+                        </div>
                         <table id="farmers-table" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -49,13 +56,13 @@
                                 <button onclick="back()">السابق</button>
                             </div>
                             @*<div class="col-lg-4">
-                                <span>يعرض</span>
-                                <span>من</span>
-                                <span id="pageFrom">1</span>
-                                <span>الى</span>
-                                <span id="pageTo">20</span>
-                                <span>سجل</span>
-                            </div>*@
+                                    <span>يعرض</span>
+                                    <span>من</span>
+                                    <span id="pageFrom">1</span>
+                                    <span>الى</span>
+                                    <span id="pageTo">20</span>
+                                    <span>سجل</span>
+                                </div>*@
                             <div class="col-lg-4">
                                 <span>عدد السجلات</span>:
                                 <span id="recordsTotal">40</span>

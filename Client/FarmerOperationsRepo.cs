@@ -26,12 +26,21 @@ namespace Farmers
         {
             return farmerEntity.Include("PurechasesHeader").AsEnumerable();
         }
-        public FarmListDTO GetAll(int currentPage)
+        public FarmListDTO GetAll(int currentPage, string keyword)
         {
+            var list = farmerEntity
+                .Include("PurechasesHeader")
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                list = list.Where(x => x.Name.Contains(keyword) || x.Address.Contains(keyword));
+            }
+
             return new FarmListDTO()
             {
                 Total = farmerEntity.Count(),
-                List = farmerEntity.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).Include("PurechasesHeader").AsQueryable()
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
         public Farmer GetById(long id)

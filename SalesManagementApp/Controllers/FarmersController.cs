@@ -27,9 +27,9 @@ namespace SalesManagementApp.Controllers
             return Json(farmerList);
         }
 
-        public JsonResult GetPagedList(int currentPage)
+        public JsonResult GetPagedList(int currentPage,string keyword)
         {
-            return Json(Helper.SerializeObject(_farmerOperationsRepo.GetAll(currentPage)));
+            return Json(Helper.SerializeObject(_farmerOperationsRepo.GetAll(currentPage,keyword)));
         }
 
         public JsonResult GetById(long id)

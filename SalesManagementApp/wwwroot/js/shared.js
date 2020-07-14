@@ -325,5 +325,12 @@ function getReportHead(title) {
     return html;
 }
 
+function isEmpty(text) {
+    if (text == undefined || text == "" || text == null) {
+        return true;
+    }
+    return false;
+}
+
 
 

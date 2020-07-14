@@ -10,7 +10,7 @@ namespace Farmers
     public interface IFarmerOperationsRepo
     {
         IEnumerable<Farmer> GetAll();
-        FarmListDTO GetAll(int currentPage);
+        FarmListDTO GetAll(int currentPage, string keyword);
         Farmer GetById(long id);
         long Add(Farmer entity);
         bool Update(Farmer entity);
