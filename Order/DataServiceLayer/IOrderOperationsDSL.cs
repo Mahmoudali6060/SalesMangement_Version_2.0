@@ -10,7 +10,6 @@ namespace Order.DataServiceLayer
    public interface IOrderOperationsDSL
     {
         IEnumerable<OrderHeader> GetAll();
-        IEnumerable<OrderHeader> GetAllDaily();
         OrderListDTO GetAll(int currentPage, string keyword,bool isToday);
         OrderHeader GetById(long id);
         bool Add(OrderDTO entity);

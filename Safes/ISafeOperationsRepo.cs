@@ -11,6 +11,7 @@ namespace Safes
     public interface ISafeOperationsRepo
     {
         IEnumerable<Safe> GetAll();
+        SafeDTO GetAll(int currentPage, string keyword);
         Safe GetById(long id);
         long Add(Safe entity);
         bool Update(Safe entity);

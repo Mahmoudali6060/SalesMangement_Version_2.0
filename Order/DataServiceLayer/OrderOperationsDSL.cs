@@ -40,11 +40,6 @@ namespace Order.DataServiceLayer
         {
             return _orderHeaderOperationsRepo.GetAll(currentPage, keyword, isToday);
         }
-        public IEnumerable<OrderHeader> GetAllDaily()
-        {
-            return _orderHeaderOperationsRepo.GetAllDaily();
-
-        }
         public OrderHeader GetById(long id)
         {
             return _orderHeaderOperationsRepo.GetById(id);

@@ -1,4 +1,5 @@
 ﻿using Database.Entities;
+using Salesinvoice.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Salesinvoice
    public interface ISalesinvoicesOperationsRepo 
     {
         IEnumerable<SalesinvoicesHeader> GetAll();
-        IEnumerable<SalesinvoicesHeader> GetAllDaily();
+        SalesinvoiceListDTO GetAll(int currentPage, string keyword, bool isToday);
         SalesinvoicesHeader GetById(long id);
         bool Add(SalesinvoicesHeader entity);
         bool Update(SalesinvoicesHeader entity);

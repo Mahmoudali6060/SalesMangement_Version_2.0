@@ -6,33 +6,61 @@ using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Safes;
+using Salesinvoice.DTOs;
+using Shared.Enums;
 
 namespace Salesinvoice
 {
     public class SalesinvoicesOperationsRepo : ISalesinvoicesOperationsRepo
     {
         private EntitiesDbContext context;
-        private DbSet<SalesinvoicesHeader> salesinvoicesHeaderEntity;
-        private ISafeOperationsRepo safeOperationsRepo;
+        private DbSet<SalesinvoicesHeader> _salesinvoicesHeaderEntity;
+        private ISafeOperationsRepo _safeOperationsRepo;
         public SalesinvoicesOperationsRepo(EntitiesDbContext context, ISafeOperationsRepo safeOperationsRepo)
         {
             this.context = context;
-            salesinvoicesHeaderEntity = context.Set<SalesinvoicesHeader>();
-            this.safeOperationsRepo = safeOperationsRepo;
+            _salesinvoicesHeaderEntity = context.Set<SalesinvoicesHeader>();
+            this._safeOperationsRepo = safeOperationsRepo;
         }
 
         public IEnumerable<SalesinvoicesHeader> GetAll()
         {
-            return salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().OrderByDescending(x => x.Id);
+            return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().OrderByDescending(x => x.Id);
         }
+
+        public SalesinvoiceListDTO GetAll(int currentPage, string keyword, bool isToday)
+        {
+            var list = _salesinvoicesHeaderEntity
+                .Include("SalesinvoicesDetialsList")
+                .Include("Seller")
+                .OrderByDescending(x => x.Id)
+                .AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                list = list.Where(x => x.Id.ToString().Contains(keyword) || x.Seller.Name.Contains(keyword) || x.SalesinvoicesDate.ToString("dd/MM/yyyy").Contains(keyword));
+            }
+
+            if (isToday)
+            {
+                list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+            }
+
+            return new SalesinvoiceListDTO()
+            {
+                Total = _salesinvoicesHeaderEntity.Count(),
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
+            };
+        }
+
         public IEnumerable<SalesinvoicesHeader> GetAllDaily()
         {
-            return salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
+            return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
         }
 
         public SalesinvoicesHeader GetById(long id)
         {
-            return salesinvoicesHeaderEntity.SingleOrDefault(s => s.Id == id);
+            return _salesinvoicesHeaderEntity.SingleOrDefault(s => s.Id == id);
         }
 
         public bool Add(SalesinvoicesHeader salesinvoicesHeader)
@@ -63,7 +91,7 @@ namespace Salesinvoice
         {
             SalesinvoicesHeader salesinvoicesHeader = GetById(id);
             DeleteSalesinvoicesDetials(id);
-            salesinvoicesHeaderEntity.Remove(salesinvoicesHeader);
+            _salesinvoicesHeaderEntity.Remove(salesinvoicesHeader);
             context.SaveChanges();
             return true;
         }

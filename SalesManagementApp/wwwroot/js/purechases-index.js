@@ -1,29 +1,21 @@
 ﻿
 $(document).ready(function () {
-    let isToday = parseInt($("#today").val());
-    loadData(isToday);
+    getAll();
 });
 var purechaseHeaders = [];
 let headerId;
 var total = 0;
 var selectedPurechaseHeader;
+var currentPage = 1;
+var recordsTotal;
 //>>>CRUD Operations Methods
 //Loading Purechase Header Data
-function loadData(isToday) {
-    var url = isToday == 1 ? "/Purechases/GetAllDaily" : "/Purechases/List";
-    $.ajax({
-        url: url,
-        type: "GET",
-        contentType: "application/json;charset=utf-8",
-        dataType: "json",
-        success: function (result) {
-            purechaseHeaders = JSON.parse(result);
-            setPurechaseHeader();
-        },
-        error: function (errormessage) {
-            alert(errormessage.responseText);
-        }
-    });
+function getAll() {
+    let isToday = parseInt($("#today").val());
+    var purchaseDto = getPagedPurchases(this.currentPage, isToday);
+    preparePagination(purchaseDto);
+    purechaseHeaders = purchaseDto.List;
+    setPurechaseHeader();
 }
 //Going to Details Page to Edit Purechase
 function getById(id) {
@@ -72,7 +64,7 @@ function delele(id) {
                             type: "success"
                         },
                             function () {
-                                loadData();
+                                getAll();
                             });
                 })
                 .error(function (data) {
@@ -99,10 +91,7 @@ function setPurechaseHeader() {
         i++;
     });
     $('.tbody').html(html);
-    var value = $("#search").val();
-    if (value !== "") {
-        filter();
-    }
+   
 }
 //Getting Related PurechaseDetails to show them in modal 
 function getPurechaseDetails(id) {
@@ -153,18 +142,7 @@ function preparePurechaseFooter(total, selectedPurechaseHeader) {
     $('#TotalDiscounts').text(totalDiscounts);
     $('#TotalAfterDiscount').text(Math.ceil(selectedPurechaseHeader.Total));
 }
-//Filtering
-function filter() {
-    var value = $("#search").val();
-    if (value !== "") {
-        $("#purechase-header-table tbody tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-        });
-    }
-    else {
-        loadData();
-    }
-}
+
 //gettting nawlon value is changed
 function updateTotal() {
     updateCommission();
@@ -258,7 +236,7 @@ function printReport() {
     //    debugger;
     //    newWin.close();
     //    let isToday = parseInt($("#today").val());
-    //    loadData(isToday);
+    //    getAll(isToday);
     //}, 300);
 
 }
@@ -397,5 +375,68 @@ function prepareReportFooter() {
     reportFooter += author;
     return reportFooter;
 }
+
+function getPagedPurchases(currentPage, isToday) {
+    var keyword = $("#search").val().toLowerCase();
+    var url = "/Purechases/GetPagedList?currentPage=" + currentPage;
+    if (!isEmpty(keyword))
+        url = url + "&&keyword=" + keyword;
+    if (isToday == 1) {
+        url = url + "&&isToday=" + true;
+    }
+
+    var purechaseHeaders = [];
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        cache: false,
+        success: function (result) {
+            purechaseHeaders = JSON.parse(result);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    return purechaseHeaders;
+}
+
+//Filtering data
+function filter() {
+    this.currentPage = 1;
+    getAll();
+}
+///Pagination Methods
+function next() {
+    currentPage++;
+    getAll();
+}
+
+function back() {
+    currentPage--;
+    if (currentPage <= 0) {
+        $("#pageNumber").val(1);
+        currentPage = 1;
+        return;
+    }
+
+    getAll();
+}
+
+function getToPageNumber() {
+    currentPage = $("#pageNumber").val();
+    if (currentPage > 0)
+        this.getAll();
+}
+
+function preparePagination(farmerDto) {
+    recordsTotal = farmerDto.Total;
+    $("#recordsTotal").text(recordsTotal);
+    $("#pageNumber").val(this.currentPage);
+}
+//End Pagination Methods
+
 
 //>>>END Helper Methods 

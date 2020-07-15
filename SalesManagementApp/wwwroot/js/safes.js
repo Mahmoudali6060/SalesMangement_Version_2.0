@@ -7,6 +7,9 @@
 });
 var sellers = [];
 var farmers = [];
+var safeList = [];
+var currentPage = 1;
+var recordsTotal;
 //////////////////////////////// Drop Down List Handling
 function hideAllDropDownLists() {
     $(".ClientId").hide();
@@ -79,7 +82,10 @@ function fillSellersDropDownList(id) {
 function getAll() {
     this.sellers = getAllSellers();
     this.farmers = getAllFarmers();
-    var safesList = getAllSafes();
+    var safeDto = getPagedSafes(this.currentPage);
+    var safesList = safeDto.List;
+    preparePagination(safeDto);
+
     if (safesList == []) return;
     var html = '';
     var i = 1;
@@ -99,10 +105,7 @@ function getAll() {
         i++;
     });
     $('.tbody').html(html);
-    var value = $("#search").val().toLowerCase();
-    if (value != "") {
-        filter();
-    }
+
 }
 
 function setAccountTypeName(item) {
@@ -314,18 +317,6 @@ function validateForm() {
 
     return isValid;
 }
-//Filtering data
-function filter() {
-    var value = $("#search").val().toLowerCase();
-    if (value != "") {
-        $("#safes-table tbody tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-    }
-    else {
-        getAll();
-    }
-}
 //Hide validation messages
 function hideAllValidationMessage() {
     $('#NameIsRequired').hide();
@@ -358,4 +349,63 @@ function fillEntity() {
     }
     return entity;
 }
+
+function getPagedSafes(currentPage) {
+    var keyword = $("#search").val().toLowerCase();
+    var url = "/Safes/GetPagedList?currentPage=" + currentPage;
+    if (!isEmpty(keyword))
+        url = url + "&&keyword=" + keyword;
+
+    var safes = [];
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        cache: false,
+        success: function (result) {
+            safes = JSON.parse(result);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    return safes;
+}
+//Filtering data
+function filter() {
+    this.currentPage = 1;
+    getAll();
+}
+///Pagination Methods
+function next() {
+    currentPage++;
+    getAll();
+}
+
+function back() {
+    currentPage--;
+    if (currentPage <= 0) {
+        $("#pageNumber").val(1);
+        currentPage = 1;
+        return;
+    }
+
+    getAll();
+}
+
+function getToPageNumber() {
+    currentPage = $("#pageNumber").val();
+    if (currentPage > 0)
+        this.getAll();
+}
+
+function preparePagination(farmerDto) {
+    recordsTotal = farmerDto.Total;
+    $("#recordsTotal").text(recordsTotal);
+    $("#pageNumber").val(this.currentPage);
+}
+//End Pagination Methods
+
 ////////////////////////////End Helper Methods

@@ -26,11 +26,9 @@ namespace SalesManagementApp.Controllers
             var salesinvoicesHeaderList = Helper.SerializeObject(_salesinvoicesOperationsRepo.GetAll());
             return Json(salesinvoicesHeaderList);
         }
-
-        public JsonResult GetAllDaily()
+        public JsonResult GetPagedList(int currentPage, string keyword, bool isToday)
         {
-            var salesinvoicesHeaderList = Helper.SerializeObject(_salesinvoicesOperationsRepo.GetAllDaily());
-            return Json(salesinvoicesHeaderList);
+            return Json(Helper.SerializeObject(_salesinvoicesOperationsRepo.GetAll(currentPage, keyword, isToday)));
         }
 
         public JsonResult GetById(long id)

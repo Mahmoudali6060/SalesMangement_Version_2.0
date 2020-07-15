@@ -1,6 +1,5 @@
 ﻿$(document).ready(function () {
-    let isToday = parseInt($("#today").val());
-    loadData(isToday);
+    getAll();
 });
 var salesinvoiceHeaders = [];
 var headerId;
@@ -9,24 +8,17 @@ var totalQuantity = 0;
 var totalWight = 0;
 var totalByaa = 0;
 var totalMashal = 0;
+var currentPage = 1;
+var recordsTotal;
 
 //>>>CRUD Operations Methods
 //Loading Salesinvoice Header Data
-function loadData(isToday) {
-    var url = isToday == 1 ? "/Salesinvoices/GetAllDaily" : "/Salesinvoices/List";
-    $.ajax({
-        url: url,
-        type: "GET",
-        contentType: "application/json;charset=utf-8",
-        dataType: "json",
-        success: function (result) {
-            salesinvoiceHeaders = JSON.parse(result);
-            setSalesinvoiceHeader();
-        },
-        error: function (errormessage) {
-            alert(errormessage.responseText);
-        }
-    });
+function getAll() {
+    let isToday = parseInt($("#today").val());
+    var salesinvoiceDto = getPagedSalesinvoices(this.currentPage, isToday);
+    preparePagination(salesinvoiceDto);
+    salesinvoiceHeaders = salesinvoiceDto.List;
+    setSalesinvoiceHeader();
 }
 //Going to Details Page to Edit Salesinvoice
 function getById(id) {
@@ -59,7 +51,7 @@ function delele(id) {
                             type: "success"
                         },
                             function () {
-                                loadData();
+                                getAll();
                             });
                 })
                 .error(function (data) {
@@ -153,10 +145,6 @@ function setSalesinvoiceHeader() {
         i++;
     });
     $('.tbody').html(html);
-    var value = $("#search").val();
-    if (value !== "") {
-        filter();
-    }
 }
 //Getting Related SalesinvoiceDetails to show them in modal 
 function getSalesinvoiceDetails(id) {
@@ -187,7 +175,7 @@ function getSalesinvoiceDetails(id) {
         totalByaa += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa;
         totalMashal += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal;
     }
-    html = prepareSalesinvoiceTotal(html, selectedSalesinvoiceHeader, totalWight, totalQuantity );
+    html = prepareSalesinvoiceTotal(html, selectedSalesinvoiceHeader, totalWight, totalQuantity);
     $('tbody.salesinvoice-details').html(html);
     prepareSalesinvoiceHeader(selectedSalesinvoiceHeader);
     $('#listModal').modal('show');
@@ -211,18 +199,6 @@ function prepareSalesinvoiceTotal(html, selectedSalesinvoiceHeader, totalWight, 
     html += '<td><span id="total">' + Math.ceil(selectedSalesinvoiceHeader.Total) + '</span></td>';
     html += '</tr>';
     return html;
-}
-//Filtering
-function filter() {
-    var value = $("#search").val();
-    if (value !== "") {
-        $("#salesinvoice-header-table tbody tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-        });
-    }
-    else {
-        loadData();
-    }
 }
 
 function printReport(id) {
@@ -340,4 +316,70 @@ function prepareSalesinvoiceTotalReport(html, total, totalWight, totalQuantity) 
     return html;
 
 }
+
+
+
+function getPagedSalesinvoices(currentPage, isToday) {
+    var keyword = $("#search").val().toLowerCase();
+    var url = "/Salesinvoices/GetPagedList?currentPage=" + currentPage;
+    if (!isEmpty(keyword))
+        url = url + "&&keyword=" + keyword;
+    if (isToday == 1) {
+        url = url + "&&isToday=" + true;
+    }
+
+    var salesinvoicesHeaders = [];
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        cache: false,
+        success: function (result) {
+            salesinvoicesHeaders = JSON.parse(result);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    return salesinvoicesHeaders;
+}
+
+//Filtering data
+function filter() {
+    this.currentPage = 1;
+    getAll();
+}
+///Pagination Methods
+function next() {
+    currentPage++;
+    getAll();
+}
+
+function back() {
+    currentPage--;
+    if (currentPage <= 0) {
+        $("#pageNumber").val(1);
+        currentPage = 1;
+        return;
+    }
+
+    getAll();
+}
+
+function getToPageNumber() {
+    currentPage = $("#pageNumber").val();
+    if (currentPage > 0)
+        this.getAll();
+}
+
+function preparePagination(farmerDto) {
+    recordsTotal = farmerDto.Total;
+    $("#recordsTotal").text(recordsTotal);
+    $("#pageNumber").val(this.currentPage);
+}
+//End Pagination Methods
+
+
 //>>>END Helper Methods

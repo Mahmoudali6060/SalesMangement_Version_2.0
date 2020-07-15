@@ -26,10 +26,10 @@ namespace SalesManagementApp.Controllers
             var purechasesHeaderList = Helper.SerializeObject(_purechasesOperationsRepo.GetAll());
             return Json(purechasesHeaderList);
         }
-        public JsonResult GetAllDaily()
+
+        public JsonResult GetPagedList(int currentPage, string keyword, bool isToday)
         {
-            var purechasesOperationsList = Helper.SerializeObject(_purechasesOperationsRepo.GetAllDaily());
-            return Json(purechasesOperationsList);
+            return Json(Helper.SerializeObject(_purechasesOperationsRepo.GetAll(currentPage, keyword, isToday)));
         }
 
         public JsonResult GetById(long id)

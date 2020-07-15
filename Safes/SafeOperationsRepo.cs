@@ -27,6 +27,24 @@ namespace Safes
             return safeEntity.Where(x => x.IsHidden == false).AsEnumerable();
         }
 
+        public SafeDTO GetAll(int currentPage, string keyword)
+        {
+            var list = safeEntity
+                .OrderByDescending(x => x.Id)
+                .AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                list = list.Where(x => x.Date.ToString("dd/MM/yyyy").Contains(keyword));
+            }
+
+            return new SafeDTO()
+            {
+                Total = safeEntity.Count(),
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
+            };
+        }
+
         public Safe GetById(long id)
         {
             return safeEntity.SingleOrDefault(s => s.Id == id);

@@ -49,14 +49,6 @@ namespace Order.Repositories
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
-        public IEnumerable<OrderHeader> GetAllDaily()
-        {
-            return context.OrderHeaders
-                .Include("OrderDetails")
-                .Include("Farmer").ToList()
-                .Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString())
-                .OrderBy(x => x.Id);
-        }
         public OrderHeader GetById(long id)
         {
             return orderHeaderEntity.Include("OrderDetails").Include("Farmer").SingleOrDefault(s => s.Id == id);

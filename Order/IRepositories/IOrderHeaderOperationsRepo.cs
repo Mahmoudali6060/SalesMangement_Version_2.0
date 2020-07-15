@@ -9,7 +9,6 @@ namespace Order.IRepositories
     public interface IOrderHeaderOperationsRepo
     {
         IEnumerable<OrderHeader> GetAll();
-        IEnumerable<OrderHeader> GetAllDaily();
         OrderListDTO GetAll(int currentPage, string keyword,bool isToday);
         OrderHeader GetById(long id);
         bool Add(OrderHeader entity);

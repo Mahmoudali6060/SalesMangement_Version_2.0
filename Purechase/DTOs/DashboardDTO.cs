@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Purechase.ViewModels
+namespace Purechase.DTOs
 {
-   public class DashboardViewModel
+   public class DashboardDTO
     {
         public decimal TotalPurchase { get; set; }
         public decimal TotalCommission { get; set; }

@@ -5,34 +5,61 @@ using System.Text;
 using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using Purechase.ViewModels;
+using Purechase.DTOs;
+using Shared.Enums;
 
 namespace Purechase
 {
     public class PurechasesOperationsRepo : IPurechasesOperationsRepo
     {
         private EntitiesDbContext context;
-        private DbSet<PurechasesHeader> purechasesHeaderEntity;
+        private DbSet<PurechasesHeader> _purechasesHeaderEntity;
 
         public PurechasesOperationsRepo(EntitiesDbContext context)
         {
             this.context = context;
-            purechasesHeaderEntity = context.Set<PurechasesHeader>();
+            _purechasesHeaderEntity = context.Set<PurechasesHeader>();
         }
 
         public IEnumerable<PurechasesHeader> GetAll()
         {
-            return purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().OrderByDescending(x => x.Id);
+            return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().OrderByDescending(x => x.Id);
         }
+
+        public PurechaseListDTO GetAll(int currentPage, string keyword, bool isToday)
+        {
+            var list = _purechasesHeaderEntity
+                .Include("PurechasesDetialsList")
+                .Include("Farmer")
+                .OrderByDescending(x => x.Id)
+                .AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                list = list.Where(x => x.Id.ToString().Contains(keyword) || x.Farmer.Name.Contains(keyword) || x.PurechasesDate.ToString("dd/MM/yyyy").Contains(keyword));
+            }
+
+            if (isToday)
+            {
+                list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+            }
+
+            return new PurechaseListDTO()
+            {
+                Total = _purechasesHeaderEntity.Count(),
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
+            };
+        }
+
 
         public IEnumerable<PurechasesHeader> GetAllDaily()
         {
-            return purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
+            return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
         }
 
         public PurechasesHeader GetById(long id)
         {
-            return purechasesHeaderEntity.SingleOrDefault(s => s.Id == id);
+            return _purechasesHeaderEntity.SingleOrDefault(s => s.Id == id);
         }
 
         public bool Add(PurechasesHeader purechasesHeader)
@@ -58,7 +85,7 @@ namespace Purechase
         {
             PurechasesHeader purechasesHeader = GetById(id);
             DeletePurchaseDetails(id);
-            purechasesHeaderEntity.Remove(purechasesHeader);
+            _purechasesHeaderEntity.Remove(purechasesHeader);
             context.SaveChanges();
             return true;
         }
@@ -70,13 +97,13 @@ namespace Purechase
             Delete(purechasesHeader.Id);
         }
 
-        public DashboardViewModel GetDashboardData()
+        public DashboardDTO GetDashboardData()
         {
             int totalQuantity = GetTodayTotalQuantity();
             decimal totalCommission = GetTodayTotalCommission();
             decimal nawlon = GetTodayTotalNawlon();
 
-            return new DashboardViewModel()
+            return new DashboardDTO()
             {
                 TotalPurchase = Math.Ceiling(GetTotalPurechase()),
                 TotalCommission = Math.Ceiling(totalCommission),
@@ -87,7 +114,7 @@ namespace Purechase
 
         public IEnumerable<PurechasesHeader> GetPurchaseHeaderListByFarmerId(long farmerId)
         {
-            return purechasesHeaderEntity.Where(x => x.FarmerId == farmerId).Include("PurechasesDetialsList").AsEnumerable().OrderByDescending(x => x.PurechasesDate);
+            return _purechasesHeaderEntity.Where(x => x.FarmerId == farmerId).Include("PurechasesDetialsList").AsEnumerable().OrderByDescending(x => x.PurechasesDate);
         }
         #region Helper
         private IEnumerable<PurechasesDetials> SetPurechasesHeaderId(long purechasesHeaderId, IEnumerable<PurechasesDetials> purechasesDetails)

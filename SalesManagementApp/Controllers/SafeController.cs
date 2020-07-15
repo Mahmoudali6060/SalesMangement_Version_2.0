@@ -35,6 +35,10 @@ namespace SalesManagementApp.Controllers
             return Json(safe);
         }
 
+        public JsonResult GetPagedList(int currentPage, string keyword)
+        {
+            return Json(Helper.SerializeObject(_safeOperationsRepo.GetAll(currentPage, keyword)));
+        }
         //public JsonResult GetByAccountId(long accountId)
         //{
         //    var safe = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(accountId));
