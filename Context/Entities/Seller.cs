@@ -10,5 +10,7 @@ namespace Database.Entities
         public string Phone { get; set; }
         public string Address { get; set; }
         public string Notes { get; set; }
+        public virtual ICollection<SalesinvoicesHeader> SalesinvoicesHeaders { get; set; }
+
     }
 }

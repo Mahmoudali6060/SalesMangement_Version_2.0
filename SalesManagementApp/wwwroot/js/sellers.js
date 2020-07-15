@@ -2,11 +2,15 @@
     getAll();//Load Data in Table when documents is ready
     turnOnTab('formModal');//to allow tab in form modal >>>is called From shared.js
 });
-
+var sellersList = [];
+var currentPage = 1;
+var recordsTotal;
 //////////////////////////////////////CRUD Operations Methods
 //Loading data (list of entity)
 function getAll() {
-    var sellersList = getAllSellers();
+    var sellerDto = getPagedSellers(this.currentPage);
+    sellersList = sellerDto.List;
+    preparePagination(sellerDto);
     if (sellersList == []) return;
     var html = '';
     var i = 1;
@@ -34,6 +38,31 @@ function getAll() {
         filter();
     }
 }
+
+function getPagedSellers(currentPage) {
+    var keyword = $("#search").val().toLowerCase();
+    var url = "/Sellers/GetPagedList?currentPage=" + currentPage;
+    if (!isEmpty(keyword))
+        url = url + "&&keyword=" + keyword;
+
+    var sellers = [];
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        cache: false,
+        success: function (result) {
+            sellers = JSON.parse(result);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    return sellers;
+}
+
 
 function openAccountStatement(sellerId) {
     var url = "/SellerAccountStatement/Index?sellerId=" + sellerId;
@@ -167,15 +196,16 @@ function validateForm() {
 //Filtering data
 function filter() {
 
-    var value = $("#search").val().toLowerCase();
-    if (value != "") {
-        $("#sellers-table tbody tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-    }
-    else {
-        getAll();
-    }
+    //var value = $("#search").val().toLowerCase();
+    //if (value != "") {
+    //    $("#sellers-table tbody tr").filter(function () {
+    //        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    //    });
+    //}
+    //else {
+    this.currentPage = 1;
+    getAll();
+    //}
 }
 //Hide validation messages
 function hideAllValidationMessage() {
@@ -193,5 +223,36 @@ function fillEntity() {
     };
     return entity;
 }
+
+///Pagination Methods
+function next() {
+    currentPage++;
+    getAll();
+}
+
+function back() {
+    currentPage--;
+    if (currentPage <= 0) {
+        $("#pageNumber").val(1);
+        currentPage = 1;
+        return;
+    }
+
+    getAll();
+}
+
+function getToPageNumber() {
+    currentPage = $("#pageNumber").val();
+    if (currentPage > 0)
+        this.getAll();
+}
+
+function preparePagination(sellerDto) {
+    recordsTotal = sellerDto.Total;
+    $("#recordsTotal").text(recordsTotal);
+    $("#pageNumber").val(this.currentPage);
+}
+//End Pagination Methods
+
 ////////////////////////////End Helper Methods
 

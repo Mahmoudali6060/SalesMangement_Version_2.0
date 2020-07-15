@@ -212,6 +212,7 @@ function filter() {
     //    });
     //}
     //else {
+    this.currentPage = 1;
     getAll();
     //}
 }
@@ -232,6 +233,7 @@ function fillEntity() {
     return entity;
 }
 
+///Pagination Methods
 function next() {
     currentPage++;
     getAll();
@@ -259,6 +261,8 @@ function preparePagination(farmerDto) {
     $("#recordsTotal").text(recordsTotal);
     $("#pageNumber").val(this.currentPage);
 }
+//End Pagination Methods
+
 ////////////////////////////End Helper Methods
 
 

@@ -1,6 +1,8 @@
 ﻿using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Sellers.DTOs;
+using Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +21,30 @@ namespace Sellers
             sellerEntity = context.Set<Seller>();
         }
 
-       
+
         public IEnumerable<Seller> GetAll()
         {
             return sellerEntity.AsEnumerable();
         }
+
+        public SellerListDTO GetAll(int currentPage, string keyword)
+        {
+            var list = sellerEntity
+                //.Include("SalesinvoicesHeader")
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                list = list.Where(x => x.Name.Contains(keyword) || x.Address.Contains(keyword));
+            }
+
+            return new SellerListDTO()
+            {
+                Total = sellerEntity.Count(),
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
+            };
+        }
+
 
         public Seller GetById(long id)
         {
@@ -51,5 +72,6 @@ namespace Sellers
             context.SaveChanges();
             return true;
         }
+
     }
 }
