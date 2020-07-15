@@ -34,11 +34,15 @@ namespace SalesManagementApp.Controllers
             var orderList = Helper.SerializeObject(_orderOperationsDSL.GetAll());
             return Json(orderList);
         }
-        public JsonResult GetAllDaily()
+        public JsonResult GetPagedList(int currentPage, string keyword,bool isToday)
         {
-            var orderList = Helper.SerializeObject(_orderOperationsDSL.GetAllDaily());
-            return Json(orderList);
+            return Json(Helper.SerializeObject(_orderOperationsDSL.GetAll(currentPage, keyword, isToday)));
         }
+        //public JsonResult GetAllDaily()
+        //{
+        //    var orderList = Helper.SerializeObject(_orderOperationsDSL.GetAllDaily());
+        //    return Json(orderList);
+        //}
         public JsonResult GetById(long id)
         {
             var order = Helper.SerializeObject(_orderOperationsDSL.GetById(id));

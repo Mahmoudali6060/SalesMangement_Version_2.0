@@ -1,25 +1,19 @@
 ﻿$(document).ready(function () {
-    let isToday = parseInt($("#today").val());
-    loadData(isToday);
+    getAll();
 });
+
 var orderHeaders = [];
+var currentPage = 1;
+var recordsTotal;
+
 //>>>CRUD Operations Methods
 //Loading Order Header Data
-function loadData(isToday) {
-    var url = isToday == 1 ? "/Orders/GetAllDaily" : "/Orders/List";
-    $.ajax({
-        url: url,
-        type: "GET",
-        contentType: "application/json;charset=utf-8",
-        dataType: "json",
-        success: function (result) {
-            orderHeaders = JSON.parse(result);
-            setOrderHeader();
-        },
-        error: function (errormessage) {
-            alert(errormessage.responseText);
-        }
-    });
+function getAll() {
+    let isToday = parseInt($("#today").val());
+    var orderDto = getPagedOrders(this.currentPage, isToday);
+    preparePagination(orderDto);
+    orderHeaders = orderDto.List;
+    setOrderHeader();
 }
 //Going to Details Page to Edit Order
 function getById(id) {
@@ -52,9 +46,9 @@ function delele(id) {
                             text: "تم حذف السجل بنجاح !",
                             type: "success"
                         },
-                        function () {
-                            loadData();
-                        });
+                            function () {
+                                getAll();
+                            });
                 })
                 .error(function (data) {
                     swal("لم يتم الحذف", "حدث خطأ في الحذف", "خطأ");
@@ -80,10 +74,10 @@ function setOrderHeader() {
         i++;
     });
     $('.tbody').html(html);
-    var value = $("#search").val();
-    if (value !== "") {
-        filter();
-    }
+    //var value = $("#search").val();
+    //if (value !== "") {
+    //    filter();
+    //}
 }
 //Getting Related OrderDetails to show them in modal
 function getOrderDetails(id) {
@@ -103,16 +97,67 @@ function getOrderDetails(id) {
     $('h4#listModalLabel').text('تفاصيل البيان رقم : ' + selectedOrderHeaders.Id + ' بتاريخ : ' + getLocalDate(selectedOrderHeaders.OrderDate));
     $('#listModal').modal('show');
 }
-//Filtering
-function filter() {
-    var value = $("#search").val();
-    if (value !== "") {
-        $("#order-header-table tbody tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-        });
+
+function getPagedOrders(currentPage, isToday) {
+    var keyword = $("#search").val().toLowerCase();
+    var url = "/Orders/GetPagedList?currentPage=" + currentPage;
+    if (!isEmpty(keyword))
+        url = url + "&&keyword=" + keyword;
+    if (isToday == 1) {
+        url = url + "&&isToday=" + true;
     }
-    else {
-        loadData();
-    }
+
+    var orderHeaders = [];
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        cache: false,
+        success: function (result) {
+            orderHeaders = JSON.parse(result);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    return orderHeaders;
 }
+
+//Filtering data
+function filter() {
+    this.currentPage = 1;
+    getAll();
+}
+///Pagination Methods
+function next() {
+    currentPage++;
+    getAll();
+}
+
+function back() {
+    currentPage--;
+    if (currentPage <= 0) {
+        $("#pageNumber").val(1);
+        currentPage = 1;
+        return;
+    }
+
+    getAll();
+}
+
+function getToPageNumber() {
+    currentPage = $("#pageNumber").val();
+    if (currentPage > 0)
+        this.getAll();
+}
+
+function preparePagination(farmerDto) {
+    recordsTotal = farmerDto.Total;
+    $("#recordsTotal").text(recordsTotal);
+    $("#pageNumber").val(this.currentPage);
+}
+//End Pagination Methods
+
 //>>>END Helper Methods

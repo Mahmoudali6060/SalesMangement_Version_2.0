@@ -1,7 +1,9 @@
 ﻿using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Order.DTOs;
 using Order.IRepositories;
+using Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +26,36 @@ namespace Order.Repositories
         {
             return context.OrderHeaders.Include("OrderDetails").Include("Farmer").ToList().OrderBy(x => x.Id);
         }
+        public OrderListDTO GetAll(int currentPage, string keyword, bool isToday)
+        {
+            var list = orderHeaderEntity
+                .Include("OrderDetails").Include("Farmer")
+                .OrderBy(x => x.Id)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                list = list.Where(x => x.Id.ToString().Contains(keyword) || x.Farmer.Name.Contains(keyword) || x.OrderDate.ToString("dd/MM/yyyy").Contains(keyword));
+            }
+
+            if (isToday)
+            {
+                list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+            }
+
+            return new OrderListDTO()
+            {
+                Total = orderHeaderEntity.Count(),
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
+            };
+        }
         public IEnumerable<OrderHeader> GetAllDaily()
         {
-            return context.OrderHeaders.Include("OrderDetails").Include("Farmer").ToList().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderBy(x => x.Id);
+            return context.OrderHeaders
+                .Include("OrderDetails")
+                .Include("Farmer").ToList()
+                .Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString())
+                .OrderBy(x => x.Id);
         }
         public OrderHeader GetById(long id)
         {
@@ -63,6 +92,6 @@ namespace Order.Repositories
             return true;
         }
 
-       
+
     }
 }

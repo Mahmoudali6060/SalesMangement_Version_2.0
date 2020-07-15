@@ -9,11 +9,19 @@ namespace Shared.Classes
     {
         public static string SerializeObject(object obj)
         {
-         return   JsonConvert.SerializeObject(obj, Formatting.None,
-                      new JsonSerializerSettings()
-                      {
-                          ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                      });
+            try
+            {
+                return JsonConvert.SerializeObject(obj, Formatting.None,
+                            new JsonSerializerSettings()
+                            {
+                                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                            });
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
         }
     }
 }

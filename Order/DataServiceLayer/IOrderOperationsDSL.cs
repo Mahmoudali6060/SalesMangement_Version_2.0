@@ -1,4 +1,5 @@
 ﻿using Database.Entities;
+using Order.DTOs;
 using Order.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Order.DataServiceLayer
     {
         IEnumerable<OrderHeader> GetAll();
         IEnumerable<OrderHeader> GetAllDaily();
-
+        OrderListDTO GetAll(int currentPage, string keyword,bool isToday);
         OrderHeader GetById(long id);
         bool Add(OrderDTO entity);
         bool Update(OrderDTO entity);

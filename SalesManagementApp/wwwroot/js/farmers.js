@@ -203,19 +203,8 @@ function validateForm() {
 
     return isValid;
 }
-//Filtering data
-function filter() {
-    //var value = $("#search").val().toLowerCase();
-    //if (value != "") {
-    //    $("#farmers-table tbody tr").filter(function () {
-    //        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    //    });
-    //}
-    //else {
-    this.currentPage = 1;
-    getAll();
-    //}
-}
+
+
 //Hide validation messages
 function hideAllValidationMessage() {
     $('#NameIsRequired').hide();
@@ -233,6 +222,11 @@ function fillEntity() {
     return entity;
 }
 
+//Filtering data
+function filter() {
+    this.currentPage = 1;
+    getAll();
+}
 ///Pagination Methods
 function next() {
     currentPage++;

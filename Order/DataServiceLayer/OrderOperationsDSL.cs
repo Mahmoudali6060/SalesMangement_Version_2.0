@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Database.Entities;
+using Order.DTOs;
 using Order.IRepositories;
 using Order.Models;
 using Purechase;
@@ -34,6 +35,10 @@ namespace Order.DataServiceLayer
         public IEnumerable<OrderHeader> GetAll()
         {
             return _orderHeaderOperationsRepo.GetAll();
+        }
+        public OrderListDTO GetAll(int currentPage, string keyword,bool isToday)
+        {
+            return _orderHeaderOperationsRepo.GetAll(currentPage, keyword, isToday);
         }
         public IEnumerable<OrderHeader> GetAllDaily()
         {
@@ -234,6 +239,8 @@ namespace Order.DataServiceLayer
                 PurechasesHeaderId = purechasesHeaderId
             };
         }
+
+
         #endregion
     }
 }
