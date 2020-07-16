@@ -20,5 +20,7 @@ namespace Safes
         SafeDTO GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, int currentPage);
         bool DeleteByHeaderId(long header, AccountTypesEnum accountTypesEnum);
         bool DeleteByOrderId(long orderId);
+        bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
+
     }
 }

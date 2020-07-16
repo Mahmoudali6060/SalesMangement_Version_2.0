@@ -6,29 +6,31 @@ using Database;
 using Database.Entities;
 using Farmers.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Safes;
 using Shared.Enums;
 
 namespace Farmers
 {
     public class FarmerOperationsRepo : IFarmerOperationsRepo
     {
-        private EntitiesDbContext context;
-        private DbSet<Farmer> farmerEntity;
-
-        public FarmerOperationsRepo(EntitiesDbContext context)
+        private EntitiesDbContext _context;
+        private DbSet<Farmer> _farmerEntity;
+        private readonly ISafeOperationsRepo _safeOperationsRepo;
+        public FarmerOperationsRepo(EntitiesDbContext context, ISafeOperationsRepo safeOperationsRepo)
         {
-            this.context = context;
-            farmerEntity = context.Set<Farmer>();
+            _context = context;
+            _farmerEntity = context.Set<Farmer>();
+            _safeOperationsRepo = safeOperationsRepo;
         }
 
 
         public IEnumerable<Farmer> GetAll()
         {
-            return farmerEntity.Include("PurechasesHeader").AsEnumerable();
+            return _farmerEntity.Include("PurechasesHeader").AsEnumerable();
         }
         public FarmListDTO GetAll(int currentPage, string keyword)
         {
-            var list = farmerEntity
+            var list = _farmerEntity
                 .Include("PurechasesHeader")
                 .AsQueryable();
 
@@ -39,21 +41,21 @@ namespace Farmers
 
             return new FarmListDTO()
             {
-                Total = farmerEntity.Count(),
+                Total = _farmerEntity.Count(),
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
         public Farmer GetById(long id)
         {
-            return farmerEntity.SingleOrDefault(s => s.Id == id);
+            return _farmerEntity.SingleOrDefault(s => s.Id == id);
         }
 
         public long Add(Farmer farmer)
         {
             try
             {
-                context.Entry(farmer).State = EntityState.Added;
-                context.SaveChanges();
+                _context.Entry(farmer).State = EntityState.Added;
+                _context.SaveChanges();
                 return farmer.Id;
             }
             catch (Exception ex)
@@ -66,16 +68,17 @@ namespace Farmers
 
         public bool Update(Farmer farmer)
         {
-            context.Entry(farmer).State = EntityState.Modified;
-            context.SaveChanges();
+            _context.Entry(farmer).State = EntityState.Modified;
+            _context.SaveChanges();
             return true;
         }
 
         public bool Delete(long id)
         {
+            _safeOperationsRepo.DeleteByAccountId(id, AccountTypesEnum.Clients);
             Farmer farmer = GetById(id);
-            farmerEntity.Remove(farmer);
-            context.SaveChanges();
+            _farmerEntity.Remove(farmer);
+            _context.SaveChanges();
             return true;
         }
 

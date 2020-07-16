@@ -40,7 +40,7 @@ namespace Safes
 
             return new SafeDTO()
             {
-                Total = safeEntity.Count(),
+                Total = safeEntity.Where(x => x.IsHidden == false).Count(),
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
@@ -125,6 +125,18 @@ namespace Safes
                 .Take(PageSettings.PageSize)
                .AsEnumerable()
             };
+        }
+
+        public bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum)
+        {
+            List<Safe> safes = safeEntity.Where(x => x.AccountId == accountId && x.AccountTypeId == (int)accountTypesEnum).ToList();
+            if (safes != null)
+            {
+                safeEntity.RemoveRange(safes);
+                context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

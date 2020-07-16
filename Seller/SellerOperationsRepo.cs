@@ -1,6 +1,7 @@
 ﻿using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Safes;
 using Sellers.DTOs;
 using Shared.Enums;
 using System;
@@ -12,24 +13,25 @@ namespace Sellers
 {
     public class OrderHeaderRepository : ISellerOperationsRepo
     {
-        private EntitiesDbContext context;
-        private DbSet<Seller> sellerEntity;
+        private EntitiesDbContext _context;
+        private DbSet<Seller> _sellerEntity;
+        private readonly ISafeOperationsRepo _safeOperationsRepo;
 
-        public OrderHeaderRepository(EntitiesDbContext context)
+        public OrderHeaderRepository(EntitiesDbContext context, ISafeOperationsRepo safeOperationsRepo)
         {
-            this.context = context;
-            sellerEntity = context.Set<Seller>();
+            _context = context;
+            _sellerEntity = context.Set<Seller>();
+            _safeOperationsRepo = safeOperationsRepo;
         }
-
 
         public IEnumerable<Seller> GetAll()
         {
-            return sellerEntity.AsEnumerable();
+            return _sellerEntity.AsEnumerable();
         }
 
         public SellerListDTO GetAll(int currentPage, string keyword)
         {
-            var list = sellerEntity
+            var list = _sellerEntity
                 //.Include("SalesinvoicesHeader")
                 .AsQueryable();
 
@@ -40,7 +42,7 @@ namespace Sellers
 
             return new SellerListDTO()
             {
-                Total = sellerEntity.Count(),
+                Total = _sellerEntity.Count(),
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
@@ -48,30 +50,30 @@ namespace Sellers
 
         public Seller GetById(long id)
         {
-            return sellerEntity.SingleOrDefault(s => s.Id == id);
+            return _sellerEntity.SingleOrDefault(s => s.Id == id);
         }
 
         public long Add(Seller seller)
         {
-            context.Entry(seller).State = EntityState.Added;
-            context.SaveChanges();
+            _context.Entry(seller).State = EntityState.Added;
+            _context.SaveChanges();
             return seller.Id;
         }
 
         public bool Update(Seller seller)
         {
-            context.Entry(seller).State = EntityState.Modified;
-            context.SaveChanges();
+            _context.Entry(seller).State = EntityState.Modified;
+            _context.SaveChanges();
             return true;
         }
 
         public bool Delete(long id)
         {
+            _safeOperationsRepo.DeleteByAccountId(id, AccountTypesEnum.Sellers);//Delete related record in Safe table
             Seller seller = GetById(id);
-            sellerEntity.Remove(seller);
-            context.SaveChanges();
+            _sellerEntity.Remove(seller);
+            _context.SaveChanges();
             return true;
         }
-
     }
 }
