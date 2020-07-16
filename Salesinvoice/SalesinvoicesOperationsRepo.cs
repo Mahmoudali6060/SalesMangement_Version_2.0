@@ -7,18 +7,19 @@ using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Safes;
 using Salesinvoice.DTOs;
+using Shared.Classes;
 using Shared.Enums;
 
 namespace Salesinvoice
 {
     public class SalesinvoicesOperationsRepo : ISalesinvoicesOperationsRepo
     {
-        private EntitiesDbContext context;
+        private EntitiesDbContext _context;
         private DbSet<SalesinvoicesHeader> _salesinvoicesHeaderEntity;
         private ISafeOperationsRepo _safeOperationsRepo;
         public SalesinvoicesOperationsRepo(EntitiesDbContext context, ISafeOperationsRepo safeOperationsRepo)
         {
-            this.context = context;
+            this._context = context;
             _salesinvoicesHeaderEntity = context.Set<SalesinvoicesHeader>();
             this._safeOperationsRepo = safeOperationsRepo;
         }
@@ -63,27 +64,35 @@ namespace Salesinvoice
             return _salesinvoicesHeaderEntity.SingleOrDefault(s => s.Id == id);
         }
 
-        public bool Add(SalesinvoicesHeader salesinvoicesHeader)
+        public bool Add(SalesinvoicesHeader salesinvoicesHeader, long orderHeaderId)
         {
             SalesinvoicesHeader exsistedSalesHeader = GetSalesinvoiceHeaderByDateAndSellerId(salesinvoicesHeader.SalesinvoicesDate, salesinvoicesHeader.SellerId);
             if (exsistedSalesHeader == null)
             {
-                context.Entry(salesinvoicesHeader).State = EntityState.Added;
-                context.SaveChanges();
+                _context.Entry(salesinvoicesHeader).State = EntityState.Added;
+                _context.SaveChanges();
             }
             if (salesinvoicesHeader.Id == 0) salesinvoicesHeader.Id = exsistedSalesHeader.Id;
             SetSalesinvoicesHeaderId(salesinvoicesHeader.Id, salesinvoicesHeader.SalesinvoicesDetialsList);
-            AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList);
+            AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, orderHeaderId);
+            return true;
+        }
+
+        public bool Update(SalesinvoicesHeader salesinvoicesHeader, long orderHeaderId)
+        {
+            _context.Entry(salesinvoicesHeader).State = EntityState.Modified;
+            _context.SaveChanges();
+            DeleteSalesinvoicesDetials(salesinvoicesHeader.Id);
+            SetSalesinvoicesHeaderId(salesinvoicesHeader.Id, salesinvoicesHeader.SalesinvoicesDetialsList);
+            AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, orderHeaderId);
             return true;
         }
 
         public bool Update(SalesinvoicesHeader salesinvoicesHeader)
         {
-            context.Entry(salesinvoicesHeader).State = EntityState.Modified;
-            context.SaveChanges();
-            DeleteSalesinvoicesDetials(salesinvoicesHeader.Id);
-            SetSalesinvoicesHeaderId(salesinvoicesHeader.Id, salesinvoicesHeader.SalesinvoicesDetialsList);
-            AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList);
+            _context.Entry(salesinvoicesHeader).State = EntityState.Modified;
+            _context.SaveChanges();
+            _safeOperationsRepo.UpdateByHeaderId(salesinvoicesHeader.Id, salesinvoicesHeader.Total, AccountTypesEnum.Sellers);
             return true;
         }
 
@@ -92,22 +101,22 @@ namespace Salesinvoice
             SalesinvoicesHeader salesinvoicesHeader = GetById(id);
             DeleteSalesinvoicesDetials(id);
             _salesinvoicesHeaderEntity.Remove(salesinvoicesHeader);
-            context.SaveChanges();
+            _context.SaveChanges();
             return true;
         }
         public void DeleteSalesinvoiceDetails(OrderHeader orderHeader)
         {
-            List<SalesinvoicesDetials> salesinvoicesDetialsList = context.SalesinvoicesDetials.Where(x => x.OrderDate == orderHeader.Created).ToList();
-            context.SalesinvoicesDetials.RemoveRange(salesinvoicesDetialsList);
-            context.SaveChanges();
+            List<SalesinvoicesDetials> salesinvoicesDetialsList = _context.SalesinvoicesDetials.Where(x => x.OrderDate == orderHeader.Created).ToList();
+            _context.SalesinvoicesDetials.RemoveRange(salesinvoicesDetialsList);
+            _context.SaveChanges();
         }
 
         public void DeleteSalesinvoiceHeader(OrderHeader orderHeader)
         {
-            List<SalesinvoicesHeader> salesinvoicesHeaderList = context.SalesinvoicesHeaders.Where(x => x.Created.ToShortDateString() == orderHeader.Created.ToShortDateString()).ToList();
+            List<SalesinvoicesHeader> salesinvoicesHeaderList = _context.SalesinvoicesHeaders.Where(x => x.Created.ToShortDateString() == orderHeader.Created.ToShortDateString()).ToList();
             foreach (SalesinvoicesHeader salesinvoicesHeader in salesinvoicesHeaderList)
             {
-                List<SalesinvoicesDetials> salesinvoices = context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == salesinvoicesHeader.Id).ToList();
+                List<SalesinvoicesDetials> salesinvoices = _context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == salesinvoicesHeader.Id).ToList();
                 if (salesinvoices.Count == 0)
                     Delete(salesinvoicesHeader.Id);
             }
@@ -124,22 +133,57 @@ namespace Salesinvoice
             return salesinvoicesDetails;
         }
 
-        private void AddSalesinvoicesDetials(IEnumerable<SalesinvoicesDetials> salesinvoicesDetialsList)
+        private void AddSalesinvoicesDetials(IEnumerable<SalesinvoicesDetials> salesinvoicesDetialsList, long orderHeaderId)
         {
-            context.SalesinvoicesDetials.AddRange(salesinvoicesDetialsList);
-            context.SaveChanges();
+            _context.SalesinvoicesDetials.AddRange(salesinvoicesDetialsList);
+            UpdateSalesinvoiceTotal(salesinvoicesDetialsList, orderHeaderId);
+            _context.SaveChanges();
         }
+
+        private void UpdateSalesinvoiceTotal(IEnumerable<SalesinvoicesDetials> salesinvoicesDetialsList, long orderHeaderId)
+        {
+            decimal total = 0;
+            long salesHeaderId = 0;
+            foreach (SalesinvoicesDetials item in salesinvoicesDetialsList)
+            {
+                salesHeaderId = item.SalesinvoicesHeaderId;
+                total += (item.Weight * item.Price) + (AppSettings.MashalRate + AppSettings.ByaaRate) * item.Quantity;
+            }
+            SalesinvoicesHeader salesinvoicesHeader = _context.SalesinvoicesHeaders.SingleOrDefault(x => x.Id == salesHeaderId);
+            salesinvoicesHeader.Total = salesinvoicesHeader.Total + total;
+            _context.SaveChanges();
+
+            _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers);
+            var sellerSafe = PrepareSellerSafeEntity(salesinvoicesHeader, salesinvoicesHeader.Total, orderHeaderId);
+            _safeOperationsRepo.Add(sellerSafe);
+        }
+
+        private Safe PrepareSellerSafeEntity(SalesinvoicesHeader entity, decimal total, long orderId)
+        {
+            return new Safe()
+            {
+                Date = entity.SalesinvoicesDate,
+                AccountId = entity.SellerId,
+                AccountTypeId = (int)AccountTypesEnum.Sellers,
+                Outcoming = total,
+                Notes = $"كشف رقم :{entity.Id}",
+                IsHidden = true,
+                HeaderId = entity.Id,
+                OrderId = orderId
+            };
+        }
+
 
         private void DeleteSalesinvoicesDetials(long headerId)
         {
-            IEnumerable<SalesinvoicesDetials> purchaseDetails = context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == headerId).AsEnumerable();
-            context.SalesinvoicesDetials.RemoveRange(purchaseDetails);
-            context.SaveChanges();
+            IEnumerable<SalesinvoicesDetials> purchaseDetails = _context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == headerId).AsEnumerable();
+            _context.SalesinvoicesDetials.RemoveRange(purchaseDetails);
+            _context.SaveChanges();
         }
 
         private SalesinvoicesHeader GetSalesinvoiceHeaderByDateAndSellerId(DateTime salesinvoicesDate, long sellerId)
         {
-            return context.SalesinvoicesHeaders.FirstOrDefault(x => x.SalesinvoicesDate.ToShortDateString() == salesinvoicesDate.ToShortDateString() && x.SellerId == sellerId);
+            return _context.SalesinvoicesHeaders.FirstOrDefault(x => x.SalesinvoicesDate.ToShortDateString() == salesinvoicesDate.ToShortDateString() && x.SellerId == sellerId);
         }
 
 

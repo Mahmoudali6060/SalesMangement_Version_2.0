@@ -39,7 +39,7 @@ namespace SalesManagementApp.Controllers
 
         public JsonResult Add(SalesinvoicesHeader salesinvoicesHeader)
         {
-            return Json(_salesinvoicesOperationsRepo.Add(salesinvoicesHeader));
+            return Json(_salesinvoicesOperationsRepo.Add(salesinvoicesHeader,0));
         }
 
         public JsonResult Update(SalesinvoicesHeader salesinvoicesHeader)

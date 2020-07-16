@@ -206,8 +206,13 @@ function updateInPrinting() {
 function preparePurechasesEntity() {
     var entity = {
         Id: headerId,
+        CommissionRate: $('#CommissionPercentage').val(),
         Commission: $('#Commission').val(),
         Nawlon: $('#Nawlon').val(),
+        Total: $('#TotalAfterDiscount').text(),
+        Gift: $('#Gift').val(),
+        Descent: $('#Descent').val(),
+
     };
     return entity;
 

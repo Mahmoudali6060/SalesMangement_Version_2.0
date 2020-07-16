@@ -6,6 +6,7 @@ using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Purechase.DTOs;
+using Safes;
 using Shared.Enums;
 
 namespace Purechase
@@ -14,11 +15,12 @@ namespace Purechase
     {
         private EntitiesDbContext context;
         private DbSet<PurechasesHeader> _purechasesHeaderEntity;
-
-        public PurechasesOperationsRepo(EntitiesDbContext context)
+        private ISafeOperationsRepo _safeOperationsRepo;
+        public PurechasesOperationsRepo(EntitiesDbContext context, ISafeOperationsRepo safeOperationsRepo)
         {
             this.context = context;
             _purechasesHeaderEntity = context.Set<PurechasesHeader>();
+            _safeOperationsRepo = safeOperationsRepo;
         }
 
         public IEnumerable<PurechasesHeader> GetAll()
@@ -78,6 +80,7 @@ namespace Purechase
             DeletePurchaseDetails(purechasesHeader.Id);
             SetPurechasesHeaderId(purechasesHeader.Id, purechasesHeader.PurechasesDetialsList);
             AddPurechasesDetials(purechasesHeader.PurechasesDetialsList);
+            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id,purechasesHeader.Total, AccountTypesEnum.Clients);
             return true;
         }
 
@@ -174,9 +177,13 @@ namespace Purechase
             PurechasesHeader purechaseHeader = GetById(entity.Id);
             purechaseHeader.Commission = entity.Commission;
             purechaseHeader.Nawlon = entity.Nawlon;
-            //purechaseHeader.Total += entity.Commission + entity.Nawlon;
+            purechaseHeader.CommissionRate = entity.CommissionRate;
+            purechaseHeader.Gift = entity.Gift;
+            purechaseHeader.Descent = entity.Descent;
+
             context.Entry(purechaseHeader).State = EntityState.Modified;
             context.SaveChanges();
+            _safeOperationsRepo.UpdateByHeaderId(entity.Id,entity.Total, AccountTypesEnum.Clients);
             return true;
         }
 

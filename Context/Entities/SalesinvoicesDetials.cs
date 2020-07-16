@@ -13,6 +13,6 @@ namespace Database.Entities
         public decimal Byaa { get; set; }
         public DateTime OrderDate { get; set; }
         public long SalesinvoicesHeaderId { get; set; }
-        public virtual SalesinvoicesHeader PurechasesHeader { get; set; }
+        public virtual SalesinvoicesHeader SalesinvoicesHeader { get; set; }
     }
 }

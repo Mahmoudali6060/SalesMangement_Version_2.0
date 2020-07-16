@@ -36,7 +36,7 @@ namespace Order.DataServiceLayer
         {
             return _orderHeaderOperationsRepo.GetAll();
         }
-        public OrderListDTO GetAll(int currentPage, string keyword,bool isToday)
+        public OrderListDTO GetAll(int currentPage, string keyword, bool isToday)
         {
             return _orderHeaderOperationsRepo.GetAll(currentPage, keyword, isToday);
         }
@@ -211,19 +211,16 @@ namespace Order.DataServiceLayer
                     Mashal = 3 * item.Quantity,
                     OrderDate = orderHeader.OrderHeader.Created
                 });
-                total += (item.Weight * item.SellingPrice) + 6 * item.Quantity;
+                total += (item.Weight * item.SellingPrice) + (AppSettings.MashalRate + AppSettings.ByaaRate) * item.Quantity;
                 ///Prepare Salesinvoices Header
                 SalesinvoicesHeader salesinvoicesHeader = new SalesinvoicesHeader()
                 {
                     SalesinvoicesDate = orderHeader.OrderHeader.OrderDate,
                     SellerId = sellerId,
                     SalesinvoicesDetialsList = salesinvoicesDetials,
-                    Total = total
                 };
-                _salesinvoicesOperationsRepo.Add(salesinvoicesHeader);
-                _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers);
-                var sellerSafe = PrepareSellerSafeEntity(salesinvoicesHeader, total, orderHeader.OrderHeader.Id);
-                _safeOperationsRepo.Add(sellerSafe);
+                _salesinvoicesOperationsRepo.Add(salesinvoicesHeader, orderHeader.OrderHeader.Id);
+
             }
         }
         private Order_Purechase PrepareOrder_Purechase(long orderHeaderId, long purechasesHeaderId)

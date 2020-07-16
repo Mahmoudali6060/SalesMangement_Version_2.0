@@ -206,6 +206,7 @@ function printReport(id) {
         headerId = id;
 
     var selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == headerId);
+    update();
     prepareSalesinvoiceHeader(selectedSalesinvoiceHeader);
     var reportHeader = prepareReportHeader();
     var reportContent = prepareReportContent(selectedSalesinvoiceHeader);

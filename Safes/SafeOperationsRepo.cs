@@ -30,6 +30,7 @@ namespace Safes
         public SafeDTO GetAll(int currentPage, string keyword)
         {
             var list = safeEntity
+                .Where(x => x.IsHidden == false)
                 .OrderByDescending(x => x.Id)
                 .AsEnumerable();
 
@@ -99,6 +100,31 @@ namespace Safes
                 context.SaveChanges();
                 return true;
             }
+            return false;
+        }
+
+        public bool UpdateByHeaderId(long headerId, decimal total, AccountTypesEnum accountTypesEnum)
+        {
+            Safe safe = safeEntity.SingleOrDefault(x => x.HeaderId == headerId && x.AccountTypeId == (int)accountTypesEnum);
+            if (safe != null)
+            {
+                if (accountTypesEnum == AccountTypesEnum.Sellers)
+                {
+                    safe.Outcoming = total;
+                }
+
+                else
+                {
+                    safe.Incoming = total;
+                }
+                safeEntity.Update(safe);
+                context.SaveChanges();
+              
+                return true;
+            }
+
+         
+
             return false;
         }
 
