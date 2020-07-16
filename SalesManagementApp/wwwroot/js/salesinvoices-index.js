@@ -205,7 +205,7 @@ function printReport(id) {
     if (id != undefined)
         headerId = id;
 
-    var selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == headerId);
+     selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == headerId);
     update();
     prepareSalesinvoiceHeader(selectedSalesinvoiceHeader);
     var reportHeader = prepareReportHeader();
@@ -281,8 +281,8 @@ function prepareReportContent(selectedSalesinvoiceHeader) {
 function getReportContent(selectedSalesinvoiceHeader) {
 
     var html = '';
-    var totalQuantity = 0;
-    var totalWight = 0;
+    //var totalQuantity = 0;
+    //var totalWight = 0;
 
 
     var total = 0;
@@ -297,13 +297,13 @@ function getReportContent(selectedSalesinvoiceHeader) {
         html += '<td>' + convertToIndiaNumbers(subTotal) + '</td>';
         html += '</tr>';
 
-        total += subTotal;
+        //total += subTotal;
         totalQuantity += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity;
         totalWight += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight;
 
 
     }
-    html = prepareSalesinvoiceTotalReport(html, total, totalWight, totalQuantity);
+    html = prepareSalesinvoiceTotalReport(html, selectedSalesinvoiceHeader.Total, totalWight, totalQuantity);
     return html;
 }
 

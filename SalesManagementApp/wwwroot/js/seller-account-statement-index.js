@@ -116,7 +116,7 @@ function printReport(safeList) {
     var reportFooter = prepareReportFooter();
     var newWin = window.open('', 'Print-Window');
     newWin.document.open();
-    var reportHead = getReportHead(' كشف حساب عميل');
+    var reportHead = getReportHead(' كشف حساب تاجر');
     newWin.document.write(reportHead +
         reportHeader + reportContent + reportFooter +
         `</body></html>`);
@@ -133,7 +133,7 @@ function prepareReportHeader() {
                             <table style="width:100%;border:none;">
                                 <tr>
                                     <td style="width:100%;border:none;font-size:24px;font-weight:bold;text-align: center;">
-                                        اسم العميل:`+ $('#sellerName').text() + `
+                                        اسم التاجر:`+ $('#sellerName').text() + `
                                     </td>
                                 </tr>
                             </table>
@@ -150,8 +150,8 @@ function prepareReportContent(safeList) {
                                     <tr>
                                         <th>م</th>
                                         <th>التاريخ</th>
-                                        <th> المدفوع</th>
-                                        <th>الوارد</th>
+                                        <th> المشتريات</th>
+                                        <th>المدفوعات</th>
                                         <th>التفاصيل  </th>
                                     </tr>
                                 </thead>
@@ -163,21 +163,39 @@ function prepareReportContent(safeList) {
 
 function getReportContent(safeList) {
 
+
+
     var html = '';
     for (var i = 0; i < safeList.length; i++) {
         let rowNumber = i + 1;
         html += '<tr>';
-        html += '<td>' + rowNumber + '</td>';
-        html += '<td>' + getLocalDate(safeList[i].Date) + '</td>';
-        html += '<td>' + safeList[i].Outcoming + '</td>';
-        html += '<td>' + safeList[i].Incoming + '</td>';
-        html += '<td>' + safeList[i].Notes + '</td>';
+        html += '<td>' + convertToIndiaNumbers(rowNumber) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(getLocalDate(safeList[i].Date)) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(safeList[i].Outcoming) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(safeList[i].Incoming) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(safeList[i].Notes) + '</td>';
         html += '</tr>';
     }
     return html;
 }
 
 function prepareReportFooter() {
+    var totalIncoming = 0;
+    var totalOutcoming = 0;
+
+    for (let item of safeList) {
+        totalIncoming += item.Incoming;
+        totalOutcoming += item.Outcoming;
+    }
+    var balance = totalIncoming - totalOutcoming;
+    var description;
+    if (balance > 0) {
+        description = "لـــــــــه";
+    }
+    else {
+        description = "عليه"
+    }
+    balance = Math.abs(balance);
     let reportFooter = `<div class="row" id="report-footer">
                         <div class="col-lg-12">
                             <table style="width:100%;border:none;">
@@ -185,16 +203,16 @@ function prepareReportFooter() {
                                     <td style="width:70%;border:none;">
                                         <table>
                                             <tr>
+                                                <td>اجمالي المشتريات</td>
                                                 <td>اجمالي المدفوعات</td>
-                                                <td>اجمالي الورادات</td>
                                                 <td>الرصيد</td>
-                                                <td>بيان</td>
+                                                <td>البيان</td>
                                             </tr>
                                             <tr>
-                                                <td>1000 </td>
-                                                <td> 800 </td>
-                                                <td> 200</td>
-                                                <td> عليه</td>
+                                                <td>`+ convertToIndiaNumbers(totalOutcoming) + ` </td>
+                                                <td>`+ convertToIndiaNumbers(totalIncoming) + `</td>
+                                                <td>`+ convertToIndiaNumbers(balance) + `</td>
+                                                <td>`+ description + `</td>
                                             </tr>
                                         </table>
                                     </td>
