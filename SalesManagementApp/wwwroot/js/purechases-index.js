@@ -291,8 +291,8 @@ function prepareReportHeader() {
 
 function prepareReportContent() {
     return `<div class="row" id="report-content">
-                        <div class="col-lg-12">
-                            <table id="purechase-details-table" class="table table-bordered table-hover" style="margin: 50px 0px;">
+                        <div class="col-lg-12" style="width:95%;">
+                            <table id="purechase-details-table" class="table-report table table-bordered table-hover" style="margin: 50px 0px;">
                                 <thead>
                                     <tr>
                                         <th>العدد</th>
@@ -304,6 +304,11 @@ function prepareReportContent() {
                                 <tbody class="purechase-details">`+ getReportContent(headerId) + `</tbody>
                             </table>
                         </div>
+                     
+                           <div class="col-lg-2" style=" width: 3%;writing-mode: vertical-rl;float: left;margin-top: -140px;">
+    هذه الفاتورة لا تلغي المستندات أو الشيكات او الايصالات     
+                           </div>
+                        
                     </div>`;
 }
 
@@ -353,7 +358,7 @@ function prepareReportFooter() {
                                                 <td> اجمالي الخصومات</td>
                                                 <td>`+ convertToIndiaNumbers($("#TotalDiscounts").text()) + `</td>
                                             </tr>
-                                            <tr style="font-size:24px;font-weight:bold;">
+                                            <tr style="font-size:24px;font-weight:bold;background-color:gray;color:white">
                                                 <td> الصافي</td>
                                                 <td>`+ convertToIndiaNumbers($("#TotalAfterDiscount").text()) + `</td>
                                             </tr>

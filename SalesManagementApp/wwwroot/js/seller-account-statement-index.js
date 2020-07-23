@@ -144,8 +144,8 @@ function prepareReportHeader() {
 
 function prepareReportContent(safeList) {
     return `<div class="row" id="report-content">
-                        <div class="col-lg-12">
-                            <table id="purechase-details-table" class="table table-bordered table-hover" style="margin: 50px 0px;">
+                        <div class="col-lg-12" style="width:100%;">
+                            <table id="purechase-details-table" class="table-report table table-bordered table-hover" style="margin: 50px 0px;">
                                 <thead>
                                     <tr>
                                         <th>م</th>

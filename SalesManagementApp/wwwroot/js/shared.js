@@ -283,7 +283,7 @@ function loadDatabaseEntity() {
 
 
 function getReportHead(title) {
-    var html = `<html>
+    var html = `<html dir="rtl">
 <head>
 <title>`+ title + `</title>
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -303,7 +303,6 @@ function getReportHead(title) {
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-    <link rel="stylesheet" type="text/css" href="/Content/app-assets/css-rtl/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/Content/app-assets/fonts/icomoon.css">
     <link rel="stylesheet" type="text/css" href="/Content/app-assets/fonts/flag-icon-css/css/flag-icon.min.css">
     <link rel="stylesheet" type="text/css" href="/Content/app-assets/vendors/css/extensions/pace.css">
@@ -322,7 +321,7 @@ function getReportHead(title) {
     <link rel='stylesheet' href='/report/css/print.css' media="print">
 
 </head>
-<body onload="window.print()">`;
+<body style="background-color: #ffffff;" onload="window.print()">`;
     return html;
 }
 
@@ -333,8 +332,20 @@ function isEmpty(text) {
     return false;
 }
 
+function getReportFooterText() {
+
+    return `<div class="col-lg-12">
+                            <table style="width:100%;border:none;font-weight:bold">
+                                <tr>
+                                    <td style="width:70%;border:none;text-align:center">خـــــــــالص مع الشكــــــــــــر</td>
+                                </tr>
+                             </table>
+                    </div>`;
+}
+
 function getReportAuthor() {
-    return `<div class="col-lg-12 author">
+    var html = getReportFooterText();
+    return html + `<div class="col-lg-12 author">
                             <table style="width:100%;border:none;font-weight:bold">
                                 <tr>
                                     <td style="width:30%;border:none;">01093162036</td>
@@ -351,9 +362,9 @@ var elements = document.getElementsByClassName("arrow-togglable");
 
 document.onkeydown = function (e) {
     let targetIndex = e.target.tabIndex;
-    
-    let rowNumber= getRowNumber(e);
-    var index = targetIndex + (parseInt( rowNumber-1 )* 5);
+
+    let rowNumber = getRowNumber(e);
+    var index = targetIndex + (parseInt(rowNumber - 1) * 5);
     switch (e.keyCode) {
         case 39:
             currentIndex = (index == 0) ? elements.length - 1 : --index;
@@ -366,7 +377,7 @@ document.onkeydown = function (e) {
     }
 };
 
-function getRowNumber(e){
+function getRowNumber(e) {
     if (e.target.id.startsWith("Quantity")) {
         return e.target.id.split('Quantity')[1];
     }

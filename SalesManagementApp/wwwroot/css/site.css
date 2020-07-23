@@ -74,3 +74,10 @@ thead {
     bottom: 0;
     width: 100%;
 }
+
+.table-report {
+    width: 100%;
+    text-align: center;
+}
+
+

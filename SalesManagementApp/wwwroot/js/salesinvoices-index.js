@@ -255,8 +255,8 @@ function prepareReportHeader() {
 function prepareReportContent(selectedSalesinvoiceHeader) {
 
     let reportcontent = `<div class="row" id="report-content">
-                        <div class="col-lg-12">
-                                <table id="salesinvoice-details-table" class="table table-bordered table-hover" style="margin: 10px 0px;">
+                        <div class="col-lg-12" style="width:100%;">
+                                <table id="salesinvoice-details-table" class="table-report table table-bordered table-hover" style="margin: 10px 0px;">
                                 <thead>
                                     <tr>
                                         <th>العدد</th>
