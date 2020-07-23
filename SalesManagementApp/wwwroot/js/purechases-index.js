@@ -91,7 +91,7 @@ function setPurechaseHeader() {
         i++;
     });
     $('.tbody').html(html);
-   
+
 }
 //Getting Related PurechaseDetails to show them in modal 
 function getPurechaseDetails(id) {
@@ -99,26 +99,31 @@ function getPurechaseDetails(id) {
     selectedPurechaseHeader = purechaseHeaders.find(x => x.Id == id);
     var html = '';
     var totalQuantity = 0;
+    var totalWeight = 0;
     total = 0;
+    var subTotal = 0;
     for (var i = 0; i < selectedPurechaseHeader.PurechasesDetialsList.length; i++) {
         let rowNumber = i + 1;
+        subTotal = 0;
+        subTotal = Math.ceil(parseFloat((selectedPurechaseHeader.PurechasesDetialsList[i].Price * selectedPurechaseHeader.PurechasesDetialsList[i].Weight)));
         html += '<tr>';
         html += '<td >' + selectedPurechaseHeader.PurechasesDetialsList[i].Quantity + '</td>';
         html += '<td>' + selectedPurechaseHeader.PurechasesDetialsList[i].Weight + '</td>';
         html += '<td>' + selectedPurechaseHeader.PurechasesDetialsList[i].Price + '</td>';
-        html += '<td>' + parseFloat((selectedPurechaseHeader.PurechasesDetialsList[i].Price * selectedPurechaseHeader.PurechasesDetialsList[i].Weight).toFixed(2)) + '</td>';
+        html += '<td>' + subTotal + '</td>';
         html += '</tr>';
 
         totalQuantity += selectedPurechaseHeader.PurechasesDetialsList[i].Quantity;
-        total += parseFloat((selectedPurechaseHeader.PurechasesDetialsList[i].Price * selectedPurechaseHeader.PurechasesDetialsList[i].Weight).toFixed(2));
+        totalWeight += selectedPurechaseHeader.PurechasesDetialsList[i].Weight;
 
+        total += subTotal;
     }
 
     $('tbody.purechase-details').html(html);
 
-    preparePurechaseHeader(selectedPurechaseHeader);
+    preparePurechaseHeader(selectedPurechaseHeader); 
 
-    preparePurechaseFooter(total, selectedPurechaseHeader);
+    preparePurechaseFooter(total, totalQuantity, totalWeight, selectedPurechaseHeader);
     $('#listModal').modal('show');
     $("#purchase-header").attr("src", getImagesUrl() + "purchase-header.jpg");
     return html;
@@ -130,17 +135,23 @@ function preparePurechaseHeader(selectedPurechaseHeader) {
     $('#Date').text(getLocalDate(selectedPurechaseHeader.PurechasesDate));
 }
 //Prepare Purechase footer to bind it in modal
-function preparePurechaseFooter(total, selectedPurechaseHeader) {
+function preparePurechaseFooter(total, totalQuantity, totalWeight, selectedPurechaseHeader) {
 
     $('#CommissionPercentage').val(selectedPurechaseHeader.CommissionRate);
-    $('#Commission').val(selectedPurechaseHeader.Commission);
+    $('#Commission').val(Math.ceil(selectedPurechaseHeader.Commission));
     $('#Nawlon').val(selectedPurechaseHeader.Nawlon);
     $('#Descent').val(Math.ceil(selectedPurechaseHeader.Descent));
     $('#Gift').val(Math.ceil(selectedPurechaseHeader.Gift));
+
     $('#Total').text(Math.ceil(total));
-    let totalDiscounts = Math.ceil(parseInt(selectedPurechaseHeader.Commission) + parseInt(selectedPurechaseHeader.Descent) + parseInt(selectedPurechaseHeader.Nawlon) + parseInt(selectedPurechaseHeader.Gift));
+    let totalDiscounts = Math.ceil(parseFloat(selectedPurechaseHeader.Commission)) + Math.ceil(parseFloat(selectedPurechaseHeader.Descent)) + Math.ceil(parseFloat(selectedPurechaseHeader.Nawlon)) + Math.ceil(parseFloat(selectedPurechaseHeader.Gift));
     $('#TotalDiscounts').text(totalDiscounts);
+    let totalAfterDiscount = total - totalDiscounts;
+    selectedPurechaseHeader.Total = totalAfterDiscount;
     $('#TotalAfterDiscount').text(Math.ceil(selectedPurechaseHeader.Total));
+
+    $('#TotalQuantity').text(Math.ceil(totalQuantity));
+    $('#TotalWeight').text(Math.ceil(totalWeight));
 }
 
 //gettting nawlon value is changed
@@ -153,7 +164,7 @@ function updateTotal() {
 //Update Commission when choose new Commission Percentage
 function updateCommission() {
     let commissionPercentage = $("#CommissionPercentage").val();
-    $("#Commission").val((commissionPercentage / 100) * total);
+    $("#Commission").val(Math.ceil((commissionPercentage / 100) * total));
 }
 //Updateing Total Discount after changing the nawlon 
 function updateTotalDiscounts() {
@@ -163,12 +174,12 @@ function updateTotalDiscounts() {
     let gift = $('#Gift').val();
     let totalDiscounts = 0;
     if (nawlon == "" || nawlon <= 0) {
-        totalDiscounts = Math.ceil(parseFloat(commission)) + parseFloat(descent) + parseFloat(gift);
+        totalDiscounts = Math.ceil(parseFloat(commission)) + Math.ceil(parseFloat(descent)) + Math.ceil(parseFloat(gift));
     }
     else if (nawlon > 0) {
-        totalDiscounts = parseFloat(commission) + parseFloat(descent) + parseFloat(gift) + parseFloat(nawlon);
+        totalDiscounts = Math.ceil(parseFloat(commission)) + Math.ceil(parseFloat(descent)) + Math.ceil(parseFloat(gift)) + Math.ceil(parseFloat(nawlon));
     }
-    $("#TotalDiscounts").text(Math.ceil(totalDiscounts));
+    $("#TotalDiscounts").text(totalDiscounts);
 
 }
 //Updating Total After Discount
@@ -240,7 +251,7 @@ function printReport() {
     //setTimeout(function () {
     //    debugger;
     //    newWin.close();
-    //    let isToday = parseInt($("#today").val());
+    //    let isToday = parseFloat($("#today").val());
     //    getAll(isToday);
     //}, 300);
 
@@ -300,24 +311,24 @@ function getReportContent(headerId) {
     var selectedPurechaseHeader = purechaseHeaders.find(x => x.Id == headerId);
     var html = '';
     var totalQuantity = 0;
+    var totalQuantity = 0;
     var total = 0;
+    var subTotal = 0;
     for (var i = 0; i < selectedPurechaseHeader.PurechasesDetialsList.length; i++) {
         let rowNumber = i + 1;
-
+        subTotal = 0;
         let quantity = convertToIndiaNumbers(selectedPurechaseHeader.PurechasesDetialsList[i].Quantity);
         let weight = convertToIndiaNumbers(selectedPurechaseHeader.PurechasesDetialsList[i].Weight);
         let price = convertToIndiaNumbers(selectedPurechaseHeader.PurechasesDetialsList[i].Price);
-
+        subTotal = Math.ceil(selectedPurechaseHeader.PurechasesDetialsList[i].Weight * selectedPurechaseHeader.PurechasesDetialsList[i].Price);
         html += '<tr>';
         html += '<td>' + quantity + '</td>';
         html += '<td>' + weight + '</td>';
         html += '<td>' + price + '</td>';
-        html += '<td>' + convertToIndiaNumbers(selectedPurechaseHeader.PurechasesDetialsList[i].Weight * selectedPurechaseHeader.PurechasesDetialsList[i].Price) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(subTotal) + '</td>';
         html += '</tr>';
-
         totalQuantity += selectedPurechaseHeader.PurechasesDetialsList[i].Quantity;
-        total += (selectedPurechaseHeader.PurechasesDetialsList[i].Price * selectedPurechaseHeader.PurechasesDetialsList[i].Weight);
-
+        total += subTotal;
     }
     return html;
 }
@@ -329,6 +340,11 @@ function prepareReportFooter() {
                                 <tr>
                                     <td style="width:70%;border:none;">
                                         <table>
+                                           
+                                            <tr>
+                                                <td> اجمالي الوزن</td>
+                                                <td>`+ convertToIndiaNumbers($("#TotalWeight").text()) + `</td>
+                                            </tr>
                                             <tr>
                                                 <td>الاجمالي</td>
                                                 <td>`+ convertToIndiaNumbers($("#Total").text()) + `</td>
@@ -369,14 +385,7 @@ function prepareReportFooter() {
 
                         </div>
                     </div>`;
-    let author = ` <div class="col-lg-12">
-                            <table style="width:100%;border:none;font-weight:bold">
-                                <tr>
-                                    <td style="width:30%;border:none;">01093162036</td>
-                                    <td style="width:70%;border:none;">Developed By Mahmoud A.Salman</td>
-                                </tr>
-                             </table>
-                    </div>`;
+    let author = getReportAuthor();
     reportFooter += author;
     return reportFooter;
 }

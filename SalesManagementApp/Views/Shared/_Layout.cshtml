@@ -10,7 +10,7 @@
     <meta name="description" content="Robust admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
     <meta name="keywords" content="admin template, robust admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>شركة تبارك</title>
+    <title>شركة السنـــوسي</title>
     <link rel="apple-touch-icon" sizes="60x60" href="/Content/app-assets/images/ico/apple-icon-60.png">
     <link rel="apple-touch-icon" sizes="76x76" href="/Content/app-assets/images/ico/apple-icon-76.png">
     <link rel="apple-touch-icon" sizes="120x120" href="/Content/app-assets/images/ico/apple-icon-120.png">
@@ -81,7 +81,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="javascript:void(0)" class="list-group-item">
+                                    <a href="javascript:void(0)" class="list-group-item" data-toggle="modal" data-target="#database-Form" onclick="loadDatabaseEntity()">
                                         <div class="media">
                                             <div class="media-left valign-middle"><i class="icon-check2 icon-bg-circle bg-green bg-accent-3"></i></div>
                                             <div class="media-body">
@@ -226,7 +226,8 @@
                     </div>
                     <div class="modal-footer">
                         <input type="reset" class="btn btn-outline-secondary btn-lg" data-dismiss="modal" value="Close">
-                        <input type="button" onclick="backupDatabase();" class="btn btn-outline-primary btn-lg" value="Ok">
+                        <input type="button" onclick="backupDatabase();" class="btn btn-outline-primary btn-lg" value="Backup">
+                        <input type="button" onclick="restoreDatabase();" class="btn btn-outline-primary btn-lg" value="Restore">
                     </div>
                 </form>
             </div>

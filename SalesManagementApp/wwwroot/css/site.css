@@ -67,3 +67,10 @@ thead {
     .icon-plus-circle:hover {
         font-size: 25px;
     }
+
+
+.author {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

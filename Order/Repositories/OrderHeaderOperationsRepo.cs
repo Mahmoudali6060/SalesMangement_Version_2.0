@@ -28,6 +28,7 @@ namespace Order.Repositories
         }
         public OrderListDTO GetAll(int currentPage, string keyword, bool isToday)
         {
+            var total = 0;
             var list = orderHeaderEntity
                 .Include("OrderDetails").Include("Farmer")
                 .OrderBy(x => x.Id)
@@ -41,11 +42,16 @@ namespace Order.Repositories
             if (isToday)
             {
                 list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+                total = orderHeaderEntity.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+            }
+            else
+            {
+                total = orderHeaderEntity.Count();
             }
 
             return new OrderListDTO()
             {
-                Total = orderHeaderEntity.Count(),
+                Total = total,
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }

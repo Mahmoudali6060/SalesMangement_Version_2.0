@@ -68,8 +68,8 @@ function setFarmerAccountStatement() {
         html += '<tr>';
         html += '<td>' + i + '</td>';
         html += '<td>' + getLocalDate(item.Date) + '</td>';
-        html += '<td>' + item.Outcoming + '</td>';
-        html += '<td>' + item.Incoming + '</td>';
+        html += '<td>' + Math.ceil( item.Outcoming )+ '</td>';
+        html += '<td>' + Math.ceil(item.Incoming )+ '</td>';
         html += '<td>' + item.Notes + '</td>';
         html += '</tr>';
         i++;
@@ -77,9 +77,9 @@ function setFarmerAccountStatement() {
         outcomingTotal += item.Outcoming;
     });
 
-    $("#incomingTotal").text(incomingTotal);
-    $("#outcomingTotal").text(outcomingTotal);
-    $("#balance").text((Math.abs(incomingTotal - outcomingTotal)).toFixed(2));
+    $("#incomingTotal").text(Math.ceil(incomingTotal));
+    $("#outcomingTotal").text(Math.ceil(outcomingTotal));
+    $("#balance").text(Math.ceil((Math.abs(incomingTotal - outcomingTotal))));
     if (incomingTotal > outcomingTotal) {
         $("#balance-description").text("جملة ما له");
     }
@@ -91,19 +91,6 @@ function setFarmerAccountStatement() {
     var value = $("#search").val();
     if (value !== "") {
         filter();
-    }
-}
-
-//Filtering
-function filter() {
-    var value = $("#search").val();
-    if (value !== "") {
-        $("#farmer-account-statement-header-table tbody tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-        });
-    }
-    else {
-        getAll();
     }
 }
 
@@ -168,8 +155,8 @@ function getReportContent(safeList) {
         html += '<tr>';
         html += '<td>' + convertToIndiaNumbers(rowNumber) + '</td>';
         html += '<td>' + convertToIndiaNumbers(getLocalDate(safeList[i].Date)) + '</td>';
-        html += '<td>' + convertToIndiaNumbers(safeList[i].Outcoming) + '</td>';
-        html += '<td>' + convertToIndiaNumbers(safeList[i].Incoming) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(Math.ceil(safeList[i].Outcoming)) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(Math.ceil(safeList[i].Incoming)) + '</td>';
         html += '<td>' + convertToIndiaNumbers(safeList[i].Notes) + '</td>';
         html += '</tr>';
     }
@@ -181,8 +168,8 @@ function prepareReportFooter() {
     var totalOutcoming = 0;
 
     for (let item of safeList) {
-        totalIncoming += item.Incoming;
-        totalOutcoming += item.Outcoming;
+        totalIncoming += Math.ceil(item.Incoming);
+        totalOutcoming += Math.ceil( item.Outcoming);
     }
     var balance = totalIncoming - totalOutcoming;
     var description;
@@ -219,14 +206,7 @@ function prepareReportFooter() {
 
                         </div>
                     </div>`;
-    let author = ` <div class="col-lg-12">
-                            <table style="width:100%;border:none;font-weight:bold">
-                                <tr>
-                                    <td style="width:30%;border:none;">01093162036</td>
-                                    <td style="width:70%;border:none;">Developed By Mahmoud A.Salman</td>
-                                </tr>
-                             </table>
-                    </div>`;
+    let author = getReportAuthor();
     reportFooter += author;
     return reportFooter;
 }

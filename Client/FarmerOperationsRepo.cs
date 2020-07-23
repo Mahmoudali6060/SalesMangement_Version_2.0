@@ -26,7 +26,7 @@ namespace Farmers
 
         public IEnumerable<Farmer> GetAll()
         {
-            return _farmerEntity.Include("PurechasesHeader").AsEnumerable();
+            return _farmerEntity.Include("PurechasesHeader").AsEnumerable().OrderBy(x => x.Name);
         }
         public FarmListDTO GetAll(int currentPage, string keyword)
         {
@@ -42,7 +42,7 @@ namespace Farmers
             return new FarmListDTO()
             {
                 Total = _farmerEntity.Count(),
-                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).OrderBy(x=>x.Name)
             };
         }
         public Farmer GetById(long id)

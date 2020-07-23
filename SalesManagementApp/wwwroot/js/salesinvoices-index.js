@@ -88,17 +88,17 @@ function onSelectedByaaChange(rowNumber) {
     updateTotal();
 }
 
-function onTotalMashalChange() {
-    totalMashal = parseInt($("#totalMashal").val());
-    updateTotal(null, totalMashal);
-}
+//function onTotalMashalChange() {
+//    totalMashal = parseInt($("#totalMashal").val());
+//    updateTotal(null, totalMashal);
+//}
 
-function onTotalByaaChange() {
-    totalByaa = parseInt($("#totalByaa").val());
-    updateTotal(totalByaa, null);
-}
+//function onTotalByaaChange() {
+//    totalByaa = parseInt($("#totalByaa").val());
+//    updateTotal(totalByaa, null);
+//}
 
-function updateTotal(updatedTotalByaa, updatedTotalMashal) {
+function updateTotal() {
     var subTotal;
     var total = 0;
     var totalByaa = 0;
@@ -107,14 +107,14 @@ function updateTotal(updatedTotalByaa, updatedTotalMashal) {
     var i = 1;
     for (let item of selectedSalesinvoiceHeader.SalesinvoicesDetialsList) {
         subTotal = 0;
-        subTotal += (item.Price * item.Weight);
+        subTotal += (item.Price * item.Weight) + item.Byaa + item.Mashal;
         $("#SubTotal" + i).text(Math.ceil(subTotal));
         i++;
         total += subTotal;
-        totalByaa = updatedTotalByaa == undefined ? totalByaa += item.Byaa : updatedTotalByaa;
-        totalMashal = updatedTotalMashal == undefined ? totalMashal += item.Mashal : updatedTotalMashal;
+        totalByaa += item.Byaa;
+        totalMashal += item.Mashal;
     }
-    total += totalByaa + totalMashal;
+    //total += totalByaa + totalMashal;
     $("#total").text(Math.ceil(total));
     $("#totalByaa").val(Math.ceil(totalByaa));
     $("#totalMashal").val(Math.ceil(totalMashal));
@@ -160,21 +160,25 @@ function getSalesinvoiceDetails(id) {
     for (var i = 0; i < selectedSalesinvoiceHeader.SalesinvoicesDetialsList.length; i++) {
         let rowNumber = i + 1;
         html += '<tr>';
-        let subTotal = (selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal;
+        let subTotal = Math.ceil((selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal);
         html += '<td style="width: 30%;">' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price + '</td>';
         html += '<td>' + '<input class="form-control" type="number" id="Byaa' + rowNumber + '" value="' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa + '"  onchange="onSelectedByaaChange(' + rowNumber + ')">' + '</td>';
-        html += '<td>' + '<input readonly="readonly" class="form-control" type="number" id="Mashal' + rowNumber + '" value="' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal + '" onchange="onSelectedMashalChange(' + rowNumber + ')">' + '</td>';
+        html += '<td>' + '<input  class="form-control" type="number" id="Mashal' + rowNumber + '" value="' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal + '" onchange="onSelectedMashalChange(' + rowNumber + ')">' + '</td>';
         html += '<td id="SubTotal' + rowNumber + '">' + subTotal + '</td>';
         html += '</tr>';
 
         total += subTotal;
         totalQuantity += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity;
         totalWight += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight;
-        totalByaa += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa;
-        totalMashal += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal;
+        totalByaa += Math.ceil(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa);
+        totalMashal += Math.ceil(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal);
     }
+    selectedSalesinvoiceHeader.ByaaTotal = totalByaa;
+    selectedSalesinvoiceHeader.MashalTotal = totalMashal;
+    selectedSalesinvoiceHeader.Total = total;
+
     html = prepareSalesinvoiceTotal(html, selectedSalesinvoiceHeader, totalWight, totalQuantity);
     $('tbody.salesinvoice-details').html(html);
     prepareSalesinvoiceHeader(selectedSalesinvoiceHeader);
@@ -195,7 +199,7 @@ function prepareSalesinvoiceTotal(html, selectedSalesinvoiceHeader, totalWight, 
     html += '<td>' + totalWight + '</td>';
     html += '<td>' + '' + '</td>';
     html += '<td>' + '<input readonly="readonly" class="form-control" type="number" id="totalByaa" value="' + selectedSalesinvoiceHeader.ByaaTotal + '"  onchange="onTotalByaaChange()" >' + '</td>';
-    html += '<td>' + '<input class="form-control" type="number" id="totalMashal" value="' + selectedSalesinvoiceHeader.MashalTotal + '" onchange="onTotalMashalChange()" >' + '</td>';
+    html += '<td>' + '<input readonly="readonly" class="form-control" type="number" id="totalMashal" value="' + selectedSalesinvoiceHeader.MashalTotal + '" onchange="onTotalMashalChange()" >' + '</td>';
     html += '<td><span id="total">' + Math.ceil(selectedSalesinvoiceHeader.Total) + '</span></td>';
     html += '</tr>';
     return html;
@@ -205,7 +209,7 @@ function printReport(id) {
     if (id != undefined)
         headerId = id;
 
-     selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == headerId);
+    selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == headerId);
     update();
     prepareSalesinvoiceHeader(selectedSalesinvoiceHeader);
     var reportHeader = prepareReportHeader();
@@ -266,14 +270,7 @@ function prepareReportContent(selectedSalesinvoiceHeader) {
                         </div>
                         </div>
                     </div>`;
-    let author = ` <div class="col-lg-12">
-                            <table style="width:100%;border:none;font-weight:bold">
-                                <tr>
-                                    <td style="width:30%;border:none;">01093162036</td>
-                                    <td style="width:70%;border:none;">Developed By Mahmoud A.Salman</td>
-                                </tr>
-                             </table>
-                    </div>`;
+    let author = getReportAuthor();
     reportcontent += author;
     return reportcontent;
 }
@@ -286,6 +283,8 @@ function getReportContent(selectedSalesinvoiceHeader) {
 
 
     var total = 0;
+    totalWight = 0;
+    totalQuantity = 0;
     for (var i = 0; i < selectedSalesinvoiceHeader.SalesinvoicesDetialsList.length; i++) {
         let rowNumber = i + 1;
 
@@ -294,7 +293,7 @@ function getReportContent(selectedSalesinvoiceHeader) {
         html += '<td>' + convertToIndiaNumbers(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity) + '</td>';
         html += '<td>' + convertToIndiaNumbers(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + '</td>';
         html += '<td>' + convertToIndiaNumbers(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price) + '</td>';
-        html += '<td>' + convertToIndiaNumbers(subTotal) + '</td>';
+        html += '<td>' + convertToIndiaNumbers(Math.ceil(subTotal)) + '</td>';
         html += '</tr>';
 
         //total += subTotal;

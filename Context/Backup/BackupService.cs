@@ -37,7 +37,8 @@ namespace Database.Backup
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     var query = String.Format("BACKUP DATABASE [{0}] TO DISK='{1}'", databaseName, filePath);
-
+                    //>>>>>>> It works with SQL Express 2017
+                    //BACKUP DATABASE SalesManagement TO  DISK = N'F:\My Projects\Sales Management\Database\SalesManagement-2020-07-18.bak' WITH INIT, NOUNLOAD, NAME = N'Sales Management',  STATS = 10,  FORMAT
                     using (var command = new SqlCommand(query, connection))
                     {
                         connection.Open();

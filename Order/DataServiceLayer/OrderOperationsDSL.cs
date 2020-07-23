@@ -91,7 +91,7 @@ namespace Order.DataServiceLayer
                 AccountId = entity.SellerId,
                 AccountTypeId = (int)AccountTypesEnum.Sellers,
                 Outcoming = total,
-                Notes = $"كشف رقم :{entity.Id}",
+                Notes = $" رقم الكشف :{entity.Id}",
                 IsHidden = true,
                 HeaderId = entity.Id,
                 OrderId = orderId
@@ -107,8 +107,18 @@ namespace Order.DataServiceLayer
 
             //[2] Update Purechase
             PurechasesHeader purechasesHeader = PreparePurechasesEntity(entity);
-            purechasesHeader.Id = _order_PurechaseOperationsRepo.GetByOrderHeaderId(entity.OrderHeader.Id).PurechasesHeaderId;
-            _purechasesOperationsRepo.Update(purechasesHeader);
+            var orderHeader = _order_PurechaseOperationsRepo.GetByOrderHeaderId(entity.OrderHeader.Id);
+            if (orderHeader != null && orderHeader.PurechasesHeaderId != 0)
+            {
+                purechasesHeader.Id = orderHeader.PurechasesHeaderId;
+                _purechasesOperationsRepo.Update(purechasesHeader);
+            }
+
+            else
+            {
+                _purechasesOperationsRepo.Add(purechasesHeader);
+            }
+
 
             //[3] Update Safe 
             _safeOperationsRepo.DeleteByOrderId(entity.OrderHeader.Id);
@@ -218,6 +228,8 @@ namespace Order.DataServiceLayer
                     SalesinvoicesDate = orderHeader.OrderHeader.OrderDate,
                     SellerId = sellerId,
                     SalesinvoicesDetialsList = salesinvoicesDetials,
+                    ByaaTotal = AppSettings.ByaaRate * item.Quantity,
+                    MashalTotal = AppSettings.MashalRate * item.Quantity
                 };
                 _salesinvoicesOperationsRepo.Add(salesinvoicesHeader, orderHeader.OrderHeader.Id);
 

@@ -68,18 +68,18 @@ function setSellerAccountStatement() {
         html += '<tr>';
         html += '<td>' + i + '</td>';
         html += '<td>' + getLocalDate(item.Date) + '</td>';
-        html += '<td>' + item.Outcoming + '</td>';
-        html += '<td>' + item.Incoming + '</td>';
+        html += '<td>' + Math.ceil( item.Outcoming )+ '</td>';
+        html += '<td>' + Math.ceil(item.Incoming) + '</td>';
         html += '<td>' + item.Notes + '</td>';
         html += '</tr>';
         i++;
-        incomingTotal += item.Incoming;
-        outcomingTotal += item.Outcoming;
+        incomingTotal += Math.ceil(item.Incoming);
+        outcomingTotal += Math.ceil(item.Outcoming);
     });
 
-    $("#incomingTotal").text(incomingTotal);
-    $("#outcomingTotal").text(outcomingTotal);
-    $("#balance").text((Math.abs(incomingTotal - outcomingTotal)).toFixed(2));
+    $("#incomingTotal").text(Math.ceil( incomingTotal));
+    $("#outcomingTotal").text(Math.ceil( outcomingTotal));
+    $("#balance").text(Math.ceil((Math.abs(incomingTotal - outcomingTotal))));
 
     if (incomingTotal > outcomingTotal) {
         $("#balance-description").text("جملة ما له");
@@ -221,14 +221,8 @@ function prepareReportFooter() {
 
                         </div>
                     </div>`;
-    let author = ` <div class="col-lg-12">
-                            <table style="width:100%;border:none;font-weight:bold">
-                                <tr>
-                                    <td style="width:30%;border:none;">01093162036</td>
-                                    <td style="width:70%;border:none;">Developed By Mahmoud A.Salman</td>
-                                </tr>
-                             </table>
-                    </div>`;
+    let author = getReportAuthor();
+
     reportFooter += author;
     return reportFooter;
 }

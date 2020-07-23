@@ -24,7 +24,7 @@ function getAll() {
         html += '<td>' + item.Phone + '</td>';
         //html += '<td>' + item.OppeningBalance + '</td>';
         html += '<td>' + item.Notes + '</td>';
-        html += '<td>' + getFarmerBalance(item.PurechasesHeader) + '</td>';
+        //html += '<td>' + getFarmerBalance(item.PurechasesHeader) + '</td>';
         html += '<td>';
         html += '<i style="color:red;cursor:pointer" class="icon-trash"  onclick = "delele(' + item.Id + ')"></i>';
         html += '<i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i>';

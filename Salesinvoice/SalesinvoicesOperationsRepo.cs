@@ -31,6 +31,7 @@ namespace Salesinvoice
 
         public SalesinvoiceListDTO GetAll(int currentPage, string keyword, bool isToday)
         {
+            var total = 0;
             var list = _salesinvoicesHeaderEntity
                 .Include("SalesinvoicesDetialsList")
                 .Include("Seller")
@@ -45,11 +46,16 @@ namespace Salesinvoice
             if (isToday)
             {
                 list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+                total = _salesinvoicesHeaderEntity.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
             }
 
+            else
+            {
+                total = _salesinvoicesHeaderEntity.Count();
+            }
             return new SalesinvoiceListDTO()
             {
-                Total = _salesinvoicesHeaderEntity.Count(),
+                Total = total,
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
@@ -143,14 +149,22 @@ namespace Salesinvoice
         private void UpdateSalesinvoiceTotal(IEnumerable<SalesinvoicesDetials> salesinvoicesDetialsList, long orderHeaderId)
         {
             decimal total = 0;
+            decimal mashalTotal = 0;
+            decimal byaaTotal = 0;
+
             long salesHeaderId = 0;
             foreach (SalesinvoicesDetials item in salesinvoicesDetialsList)
             {
                 salesHeaderId = item.SalesinvoicesHeaderId;
                 total += (item.Weight * item.Price) + (AppSettings.MashalRate + AppSettings.ByaaRate) * item.Quantity;
+                mashalTotal += AppSettings.MashalRate * item.Quantity;
+                byaaTotal += AppSettings.ByaaRate * item.Quantity;
             }
             SalesinvoicesHeader salesinvoicesHeader = _context.SalesinvoicesHeaders.SingleOrDefault(x => x.Id == salesHeaderId);
             salesinvoicesHeader.Total = salesinvoicesHeader.Total + total;
+            salesinvoicesHeader.MashalTotal = salesinvoicesHeader.MashalTotal + mashalTotal;
+            salesinvoicesHeader.ByaaTotal = salesinvoicesHeader.ByaaTotal + byaaTotal;
+
             _context.SaveChanges();
 
             _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers);
@@ -166,7 +180,7 @@ namespace Salesinvoice
                 AccountId = entity.SellerId,
                 AccountTypeId = (int)AccountTypesEnum.Sellers,
                 Outcoming = total,
-                Notes = $"كشف رقم :{entity.Id}",
+                Notes = $" رقم الكشف:{entity.Id}",
                 IsHidden = true,
                 HeaderId = entity.Id,
                 OrderId = orderId

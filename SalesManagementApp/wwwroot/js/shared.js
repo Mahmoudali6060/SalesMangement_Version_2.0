@@ -256,7 +256,8 @@ function restoreDatabase() {
         data: databaseEntity,
         type: "POST",
         success: function (result) {
-
+            $('#database-Form').modal('hide');
+            alert("تم استرجاع قاعدة بيانات الاحتياطية بنجاح");
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -332,5 +333,53 @@ function isEmpty(text) {
     return false;
 }
 
+function getReportAuthor() {
+    return `<div class="col-lg-12 author">
+                            <table style="width:100%;border:none;font-weight:bold">
+                                <tr>
+                                    <td style="width:30%;border:none;">01093162036</td>
+                                    <td style="width:70%;border:none;">  الدعم الفني والبرمجيات م/محمود علي</td>
+                                </tr>
+                             </table>
+                    </div>`;
+}
 
 
+var elements = document.getElementsByClassName("arrow-togglable");
+//var length = elements.length;
+//var currentIndex = 0;
+
+document.onkeydown = function (e) {
+    let targetIndex = e.target.tabIndex;
+    
+    let rowNumber= getRowNumber(e);
+    var index = targetIndex + (parseInt( rowNumber-1 )* 5);
+    switch (e.keyCode) {
+        case 39:
+            currentIndex = (index == 0) ? elements.length - 1 : --index;
+            elements[currentIndex].focus();
+            break;
+        case 37:
+            currentIndex = ((index + 1) == elements.length) ? 0 : ++index;
+            elements[currentIndex].focus();
+            break;
+    }
+};
+
+function getRowNumber(e){
+    if (e.target.id.startsWith("Quantity")) {
+        return e.target.id.split('Quantity')[1];
+    }
+    if (e.target.id.startsWith("Weight")) {
+        return e.target.id.split('Weight')[1];
+    }
+    if (e.target.id.startsWith("Price")) {
+        return e.target.id.split('Price')[1];
+    }
+    if (e.target.id.startsWith("SellingPrice")) {
+        return e.target.id.split('SellingPrice')[1];
+    }
+    if (e.target.id.startsWith("Sellers")) {
+        return e.target.id.split('Sellers')[1];
+    }
+}

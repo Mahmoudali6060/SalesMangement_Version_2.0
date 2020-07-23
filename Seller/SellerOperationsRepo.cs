@@ -26,7 +26,7 @@ namespace Sellers
 
         public IEnumerable<Seller> GetAll()
         {
-            return _sellerEntity.AsEnumerable();
+            return _sellerEntity.AsEnumerable().OrderBy(x => x.Name);
         }
 
         public SellerListDTO GetAll(int currentPage, string keyword)
@@ -43,7 +43,7 @@ namespace Sellers
             return new SellerListDTO()
             {
                 Total = _sellerEntity.Count(),
-                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).OrderBy(x => x.Name)
             };
         }
 

@@ -33,6 +33,8 @@ namespace Account.Users
         {
             try
             {
+                var company = context.Companys.SingleOrDefault();
+                user.CompanyId = company.Id;
                 context.Entry(user).State = EntityState.Added;
                 context.SaveChanges();
                 return true;
@@ -47,6 +49,8 @@ namespace Account.Users
 
         public bool Update(User user)
         {
+            var company = context.Companys.SingleOrDefault();
+            user.CompanyId = company.Id;
             context.Entry(user).State = EntityState.Modified;
             context.SaveChanges();
             return true;

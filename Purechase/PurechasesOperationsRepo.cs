@@ -30,6 +30,7 @@ namespace Purechase
 
         public PurechaseListDTO GetAll(int currentPage, string keyword, bool isToday)
         {
+            var total = 0;
             var list = _purechasesHeaderEntity
                 .Include("PurechasesDetialsList")
                 .Include("Farmer")
@@ -44,15 +45,19 @@ namespace Purechase
             if (isToday)
             {
                 list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+                total = _purechasesHeaderEntity.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+            }
+            else
+            {
+                total = _purechasesHeaderEntity.Count();
             }
 
             return new PurechaseListDTO()
             {
-                Total = _purechasesHeaderEntity.Count(),
+                Total = total,
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
-
 
         public IEnumerable<PurechasesHeader> GetAllDaily()
         {
@@ -80,7 +85,7 @@ namespace Purechase
             DeletePurchaseDetails(purechasesHeader.Id);
             SetPurechasesHeaderId(purechasesHeader.Id, purechasesHeader.PurechasesDetialsList);
             AddPurechasesDetials(purechasesHeader.PurechasesDetialsList);
-            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id,purechasesHeader.Total, AccountTypesEnum.Clients);
+            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id, purechasesHeader.Total, AccountTypesEnum.Clients);
             return true;
         }
 
@@ -96,8 +101,12 @@ namespace Purechase
         public void DeleteRelatedPurechase(long orderHeaderId)
         {
             Order_Purechase order_Purechase = context.Order_Purechases.FirstOrDefault(x => x.OrderHeaderId == orderHeaderId);
-            PurechasesHeader purechasesHeader = context.PurechasesHeaders.FirstOrDefault(x => x.Id == order_Purechase.PurechasesHeaderId);
-            Delete(purechasesHeader.Id);
+            if (order_Purechase != null && order_Purechase.PurechasesHeaderId != 0)
+            {
+                PurechasesHeader purechasesHeader = context.PurechasesHeaders.FirstOrDefault(x => x.Id == order_Purechase.PurechasesHeaderId);
+                Delete(purechasesHeader.Id);
+            }
+
         }
 
         public DashboardDTO GetDashboardData()
@@ -183,7 +192,7 @@ namespace Purechase
 
             context.Entry(purechaseHeader).State = EntityState.Modified;
             context.SaveChanges();
-            _safeOperationsRepo.UpdateByHeaderId(entity.Id,entity.Total, AccountTypesEnum.Clients);
+            _safeOperationsRepo.UpdateByHeaderId(entity.Id, entity.Total, AccountTypesEnum.Clients);
             return true;
         }
 
