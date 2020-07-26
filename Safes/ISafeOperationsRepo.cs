@@ -19,9 +19,9 @@ namespace Safes
         IEnumerable<Safe> GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
         SafeDTO GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, int currentPage);
         bool DeleteByHeaderId(long header, AccountTypesEnum accountTypesEnum);
-        bool UpdateByHeaderId(long header,decimal total, AccountTypesEnum accountTypesEnum);
+        bool UpdateByHeaderId(long header, decimal total, AccountTypesEnum accountTypesEnum);
         bool DeleteByOrderId(long orderId);
         bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
-
+        BalanceDTO GetBalanceByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
     }
 }

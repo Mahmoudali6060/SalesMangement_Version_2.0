@@ -349,7 +349,7 @@ function getReportAuthor() {
                             <table style="width:100%;border:none;font-weight:bold">
                                 <tr>
                                     <td style="width:30%;border:none;">01093162036</td>
-                                    <td style="width:70%;border:none;">  الدعم الفني والبرمجيات م/محمود علي</td>
+                                    <td style="width:70%;border:none;">تم عمل هذا البرنامج بواسطة مهندس/محمود علي</td>
                                 </tr>
                              </table>
                     </div>`;
@@ -376,6 +376,25 @@ document.onkeydown = function (e) {
             break;
     }
 };
+
+function getBalanceByAccountId(accountId, accountTypeId) {
+    var balance;
+    $.ajax({
+        url: "/Safes/GetBalanceByAccountId?accountId=" + accountId + "&&accountTypesEnum=" + accountTypeId,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        async: false,
+        cache: false,
+        success: function (result) {
+            balance = JSON.parse(result);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    return balance;
+}
 
 function getRowNumber(e) {
     if (e.target.id.startsWith("Quantity")) {

@@ -97,6 +97,8 @@ function setPurechaseHeader() {
 function getPurechaseDetails(id) {
     headerId = id;
     selectedPurechaseHeader = purechaseHeaders.find(x => x.Id == id);
+    var balance = getBalanceByAccountId(selectedPurechaseHeader.FarmerId, 1);
+
     var html = '';
     var totalQuantity = 0;
     var totalWeight = 0;
@@ -121,7 +123,7 @@ function getPurechaseDetails(id) {
 
     $('tbody.purechase-details').html(html);
 
-    preparePurechaseHeader(selectedPurechaseHeader); 
+    preparePurechaseHeader(selectedPurechaseHeader);
 
     preparePurechaseFooter(total, totalQuantity, totalWeight, selectedPurechaseHeader);
     $('#listModal').modal('show');
@@ -140,11 +142,12 @@ function preparePurechaseFooter(total, totalQuantity, totalWeight, selectedPurec
     $('#CommissionPercentage').val(selectedPurechaseHeader.CommissionRate);
     $('#Commission').val(Math.ceil(selectedPurechaseHeader.Commission));
     $('#Nawlon').val(selectedPurechaseHeader.Nawlon);
+    $('#Expense').val(selectedPurechaseHeader.Expense);
     $('#Descent').val(Math.ceil(selectedPurechaseHeader.Descent));
     $('#Gift').val(Math.ceil(selectedPurechaseHeader.Gift));
 
     $('#Total').text(Math.ceil(total));
-    let totalDiscounts = Math.ceil(parseFloat(selectedPurechaseHeader.Commission)) + Math.ceil(parseFloat(selectedPurechaseHeader.Descent)) + Math.ceil(parseFloat(selectedPurechaseHeader.Nawlon)) + Math.ceil(parseFloat(selectedPurechaseHeader.Gift));
+    let totalDiscounts = Math.ceil(parseFloat(selectedPurechaseHeader.Commission)) + Math.ceil(parseFloat(selectedPurechaseHeader.Descent)) + Math.ceil(parseFloat(selectedPurechaseHeader.Expense)) + Math.ceil(parseFloat(selectedPurechaseHeader.Nawlon)) + Math.ceil(parseFloat(selectedPurechaseHeader.Gift));
     $('#TotalDiscounts').text(totalDiscounts);
     let totalAfterDiscount = total - totalDiscounts;
     selectedPurechaseHeader.Total = totalAfterDiscount;
@@ -171,6 +174,7 @@ function updateTotalDiscounts() {
     let commission = $("#Commission").val();
     let descent = $("#Descent").val();
     let nawlon = $("#Nawlon").val();
+    let expense = $("#Expense").val();
     let gift = $('#Gift').val();
     let totalDiscounts = 0;
     if (nawlon == "" || nawlon <= 0) {
@@ -179,6 +183,11 @@ function updateTotalDiscounts() {
     else if (nawlon > 0) {
         totalDiscounts = Math.ceil(parseFloat(commission)) + Math.ceil(parseFloat(descent)) + Math.ceil(parseFloat(gift)) + Math.ceil(parseFloat(nawlon));
     }
+
+    if (expense > 0) {
+        totalDiscounts += Math.ceil(parseFloat(expense));
+    }
+
     $("#TotalDiscounts").text(totalDiscounts);
 
 }
@@ -195,6 +204,7 @@ function updateTotalAfterDiscount() {
     selectedPurechaseHeader.Descent = $("#Descent").val();
     selectedPurechaseHeader.Commission = $("#Commission").val();
     selectedPurechaseHeader.Nawlon = $("#Nawlon").val();
+    selectedPurechaseHeader.Expense = $("#Expense").val();
     selectedPurechaseHeader.CommissionRate = $("#CommissionPercentage").val();
 }
 
@@ -220,6 +230,7 @@ function preparePurechasesEntity() {
         CommissionRate: $('#CommissionPercentage').val(),
         Commission: $('#Commission').val(),
         Nawlon: $('#Nawlon').val(),
+        Expense: $('#Expense').val(),
         Total: $('#TotalAfterDiscount').text(),
         Gift: $('#Gift').val(),
         Descent: $('#Descent').val(),
@@ -375,13 +386,18 @@ function prepareReportFooter() {
                                                 <td> النزول</td>
                                                 <td>`+ convertToIndiaNumbers($("#Descent").val()) + `</td>
                                             </tr>
+                                           
+                                            <tr>
+                                                <td>الوهبة </td>
+                                                <td>`+ convertToIndiaNumbers($('#Gift').val()) + `</td>
+                                            </tr>
                                             <tr>
                                                 <td>النولون</td>
                                                 <td>`+ convertToIndiaNumbers($("#Nawlon").val()) + `</td>
                                             </tr>
                                             <tr>
-                                                <td>الوهبة </td>
-                                                <td>`+ convertToIndiaNumbers($('#Gift').val()) + `</td>
+                                                <td>مصروف</td>
+                                                <td>`+ convertToIndiaNumbers($("#Expense").val()) + `</td>
                                             </tr>
                                         </table>
                                     </td>

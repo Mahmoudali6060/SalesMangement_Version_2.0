@@ -299,9 +299,10 @@ function getReportContent(selectedSalesinvoiceHeader) {
         //total += subTotal;
         totalQuantity += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity;
         totalWight += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight;
-
+        total += subTotal;
 
     }
+    selectedSalesinvoiceHeader.Total = total;
     html = prepareSalesinvoiceTotalReport(html, selectedSalesinvoiceHeader.Total, totalWight, totalQuantity);
     return html;
 }

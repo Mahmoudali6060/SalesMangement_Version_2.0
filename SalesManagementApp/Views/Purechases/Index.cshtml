@@ -30,8 +30,8 @@
                     <div class="card material-table">
                         <div class="table-header">
                             @*<div class="actions">
-                <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
-            </div>*@
+                                    <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
+                                </div>*@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <input type="text" class="form-control col-lg-6" id="search" name="search" placeholder="ادخل كلمة البحث" />
@@ -169,12 +169,16 @@
                                                 <td> <input type="number" id="Descent" onchange="updateTotal()" /></td>
                                             </tr>
                                             <tr>
+                                                <td>الوهبة </td>
+                                                <td> <input type="number" id="Gift" onchange="updateTotal()" /></td>
+                                            </tr>
+                                            <tr>
                                                 <td>النولون</td>
                                                 <td> <input type="number" value="0" onchange="updateTotal()" id="Nawlon" /></td>
                                             </tr>
                                             <tr>
-                                                <td>الوهبة </td>
-                                                <td> <input type="number" id="Gift" onchange="updateTotal()" /></td>
+                                                <td>مصــروف</td>
+                                                <td> <input type="number" value="0" onchange="updateTotal()" id="Expense" /></td>
                                             </tr>
                                         </table>
 

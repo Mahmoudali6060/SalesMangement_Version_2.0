@@ -119,11 +119,11 @@ namespace Safes
                 }
                 safeEntity.Update(safe);
                 context.SaveChanges();
-              
+
                 return true;
             }
 
-         
+
 
             return false;
         }
@@ -163,6 +163,23 @@ namespace Safes
                 return true;
             }
             return false;
+        }
+
+        public BalanceDTO GetBalanceByAccountId(long accountId, AccountTypesEnum accountTypesEnum)
+        {
+            var safes = GetByAccountId(accountId, accountTypesEnum);
+            decimal totalOutcoming = 0;
+            decimal totalIncoming = 0;
+            foreach (Safe safe in safes)
+            {
+                totalOutcoming += safe.Outcoming;
+                totalIncoming += safe.Incoming;
+            }
+            return new BalanceDTO()
+            {
+                TotalIncoming = totalIncoming,
+                TotalOutcoming = totalOutcoming
+            };
         }
     }
 }

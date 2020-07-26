@@ -4,6 +4,7 @@ using Database.Entities;
 using Safes;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Classes;
+using Shared.Enums;
 
 namespace SalesManagementApp.Controllers
 {
@@ -39,11 +40,12 @@ namespace SalesManagementApp.Controllers
         {
             return Json(Helper.SerializeObject(_safeOperationsRepo.GetAll(currentPage, keyword)));
         }
-        //public JsonResult GetByAccountId(long accountId)
-        //{
-        //    var safe = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(accountId));
-        //    return Json(safe);
-        //}
+
+        public JsonResult GetBalanceByAccountId(long accountId,AccountTypesEnum accountTypesEnum)
+        {
+            var safe = Helper.SerializeObject(_safeOperationsRepo.GetBalanceByAccountId(accountId,accountTypesEnum));
+            return Json(safe);
+        }
 
         public JsonResult Add(Safe safe)
         {
