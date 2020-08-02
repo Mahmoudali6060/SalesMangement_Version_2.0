@@ -189,6 +189,7 @@ namespace Purechase
             purechaseHeader.CommissionRate = entity.CommissionRate;
             purechaseHeader.Gift = entity.Gift;
             purechaseHeader.Descent = entity.Descent;
+            purechaseHeader.Expense = entity.Expense;
 
             context.Entry(purechaseHeader).State = EntityState.Modified;
             context.SaveChanges();
