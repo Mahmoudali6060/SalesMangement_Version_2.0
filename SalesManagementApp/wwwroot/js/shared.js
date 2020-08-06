@@ -344,8 +344,8 @@ function getReportFooterText() {
 }
 
 function getReportAuthor() {
-    var html = getReportFooterText();
-    return html + `<div class="col-lg-12 author">
+    //var html = getReportFooterText();
+    return `<div class="col-lg-12 author">
                             <table style="width:100%;border:none;font-weight:bold">
                                 <tr>
                                     <td style="width:30%;border:none;">01093162036</td>

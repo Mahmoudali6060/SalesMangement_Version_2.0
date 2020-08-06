@@ -406,7 +406,8 @@ function prepareReportFooter() {
 
                         </div>
                     </div>`;
-    let author = getReportAuthor();
+    let footer = getReportFooterText();
+    let author = footer + getReportAuthor();
     reportFooter += author;
     return reportFooter;
 }
