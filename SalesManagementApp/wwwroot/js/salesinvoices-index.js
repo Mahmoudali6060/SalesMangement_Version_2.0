@@ -311,7 +311,7 @@ function prepareSalesinvoiceTotalReport(html, total, totalWight, totalQuantity) 
     html += '<tr style="background-color: #f7edbd;font-size: 20px;font-weight: bold;">';
     html += '<td>' + convertToIndiaNumbers(totalQuantity) + '</td>';
     html += '<td>' + convertToIndiaNumbers(totalWight) + '</td>';
-    html += '<td>' + '' + '</td>';
+    html += '<td>' + 'اجمالي الكشــــف' + '</td>';
     html += '<td>' + convertToIndiaNumbers(Math.ceil(total)) + '</td>';
     html += '</tr>';
     return html;
