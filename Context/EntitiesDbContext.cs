@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Database.Entities;
+using Shared.Classes;
 
 namespace Database
 {
@@ -47,8 +48,17 @@ namespace Database
 
         public override int SaveChanges()
         {
-            Audit();
-            return base.SaveChanges();
+            try
+            {
+                Audit();
+                return base.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                LogFile.WriteLog(ex.InnerException.ToString());
+                return 0;
+            }
+          
         }
 
         public async Task<int> SaveChangesAsync()

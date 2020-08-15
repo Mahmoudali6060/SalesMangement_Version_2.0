@@ -10,6 +10,8 @@ using Database.Entities;
 using Farmers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +53,12 @@ namespace SalesManagementApp
                 options.ForwardClientCertificate = false;
             });
 
+            //Increase Form Count Limit
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueCountLimit = 4096; // 200 items max
+                options.ValueLengthLimit = 1024 * 1024 * 100; // 100MB max len form data
+            });
 
             services.AddDbContext<EntitiesDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IFarmerOperationsRepo, FarmerOperationsRepo>();
@@ -66,6 +74,7 @@ namespace SalesManagementApp
             services.AddTransient<ISafeOperationsRepo, SafeOperationsRepo>();
 
             services.AddTransient<IRoleOperationsRepo, RoleOperationsRepo>();
+
 
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -33,10 +33,10 @@ function getAll() {
         i++;
     });
     $('.tbody').html(html);
-    var value = $("#search").val().toLowerCase();
-    if (value != "") {
-        filter();
-    }
+    //var value = $("#search").val().toLowerCase();
+    //if (value != "") {
+    //    filter();
+    //}
 }
 
 function getPagedSellers(currentPage) {

@@ -1,4 +1,5 @@
-﻿using Database.Entities;
+﻿using Database;
+using Database.Entities;
 using Salesinvoice.DTOs;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace Salesinvoice
         IEnumerable<SalesinvoicesHeader> GetAll();
         SalesinvoiceListDTO GetAll(int currentPage, string keyword, bool isToday);
         SalesinvoicesHeader GetById(long id);
-        bool Add(SalesinvoicesHeader entity, long orderHeaderId);
-        bool Update(SalesinvoicesHeader entity, long orderHeaderId);
+        SalesinvoicesHeader Add(SalesinvoicesHeader entity, long orderHeaderId, EntitiesDbContext context);
+        bool Update(SalesinvoicesHeader entity, long orderHeaderId, EntitiesDbContext context);
         bool Update(SalesinvoicesHeader entity);
-        bool Delete(long id);
-        void DeleteSalesinvoiceDetails(OrderHeader orderHeader);
-        void DeleteSalesinvoiceHeader(OrderHeader orderHeader);
+        bool Delete(long id,EntitiesDbContext context);
+        void DeleteSalesinvoiceDetails(OrderHeader orderHeader, EntitiesDbContext context);
+        void DeleteSalesinvoiceHeader(DateTime orderHeaderCreatedDate, EntitiesDbContext context);
 
     }
 }

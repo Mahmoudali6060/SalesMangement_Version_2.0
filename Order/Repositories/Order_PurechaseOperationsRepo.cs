@@ -11,13 +11,13 @@ namespace Order.Repositories
 {
     public class Order_PurechaseOperationsRepo : IOrder_PurechaseOperationsRepo
     {
-        private EntitiesDbContext context;
-        private DbSet<Order_Purechase> order_purechaseEntity;
+        private EntitiesDbContext _context;
+        private DbSet<Order_Purechase> _order_purechaseEntity;
 
         public Order_PurechaseOperationsRepo(EntitiesDbContext context)
         {
-            this.context = context;
-            order_purechaseEntity = context.Set<Order_Purechase>();
+            this._context = context;
+            _order_purechaseEntity = context.Set<Order_Purechase>();
         }
 
         public IEnumerable<Order_Purechase> GetAll()
@@ -30,7 +30,7 @@ namespace Order.Repositories
             throw new NotImplementedException();
         }
 
-        public bool Add(Order_Purechase entity)
+        public bool Add(Order_Purechase entity, EntitiesDbContext context)
         {
             context.Order_Purechases.Add(entity);
             context.SaveChanges();
@@ -39,24 +39,24 @@ namespace Order.Repositories
 
         public bool Update(Order_Purechase entity)
         {
-            Order_Purechase order_Purechase = context.Order_Purechases.FirstOrDefault(x => x.OrderHeaderId == entity.OrderHeaderId);
+            Order_Purechase order_Purechase = _context.Order_Purechases.FirstOrDefault(x => x.OrderHeaderId == entity.OrderHeaderId);
             if (order_Purechase != null)
                 order_Purechase.PurechasesHeaderId = entity.PurechasesHeaderId;
-            context.SaveChanges();
+            _context.SaveChanges();
             return true;
         }
 
         public bool Delete(long orderHeaderId)
         {
-            Order_Purechase order_Purechase = context.Order_Purechases.FirstOrDefault(x => x.OrderHeaderId == orderHeaderId);
-            order_purechaseEntity.Remove(order_Purechase);
-            context.SaveChanges();
+            Order_Purechase order_Purechase = _context.Order_Purechases.FirstOrDefault(x => x.OrderHeaderId == orderHeaderId);
+            _order_purechaseEntity.Remove(order_Purechase);
+            _context.SaveChanges();
             return true;
         }
 
         public Order_Purechase GetByOrderHeaderId(long orderHeaderId)
         {
-            return context.Order_Purechases.FirstOrDefault(x => x.OrderHeaderId == orderHeaderId);
+            return _context.Order_Purechases.FirstOrDefault(x => x.OrderHeaderId == orderHeaderId);
         }
     }
 }

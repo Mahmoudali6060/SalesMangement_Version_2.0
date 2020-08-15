@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="EntityFramework">
       <HintPath>..\..\..\..\El Rahma Projects\DotNet Framework - Revamp Design\Rahma\Rahma.UI\Bin\EntityFramework.dll</HintPath>
     </Reference>

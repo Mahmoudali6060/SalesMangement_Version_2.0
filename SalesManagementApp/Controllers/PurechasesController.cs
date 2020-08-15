@@ -38,11 +38,6 @@ namespace SalesManagementApp.Controllers
             return Json(purechasesHeader);
         }
 
-        public JsonResult Add(PurechasesHeader purechasesHeader)
-        {
-            return Json(_purechasesOperationsRepo.Add(purechasesHeader));
-        }
-
         public JsonResult Update(PurechasesHeader purechasesHeader)
         {
             return Json(_purechasesOperationsRepo.Update(purechasesHeader));
@@ -53,10 +48,10 @@ namespace SalesManagementApp.Controllers
             return Json(_purechasesOperationsRepo.UpdateInPrinting(purechasesHeader));
         }
 
-        public JsonResult Delete(long id)
-        {
-            return Json(_purechasesOperationsRepo.Delete(id));
-        }
+        //public JsonResult Delete(long id)
+        //{
+        //    return Json(_purechasesOperationsRepo.Delete(id));
+        //}
 
     }
 }

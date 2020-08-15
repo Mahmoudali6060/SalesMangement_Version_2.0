@@ -10,15 +10,15 @@ namespace Order.Repositories
 {
     public class OrderDetailsOperationsRepo : IOrderDetailsOperationsRepo
     {
-        private EntitiesDbContext context;
-        private DbSet<OrderDetails> sellerEntity;
-        private DbSet<List<OrderDetails>> sellerEntityList;
+        private EntitiesDbContext _context;
+        private DbSet<OrderDetails> _sellerEntity;
+        private DbSet<List<OrderDetails>> _sellerEntityList;
 
         public OrderDetailsOperationsRepo(EntitiesDbContext context)
         {
-            this.context = context;
-            sellerEntity = context.Set<OrderDetails>();
-            sellerEntityList = context.Set<List<OrderDetails>>();
+            this._context = context;
+            _sellerEntity = context.Set<OrderDetails>();
+            _sellerEntityList = context.Set<List<OrderDetails>>();
         }
 
         public IEnumerable<OrderDetails> GetAll()
@@ -36,10 +36,9 @@ namespace Order.Repositories
             throw new NotImplementedException();
         }
 
-        public bool AddRange(IEnumerable<OrderDetails> orderDetailesList )
+        public bool AddRange(IEnumerable<OrderDetails> orderDetailesList,EntitiesDbContext context )
         {
             context.OrderDetails.AddRange(orderDetailesList);
-            //context.Entry(orderDetailesList).State = EntityState.Added;
             context.SaveChanges();
             return true;
         }

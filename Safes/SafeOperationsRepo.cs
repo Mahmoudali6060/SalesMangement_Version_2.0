@@ -12,24 +12,24 @@ namespace Safes
 {
     public class SafeOperationsRepo : ISafeOperationsRepo
     {
-        private EntitiesDbContext context;
-        private DbSet<Safe> safeEntity;
+        private EntitiesDbContext _context;
+        private DbSet<Safe> _safeEntity;
 
         public SafeOperationsRepo(EntitiesDbContext context)
         {
-            this.context = context;
-            safeEntity = context.Set<Safe>();
+            this._context = context;
+            _safeEntity = context.Set<Safe>();
         }
 
 
         public IEnumerable<Safe> GetAll()
         {
-            return safeEntity.Where(x => x.IsHidden == false).AsEnumerable();
+            return _safeEntity.Where(x => x.IsHidden == false).AsEnumerable();
         }
 
         public SafeDTO GetAll(int currentPage, string keyword)
         {
-            var list = safeEntity
+            var list = _safeEntity
                 .Where(x => x.IsHidden == false)
                 .OrderByDescending(x => x.Id)
                 .AsEnumerable();
@@ -41,41 +41,38 @@ namespace Safes
 
             return new SafeDTO()
             {
-                Total = safeEntity.Where(x => x.IsHidden == false).Count(),
+                Total = _safeEntity.Where(x => x.IsHidden == false).Count(),
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
 
         public Safe GetById(long id)
         {
-            return safeEntity.SingleOrDefault(s => s.Id == id);
+            return _safeEntity.SingleOrDefault(s => s.Id == id);
         }
 
         public IEnumerable<Safe> GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum)
         {
-            return safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).AsEnumerable();
+            return _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).AsEnumerable();
         }
 
         public long Add(Safe safe)
         {
-            try
-            {
-                context.Entry(safe).State = EntityState.Added;
-                context.SaveChanges();
-                return safe.Id;
-            }
-            catch (Exception ex)
-            {
-                System.IO.File.WriteAllText(@"e:\errorLog.txt", ex.Message);
-                throw ex;
-            }
-
+            _context.Entry(safe).State = EntityState.Added;
+            _context.SaveChanges();
+            return safe.Id;
+        }
+        public long Add(Safe safe, EntitiesDbContext context)
+        {
+            context.Entry(safe).State = EntityState.Added;
+            context.SaveChanges();
+            return safe.Id;
         }
 
         public bool Update(Safe safe)
         {
-            context.Entry(safe).State = EntityState.Modified;
-            context.SaveChanges();
+            _context.Entry(safe).State = EntityState.Modified;
+            _context.SaveChanges();
             return true;
         }
 
@@ -84,19 +81,19 @@ namespace Safes
             Safe safe = GetById(id);
             if (safe != null)
             {
-                safeEntity.Remove(safe);
-                context.SaveChanges();
+                _safeEntity.Remove(safe);
+                _context.SaveChanges();
                 return true;
             }
             return false;
         }
 
-        public bool DeleteByHeaderId(long header, AccountTypesEnum accountTypesEnum)
+        public bool DeleteByHeaderId(long header, AccountTypesEnum accountTypesEnum,EntitiesDbContext context)
         {
-            Safe safe = safeEntity.SingleOrDefault(x => x.HeaderId == header && x.AccountTypeId == (int)accountTypesEnum);
+            Safe safe = context.Safes.SingleOrDefault(x => x.HeaderId == header && x.AccountTypeId == (int)accountTypesEnum);
             if (safe != null)
             {
-                safeEntity.Remove(safe);
+                context.Safes.Remove(safe);
                 context.SaveChanges();
                 return true;
             }
@@ -105,35 +102,25 @@ namespace Safes
 
         public bool UpdateByHeaderId(long headerId, decimal total, AccountTypesEnum accountTypesEnum)
         {
-            Safe safe = safeEntity.SingleOrDefault(x => x.HeaderId == headerId && x.AccountTypeId == (int)accountTypesEnum);
+            Safe safe = _safeEntity.SingleOrDefault(x => x.HeaderId == headerId && x.AccountTypeId == (int)accountTypesEnum);
             if (safe != null)
             {
-                if (accountTypesEnum == AccountTypesEnum.Sellers)
-                {
-                    safe.Outcoming = total;
-                }
+                if (accountTypesEnum == AccountTypesEnum.Sellers) safe.Outcoming = total;
+                else safe.Incoming = total;
 
-                else
-                {
-                    safe.Incoming = total;
-                }
-                safeEntity.Update(safe);
-                context.SaveChanges();
-
+                _safeEntity.Update(safe);
+                _context.SaveChanges();
                 return true;
             }
-
-
-
             return false;
         }
 
-        public bool DeleteByOrderId(long orderId)
+        public bool DeleteByOrderId(long orderId, EntitiesDbContext context)
         {
-            List<Safe> safes = safeEntity.Where(x => x.OrderId == orderId).ToList();
+            List<Safe> safes = _safeEntity.Where(x => x.OrderId == orderId).ToList();
             if (safes != null)
             {
-                safeEntity.RemoveRange(safes);
+                context.Safes.RemoveRange(safes);
                 context.SaveChanges();
                 return true;
             }
@@ -144,9 +131,10 @@ namespace Safes
         {
             return new SafeDTO()
             {
-                Total = safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).Count(),
-                List = safeEntity
+                Total = _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).Count(),
+                List = _safeEntity
                  .Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum)
+                 .OrderBy(x => x.Date)
                 .Skip((currentPage - 1) * PageSettings.PageSize)
                 .Take(PageSettings.PageSize)
                .AsEnumerable()
@@ -155,11 +143,11 @@ namespace Safes
 
         public bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum)
         {
-            List<Safe> safes = safeEntity.Where(x => x.AccountId == accountId && x.AccountTypeId == (int)accountTypesEnum).ToList();
+            List<Safe> safes = _safeEntity.Where(x => x.AccountId == accountId && x.AccountTypeId == (int)accountTypesEnum).ToList();
             if (safes != null)
             {
-                safeEntity.RemoveRange(safes);
-                context.SaveChanges();
+                _safeEntity.RemoveRange(safes);
+                _context.SaveChanges();
                 return true;
             }
             return false;

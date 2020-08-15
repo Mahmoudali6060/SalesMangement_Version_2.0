@@ -40,7 +40,7 @@ function manageActionButtonsAppearance(orderHeaderId) {
         $('#btnAdd').hide();
     }
     else {
-        addOrderDetailsRow(null,null ,null ,null , 0);
+        addOrderDetailsRow(null, null, null, null, 0);
         $('#btnUpdate').hide();
         $('#btnAdd').show();
     }
@@ -74,10 +74,14 @@ function add() {
         data: entity,
         type: "POST",
         success: function (result) {
-            cancel();
+            if (result == true)
+                cancel();
+            else {
+                swal("لم يتم الحفظ", "حدث خطأ في الحفظ", "خطأ");
+            }
         },
         error: function (errormessage) {
-            alert(errormessage.responseText);
+            swal("لم يتم التعديل", "حدث خطأ في التعديل", "خطأ");
         }
     });
 }
@@ -89,10 +93,14 @@ function update() {
         data: entity,
         type: "POST",
         success: function (result) {
-            cancel();
+            if (result == true)
+                cancel();
+            else {
+                swal("لم يتم التعديل", "حدث خطأ في التعديل", "خطأ");
+            }
         },
         error: function (errormessage) {
-            alert(errormessage.responseText);
+            swal("لم يتم التعديل", "حدث خطأ في التعديل", "خطأ");
         }
     });
 }

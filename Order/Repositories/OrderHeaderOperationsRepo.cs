@@ -13,23 +13,23 @@ namespace Order.Repositories
 {
     public class OrderHeaderOperationsRepo : IOrderHeaderOperationsRepo
     {
-        private EntitiesDbContext context;
-        private DbSet<OrderHeader> orderHeaderEntity;
+        private EntitiesDbContext _context;
+        private DbSet<OrderHeader> _orderHeaderEntity;
 
         public OrderHeaderOperationsRepo(EntitiesDbContext context)
         {
-            this.context = context;
-            orderHeaderEntity = context.Set<OrderHeader>();
+            this._context = context;
+            _orderHeaderEntity = context.Set<OrderHeader>();
         }
 
         public IEnumerable<OrderHeader> GetAll()
         {
-            return context.OrderHeaders.Include("OrderDetails").Include("Farmer").ToList().OrderBy(x => x.Id);
+            return _context.OrderHeaders.Include("OrderDetails").Include("Farmer").ToList().OrderBy(x => x.Id);
         }
         public OrderListDTO GetAll(int currentPage, string keyword, bool isToday)
         {
             var total = 0;
-            var list = orderHeaderEntity
+            var list = _orderHeaderEntity
                 .Include("OrderDetails").Include("Farmer")
                 .OrderBy(x => x.Id)
                 .AsQueryable();
@@ -42,11 +42,11 @@ namespace Order.Repositories
             if (isToday)
             {
                 list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
-                total = orderHeaderEntity.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+                total = _orderHeaderEntity.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
             }
             else
             {
-                total = orderHeaderEntity.Count();
+                total = _orderHeaderEntity.Count();
             }
 
             return new OrderListDTO()
@@ -57,32 +57,36 @@ namespace Order.Repositories
         }
         public OrderHeader GetById(long id)
         {
-            return orderHeaderEntity.Include("OrderDetails").Include("Farmer").SingleOrDefault(s => s.Id == id);
+            return _orderHeaderEntity.Include("OrderDetails").Include("Farmer").SingleOrDefault(s => s.Id == id);
+        }
+        public OrderHeader GetById(long id, EntitiesDbContext context)
+        {
+            return context.OrderHeaders.Include("OrderDetails").Include("Farmer").SingleOrDefault(s => s.Id == id);
         }
 
-        public bool Add(OrderHeader entity)
+        public bool Add(OrderHeader entity, EntitiesDbContext context)
         {
             context.OrderHeaders.Add(entity);
             context.SaveChanges();
             return true;
         }
 
-        public bool Update(OrderHeader entity)
+        public bool Update(OrderHeader entity, EntitiesDbContext context)
         {
             context.Entry(entity).State = EntityState.Modified;
             context.SaveChanges();
             return true;
         }
 
-        public bool Delete(long id)
+        public bool Delete(long id, EntitiesDbContext context)
         {
-            OrderHeader OrderHeader = GetById(id);
-            orderHeaderEntity.Remove(OrderHeader);
+            OrderHeader OrderHeader = GetById(id, context);
+            context.OrderHeaders.Remove(OrderHeader);
             context.SaveChanges();
             return true;
         }
 
-        public bool DeleteRelatedOrderDetials(long headerId)
+        public bool DeleteRelatedOrderDetials(long headerId, EntitiesDbContext context)
         {
             IEnumerable<OrderDetails> orderDetails = context.OrderDetails.Where(x => x.OrderHeaderId == headerId);
             context.OrderDetails.RemoveRange(orderDetails);
