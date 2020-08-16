@@ -80,12 +80,22 @@ function setPurechaseHeader() {
     var html = '';
     var i = 1;
     $.each(purechaseHeaders, function (key, item) {
-        html += '<tr style="cursor:pointer;" onclick="getPurechaseDetails(' + item.Id + ')">';
+        if (item.IsPrinted == true) {
+            html += '<tr class="is-printed" style="cursor:pointer;" onclick="getPurechaseDetails(' + item.Id + ')">';
+        }
+
+        else {
+            html += '<tr id="purechase-header' + item.Id + '" style="cursor:pointer;" onclick="getPurechaseDetails(' + item.Id + ')">';
+        }
+
         html += '<td>' + i + '</td>';
         html += '<td>' + item.Id + '</td>';
         html += '<td>' + getLocalDate(item.PurechasesDate) + '</td>';
         html += '<td>' + getFarmerById(item.FarmerId).Name + '</td>';
         html += '<td>' + '' + '</td>';
+        if (item.IsPrinted == true) html += '<td>' + 'تم طباعة الفاتورة' + '</td>';
+        else html += '<td>' + '' + '</td>';
+
         html += '<td><i style="color:blue;cursor:pointer" class="icon-search-plus"  onclick="getPurechaseDetails(' + item.Id + ')"></i></td>';
         html += '</tr>';
         i++;
@@ -239,11 +249,19 @@ function preparePurechasesEntity() {
     return entity;
 
 }
+
+function setIsPrintedClass() {
+    var element = document.getElementById('purechase-header' + headerId);
+    if (element != null) {
+        element.classList.add("is-printed");
+        element.cells[5].innerText = 'تم طباعة الفاتورة';
+    }
+}
 //print report
 function printReport() {
 
     updateInPrinting();
-
+    setIsPrintedClass();
     var reportHeader = prepareReportHeader();
     var reportContent = prepareReportContent();
     var reportFooter = prepareReportFooter();
@@ -251,7 +269,11 @@ function printReport() {
     var newWin = window.open('', 'Print-Window');
 
     newWin.document.open();
-    var reportHead = getReportHead('فاتورة');
+
+    var selectedPurechaseHeader = purechaseHeaders.find(x => x.Id == headerId);
+
+    var reportHead = selectedPurechaseHeader.IsPrinted == true ? getReportHead('فاتورة - بدل فاقد') : getReportHead('فاتورة');
+
 
     newWin.document.write(reportHead +
         reportHeader + reportContent + reportFooter +

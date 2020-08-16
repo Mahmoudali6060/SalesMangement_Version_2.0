@@ -183,6 +183,7 @@ namespace Purechase
             purechaseHeader.Gift = entity.Gift;
             purechaseHeader.Descent = entity.Descent;
             purechaseHeader.Expense = entity.Expense;
+            purechaseHeader.IsPrinted = true;
 
             _context.Entry(purechaseHeader).State = EntityState.Modified;
             _context.SaveChanges();

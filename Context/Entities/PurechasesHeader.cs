@@ -16,6 +16,7 @@ namespace Database.Entities
         public decimal Gift { get; set; }
         public decimal Descent { get; set; }
         public decimal? Expense { get; set; }
+        public bool? IsPrinted { get; set; }
         public virtual ICollection<PurechasesDetials> PurechasesDetialsList { get; set; }
         public virtual Farmer Farmer{ get; set; }
 
