@@ -42,7 +42,7 @@ namespace Order.Repositories
             if (isToday)
             {
                 list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
-                total = _orderHeaderEntity.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+                total = list.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
             }
             else
             {

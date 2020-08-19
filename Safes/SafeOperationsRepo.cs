@@ -41,7 +41,7 @@ namespace Safes
 
             return new SafeDTO()
             {
-                Total = _safeEntity.Where(x => x.IsHidden == false).Count(),
+                Total = list.Where(x => x.IsHidden == false).Count(),
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }

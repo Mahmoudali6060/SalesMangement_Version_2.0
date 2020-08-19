@@ -42,7 +42,7 @@ namespace Sellers
 
             return new SellerListDTO()
             {
-                Total = _sellerEntity.Count(),
+                Total = list.Count(),
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).OrderBy(x => x.Name)
             };
         }

@@ -41,7 +41,7 @@ namespace Farmers
 
             return new FarmListDTO()
             {
-                Total = _farmerEntity.Count(),
+                Total = list.Count(),
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).OrderBy(x=>x.Name)
             };
         }

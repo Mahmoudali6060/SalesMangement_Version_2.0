@@ -44,8 +44,8 @@ namespace Salesinvoice
 
             if (isToday)
             {
-                list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
-                total = _salesinvoicesHeaderEntity.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+                list = list.Where(x => x.SalesinvoicesDate.ToShortDateString() == DateTime.Now.ToShortDateString());
+                total = list.Count(x => x.SalesinvoicesDate.ToShortDateString() == DateTime.Now.ToShortDateString());
             }
 
             else
@@ -57,10 +57,6 @@ namespace Salesinvoice
                 Total = total,
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
-        }
-        public IEnumerable<SalesinvoicesHeader> GetAllDaily()
-        {
-            return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
         }
         public SalesinvoicesHeader GetById(long id)
         {

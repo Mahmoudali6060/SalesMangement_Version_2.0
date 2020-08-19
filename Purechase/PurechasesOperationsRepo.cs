@@ -43,12 +43,12 @@ namespace Purechase
 
             if (isToday)
             {
-                list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
-                total = _purechasesHeaderEntity.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+                list = list.Where(x => x.PurechasesDate.ToShortDateString() == DateTime.Now.ToShortDateString());
+                total = _purechasesHeaderEntity.Count(x => x.PurechasesDate.ToShortDateString() == DateTime.Now.ToShortDateString());
             }
             else
             {
-                total = _purechasesHeaderEntity.Count();
+                total = list.Count();
             }
 
             return new PurechaseListDTO()
