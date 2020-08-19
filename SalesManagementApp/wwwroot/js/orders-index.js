@@ -40,12 +40,15 @@ function delele(id) {
                 dataType: "json"
             })
                 .done(function (data) {
-                    if (data == true) {
-                        getAll();
-                    }
-                    else {
-                        swal("لم يتم الحذف", "حدث خطأ في الحذف", "خطأ");
-                    }
+                    sweetAlert
+                        ({
+                            title: "تم الحذف!",
+                            text: "تم حذف السجل بنجاح !",
+                            type: "success"
+                        },
+                            function () {
+                                getAll();
+                            });
                 })
                 .error(function (data) {
                     swal("لم يتم الحذف", "حدث خطأ في الحذف", "خطأ");

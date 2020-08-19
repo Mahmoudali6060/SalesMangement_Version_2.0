@@ -66,6 +66,10 @@ namespace Salesinvoice
         {
             return _salesinvoicesHeaderEntity.SingleOrDefault(s => s.Id == id);
         }
+        public SalesinvoicesHeader GetById(long id,EntitiesDbContext context)
+        {
+            return context.SalesinvoicesHeaders.SingleOrDefault(s => s.Id == id);
+        }
         public SalesinvoicesHeader Add(SalesinvoicesHeader salesinvoicesHeader, long orderHeaderId, EntitiesDbContext context)
         {
             //Check if Seller has at least one salesinvoice at this day or no
@@ -100,7 +104,7 @@ namespace Salesinvoice
         }
         public bool Delete(long id, EntitiesDbContext context)
         {
-            SalesinvoicesHeader salesinvoicesHeader = GetById(id);
+            SalesinvoicesHeader salesinvoicesHeader = GetById(id,context);
             DeleteSalesinvoicesDetials(id, context);
             context.SalesinvoicesHeaders.Remove(salesinvoicesHeader);
             context.SaveChanges();
@@ -114,13 +118,15 @@ namespace Salesinvoice
         }
         public void DeleteSalesinvoiceHeader(DateTime orderHeaderCreatedDate, EntitiesDbContext context)
         {
-            List<SalesinvoicesHeader> salesinvoicesHeaderList = _context.SalesinvoicesHeaders.Where(x => x.Created.ToShortDateString() == orderHeaderCreatedDate.ToShortDateString()).ToList();
+            List<SalesinvoicesHeader> salesinvoicesHeaderList = context.SalesinvoicesHeaders.Where(x => x.Created.ToShortDateString() == orderHeaderCreatedDate.ToShortDateString()).ToList();
             foreach (SalesinvoicesHeader salesinvoicesHeader in salesinvoicesHeaderList)
             {
-                //List<SalesinvoicesDetials> salesinvoices = _context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == salesinvoicesHeader.Id).ToList();
-                //if (salesinvoices.Count == 0)
-                _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers, context);//Delete old record in safe related to this Seller
-                Delete(salesinvoicesHeader.Id, context);
+                List<SalesinvoicesDetials> salesinvoices = context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == salesinvoicesHeader.Id).ToList();
+                if (salesinvoices.Count == 0)
+                {
+                    _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers, context);//Delete old record in safe related to this Seller
+                    Delete(salesinvoicesHeader.Id, context);
+                }
             }
         }
 
@@ -177,7 +183,7 @@ namespace Salesinvoice
         }
         private void DeleteSalesinvoicesDetials(long headerId, EntitiesDbContext context)
         {
-            IEnumerable<SalesinvoicesDetials> purchaseDetails = _context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == headerId).AsEnumerable();
+            IEnumerable<SalesinvoicesDetials> purchaseDetails = context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == headerId).AsEnumerable();
             context.SalesinvoicesDetials.RemoveRange(purchaseDetails);
             context.SaveChanges();
         }

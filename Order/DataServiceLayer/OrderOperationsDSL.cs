@@ -49,6 +49,8 @@ namespace Order.DataServiceLayer
         {
             return _orderHeaderOperationsRepo.GetById(id);
         }
+
+       
         public bool Add(OrderDTO entity)
         {
             var options = GetOptions();
@@ -133,8 +135,8 @@ namespace Order.DataServiceLayer
                         _order_PurechaseOperationsRepo.Update(order_Purechase);
 
                         //[5] Update Salesinvoice
-                        //_salesinvoicesOperationsRepo.DeleteSalesinvoiceDetails(entity.OrderHeader, context);
-                        _salesinvoicesOperationsRepo.DeleteSalesinvoiceHeader(entity.OrderHeader.Created, context);
+                        _salesinvoicesOperationsRepo.DeleteSalesinvoiceDetails(entity.OrderHeader, context);
+                        _salesinvoicesOperationsRepo.DeleteSalesinvoiceHeader(entity.OrderHeader.Created, context);//Delete Old Salesinvoice related to this Order
                         var salesinvoicesHeaderList = PrepareSalesinvoicesEntity(entity);//Prepare Salesinvoice(Header and Details)
                         foreach (var salesinvoicesHeader in salesinvoicesHeaderList)
                         {
@@ -164,11 +166,12 @@ namespace Order.DataServiceLayer
                 {
                     try
                     {
-                        OrderHeader orderHeader = GetById(id);
+                        OrderHeader orderHeader =_orderHeaderOperationsRepo.GetById(id,context);
                         _purechasesOperationsRepo.DeleteRelatedPurechase(id, context);//Delete related purechase
-                        _salesinvoicesOperationsRepo.DeleteSalesinvoiceHeader(orderHeader.Created, context);//Delete related Salesinvoice                      _orderHeaderOperationsRepo.Delete(id, context);
                         _safeOperationsRepo.DeleteByOrderId(id, context);//Delete from Safe
                         _orderHeaderOperationsRepo.DeleteRelatedOrderDetials(id, context);//Delelte related order details
+                        _salesinvoicesOperationsRepo.DeleteSalesinvoiceDetails(orderHeader, context);
+                        _salesinvoicesOperationsRepo.DeleteSalesinvoiceHeader(orderHeader.Created, context);//Delete related Salesinvoice                      _orderHeaderOperationsRepo.Delete(id, context);
                         _orderHeaderOperationsRepo.Delete(id, context);//Delete OrderHeader
                         transaction.Commit();
                         return true;

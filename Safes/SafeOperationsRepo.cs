@@ -117,7 +117,7 @@ namespace Safes
 
         public bool DeleteByOrderId(long orderId, EntitiesDbContext context)
         {
-            List<Safe> safes = _safeEntity.Where(x => x.OrderId == orderId).ToList();
+            List<Safe> safes = context.Safes.Where(x => x.OrderId == orderId).ToList();
             if (safes != null)
             {
                 context.Safes.RemoveRange(safes);
