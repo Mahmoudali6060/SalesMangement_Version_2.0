@@ -9,5 +9,7 @@ namespace Safes.DTOs
     {
         public IEnumerable<Safe> List { get; set; }
         public int Total { get; set; }
+        public decimal TotalIncoming { get; set; }
+        public decimal TotalOutcoming { get; set; }
     }
 }

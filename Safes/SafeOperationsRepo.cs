@@ -88,7 +88,7 @@ namespace Safes
             return false;
         }
 
-        public bool DeleteByHeaderId(long header, AccountTypesEnum accountTypesEnum,EntitiesDbContext context)
+        public bool DeleteByHeaderId(long header, AccountTypesEnum accountTypesEnum, EntitiesDbContext context)
         {
             Safe safe = context.Safes.SingleOrDefault(x => x.HeaderId == header && x.AccountTypeId == (int)accountTypesEnum);
             if (safe != null)
@@ -129,15 +129,19 @@ namespace Safes
 
         public SafeDTO GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, int currentPage)
         {
+            var safes = _safeEntity
+                        .Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum)
+                        .OrderBy(x => x.Date);
+
             return new SafeDTO()
             {
                 Total = _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).Count(),
-                List = _safeEntity
-                 .Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum)
-                 .OrderBy(x => x.Date)
+                List = safes
                 .Skip((currentPage - 1) * PageSettings.PageSize)
                 .Take(PageSettings.PageSize)
-               .AsEnumerable()
+               .AsEnumerable(),
+                TotalIncoming = safes.Sum(x => Math.Ceiling(x.Incoming)),
+                TotalOutcoming = safes.Sum(x => Math.Ceiling(x.Outcoming))
             };
         }
 

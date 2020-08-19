@@ -27,7 +27,7 @@ function getAll() {
             var safeListDto = JSON.parse(result);//Set Data in safeListDto
             safeList = safeListDto.List;//set List of safe
             preparePagination(safeListDto);//prepare pagination labels(Current Page and number of records)
-            setSellerAccountStatement();//Draw content of table(safe table body)
+            setSellerAccountStatement(safeListDto);//Draw content of table(safe table body)
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -59,11 +59,10 @@ function getAllSafeList() {
 
 //>>>Helper Methods 
 //Binding Purechase Header --LoadData() call it
-function setSellerAccountStatement() {
+function setSellerAccountStatement(safeListDto) {
     var html = '';
     var i = 1;
-    incomingTotal = 0;
-    outcomingTotal = 0;
+  
     $.each(safeList, function (key, item) {
         html += '<tr>';
         html += '<td>' + i + '</td>';
@@ -73,15 +72,14 @@ function setSellerAccountStatement() {
         html += '<td>' + item.Notes + '</td>';
         html += '</tr>';
         i++;
-        incomingTotal += Math.ceil(item.Incoming);
-        outcomingTotal += Math.ceil(item.Outcoming);
+      
     });
 
-    $("#incomingTotal").text(Math.ceil( incomingTotal));
-    $("#outcomingTotal").text(Math.ceil( outcomingTotal));
-    $("#balance").text(Math.ceil((Math.abs(incomingTotal - outcomingTotal))));
+    $("#incomingTotal").text(Math.ceil(safeListDto.TotalIncoming));
+    $("#outcomingTotal").text(Math.ceil(safeListDto.TotalOutcoming));
+    $("#balance").text(Math.ceil((Math.abs(safeListDto.TotalIncoming - safeListDto.TotalOutcoming))));
 
-    if (incomingTotal > outcomingTotal) {
+    if (safeListDto.TotalIncoming > safeListDto.TotalOutcoming) {
         $("#balance-description").text("جملة ما له");
     }
     else {
