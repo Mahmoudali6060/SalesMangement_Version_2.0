@@ -44,7 +44,7 @@ namespace Purechase
             if (isToday)
             {
                 list = list.Where(x => x.PurechasesDate.ToShortDateString() == DateTime.Now.ToShortDateString());
-                total = _purechasesHeaderEntity.Count(x => x.PurechasesDate.ToShortDateString() == DateTime.Now.ToShortDateString());
+                total = list.Count(x => x.PurechasesDate.ToShortDateString() == DateTime.Now.ToShortDateString());
             }
             else
             {

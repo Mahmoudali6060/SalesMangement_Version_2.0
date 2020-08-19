@@ -50,7 +50,7 @@ namespace Salesinvoice
 
             else
             {
-                total = _salesinvoicesHeaderEntity.Count();
+                total = list.Count();
             }
             return new SalesinvoiceListDTO()
             {
