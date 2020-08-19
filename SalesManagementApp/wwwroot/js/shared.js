@@ -17,7 +17,7 @@ function getLocalDate(dateUTC) {
     var now = new Date(dateUTC);
     var day = ("0" + now.getDate()).slice(-2);
     var month = ("0" + (now.getMonth() + 1)).slice(-2);
-    var today = day + "-" + month + "-" + now.getFullYear();
+    var today = now.getFullYear() + "/" + month + "/" + day
     return today;
 }
 
