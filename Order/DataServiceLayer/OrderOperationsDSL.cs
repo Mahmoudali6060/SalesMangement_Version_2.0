@@ -138,7 +138,8 @@ namespace Order.DataServiceLayer
                         _order_PurechaseOperationsRepo.Update(order_Purechase);
 
                         //[5] Update Salesinvoice
-                        _salesinvoicesOperationsRepo.DeleteSalesinvoiceDetails(entity.OrderHeader, context);
+                        List<SalesinvoicesDetials> deletedSalesinvoicesDetials = _salesinvoicesOperationsRepo.DeleteSalesinvoiceDetails(entity.OrderHeader, context);//Delete SalesinvoiceDetails
+                        UpdateSalesInvoicTotal(deletedSalesinvoicesDetials,context);
                         _salesinvoicesOperationsRepo.DeleteSalesinvoiceHeader(entity.OrderHeader.Created, context);//Delete Old Salesinvoice related to this Order
                         var salesinvoicesHeaderList = PrepareSalesinvoicesEntity(entity);//Prepare Salesinvoice(Header and Details)
                         foreach (var salesinvoicesHeader in salesinvoicesHeaderList)
@@ -160,6 +161,17 @@ namespace Order.DataServiceLayer
                 }
             }
         }
+
+        private void UpdateSalesInvoicTotal(List<SalesinvoicesDetials> deletedSalesinvoicesDetials, EntitiesDbContext context)
+        {
+            foreach (var item in deletedSalesinvoicesDetials)
+            {
+                var salesinvoiceHeader = _salesinvoicesOperationsRepo.GetById(item.SalesinvoicesHeaderId, context);
+                salesinvoiceHeader.Total = salesinvoiceHeader.Total - ((item.Weight * item.Price) + (AppSettings.MashalRate + AppSettings.ByaaRate) * item.Quantity);
+                _salesinvoicesOperationsRepo.Update(salesinvoiceHeader, context);
+            }
+        }
+
         public bool Delete(long id)
         {
             var options = GetOptions();

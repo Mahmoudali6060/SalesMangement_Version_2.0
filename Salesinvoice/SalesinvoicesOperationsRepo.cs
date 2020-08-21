@@ -62,7 +62,7 @@ namespace Salesinvoice
         {
             return _salesinvoicesHeaderEntity.SingleOrDefault(s => s.Id == id);
         }
-        public SalesinvoicesHeader GetById(long id,EntitiesDbContext context)
+        public SalesinvoicesHeader GetById(long id, EntitiesDbContext context)
         {
             return context.SalesinvoicesHeaders.SingleOrDefault(s => s.Id == id);
         }
@@ -91,6 +91,13 @@ namespace Salesinvoice
             UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, orderHeaderId, context);
             return true;
         }
+
+        public bool Update(SalesinvoicesHeader salesinvoicesHeader, EntitiesDbContext context)
+        {
+            context.SalesinvoicesHeaders.Update(salesinvoicesHeader);
+            context.SaveChanges();
+            return true;
+        }
         public bool Update(SalesinvoicesHeader salesinvoicesHeader)
         {
             _context.Entry(salesinvoicesHeader).State = EntityState.Modified;
@@ -100,17 +107,18 @@ namespace Salesinvoice
         }
         public bool Delete(long id, EntitiesDbContext context)
         {
-            SalesinvoicesHeader salesinvoicesHeader = GetById(id,context);
+            SalesinvoicesHeader salesinvoicesHeader = GetById(id, context);
             DeleteSalesinvoicesDetials(id, context);
             context.SalesinvoicesHeaders.Remove(salesinvoicesHeader);
             context.SaveChanges();
             return true;
         }
-        public void DeleteSalesinvoiceDetails(OrderHeader orderHeader, EntitiesDbContext context)
+        public List<SalesinvoicesDetials> DeleteSalesinvoiceDetails(OrderHeader orderHeader, EntitiesDbContext context)
         {
             List<SalesinvoicesDetials> salesinvoicesDetialsList = _context.SalesinvoicesDetials.Where(x => x.OrderDate == orderHeader.Created).ToList();
             context.SalesinvoicesDetials.RemoveRange(salesinvoicesDetialsList);
             context.SaveChanges();
+            return salesinvoicesDetialsList;
         }
         public void DeleteSalesinvoiceHeader(DateTime orderHeaderCreatedDate, EntitiesDbContext context)
         {
