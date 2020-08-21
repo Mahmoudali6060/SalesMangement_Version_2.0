@@ -115,6 +115,21 @@ namespace Safes
             return false;
         }
 
+        public bool UpdateByHeaderId(long headerId, decimal total, AccountTypesEnum accountTypesEnum,EntitiesDbContext context)
+        {
+            Safe safe = context.Safes.SingleOrDefault(x => x.HeaderId == headerId && x.AccountTypeId == (int)accountTypesEnum);
+            if (safe != null)
+            {
+                if (accountTypesEnum == AccountTypesEnum.Sellers) safe.Outcoming = total;
+                else safe.Incoming = total;
+
+                context.Safes.Update(safe);
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
         public bool DeleteByOrderId(long orderId, EntitiesDbContext context)
         {
             List<Safe> safes = context.Safes.Where(x => x.OrderId == orderId).ToList();

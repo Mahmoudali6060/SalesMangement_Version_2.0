@@ -77,10 +77,10 @@ namespace Purechase
         {
             context.Entry(purechasesHeader).State = EntityState.Modified;
             context.SaveChanges();
-            DeletePurchaseDetails(purechasesHeader.Id);
+            DeletePurchaseDetails(purechasesHeader.Id, context);
             SetPurechasesHeaderId(purechasesHeader.Id, purechasesHeader.PurechasesDetialsList);
             AddPurechasesDetials(purechasesHeader.PurechasesDetialsList, context);
-            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id, purechasesHeader.Total, AccountTypesEnum.Clients);
+            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id, purechasesHeader.Total, AccountTypesEnum.Clients,context);
             return true;
         }
         public bool Update(PurechasesHeader purechasesHeader)
@@ -149,6 +149,13 @@ namespace Purechase
             IEnumerable<PurechasesDetials> purchaseDetails = _context.PurechasesDetials.Where(x => x.PurechasesHeaderId == headerId);
             _context.PurechasesDetials.RemoveRange(purchaseDetails);
             _context.SaveChanges();
+        }
+
+        private void DeletePurchaseDetails(long headerId,EntitiesDbContext context)
+        {
+            IEnumerable<PurechasesDetials> purchaseDetails = context.PurechasesDetials.Where(x => x.PurechasesHeaderId == headerId);
+            context.PurechasesDetials.RemoveRange(purchaseDetails);
+            context.SaveChanges();
         }
         private decimal GetTotalPurechase()
         {

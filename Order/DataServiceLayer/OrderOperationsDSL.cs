@@ -6,6 +6,7 @@ using System.Text;
 using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Order.DTOs;
 using Order.IRepositories;
 using Order.Models;
@@ -26,7 +27,8 @@ namespace Order.DataServiceLayer
         private IOrder_PurechaseOperationsRepo _order_PurechaseOperationsRepo;
         private ISafeOperationsRepo _safeOperationsRepo;
         private IServiceProvider _serviceProvider;
-        public OrderOperationsDSL(IOrderHeaderOperationsRepo orderHeaderOperationsRepo, IOrderDetailsOperationsRepo orderDetailsOperationsRepo, IPurechasesOperationsRepo purechasesOperationsRepo, ISalesinvoicesOperationsRepo salesinvoicesOperationsRepo, IOrder_PurechaseOperationsRepo order_PurechaseOperationsRepo, ISafeOperationsRepo safeOperationsRepo, IServiceProvider serviceProvider)
+        private IConfiguration _configuration;
+        public OrderOperationsDSL(IOrderHeaderOperationsRepo orderHeaderOperationsRepo, IOrderDetailsOperationsRepo orderDetailsOperationsRepo, IPurechasesOperationsRepo purechasesOperationsRepo, ISalesinvoicesOperationsRepo salesinvoicesOperationsRepo, IOrder_PurechaseOperationsRepo order_PurechaseOperationsRepo, ISafeOperationsRepo safeOperationsRepo, IServiceProvider serviceProvider, IConfiguration configuration)
         {
             _orderHeaderOperationsRepo = orderHeaderOperationsRepo;
             _orderDetailsOperationsRepo = orderDetailsOperationsRepo;
@@ -35,6 +37,7 @@ namespace Order.DataServiceLayer
             _order_PurechaseOperationsRepo = order_PurechaseOperationsRepo;
             _safeOperationsRepo = safeOperationsRepo;
             _serviceProvider = serviceProvider;
+            _configuration = configuration;
         }
 
         public IEnumerable<OrderHeader> GetAll()
@@ -50,7 +53,7 @@ namespace Order.DataServiceLayer
             return _orderHeaderOperationsRepo.GetById(id);
         }
 
-       
+
         public bool Add(OrderDTO entity)
         {
             var options = GetOptions();
@@ -110,7 +113,7 @@ namespace Order.DataServiceLayer
                         _orderHeaderOperationsRepo.Update(entity.OrderHeader, context);//Update Order table(Master)
                         _orderHeaderOperationsRepo.DeleteRelatedOrderDetials(entity.OrderHeader.Id, context);//Delete order details related to this order header
                         SetOrderHeaderId(entity.OrderHeader.Id, entity.OrderDetails);
-                        _orderDetailsOperationsRepo.AddRange(entity.OrderDetails, context);
+                        _orderDetailsOperationsRepo.AddRange(entity.OrderDetails, context);//Adding of new Order Details
 
                         //[2] Update Purechase (Master and Details)
                         PurechasesHeader purechasesHeader = PreparePurechasesEntity(entity);
@@ -166,7 +169,7 @@ namespace Order.DataServiceLayer
                 {
                     try
                     {
-                        OrderHeader orderHeader =_orderHeaderOperationsRepo.GetById(id,context);
+                        OrderHeader orderHeader = _orderHeaderOperationsRepo.GetById(id, context);
                         _purechasesOperationsRepo.DeleteRelatedPurechase(id, context);//Delete related purechase
                         _safeOperationsRepo.DeleteByOrderId(id, context);//Delete from Safe
                         _orderHeaderOperationsRepo.DeleteRelatedOrderDetials(id, context);//Delelte related order details
@@ -187,8 +190,9 @@ namespace Order.DataServiceLayer
 
         private DbContextOptions<EntitiesDbContext> GetOptions()
         {
+            string dbConn = _configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value;
             var options = new DbContextOptionsBuilder<EntitiesDbContext>()
-                .UseSqlServer(new SqlConnection("Server=.;Database=SalesManagement;Trusted_Connection=True;"))
+                .UseSqlServer(new SqlConnection(dbConn))
                 .Options;
             return options;
         }
