@@ -259,9 +259,9 @@ namespace Order.DataServiceLayer
                 PurechasesDetialsList = purechasesDetials,
                 Created = orderHeader.OrderHeader.Created,
                 Total = total - Math.Ceiling(total * AppSettings.CommissionRate),//صافي الفاتورة
-                Commission = total * AppSettings.CommissionRate,
+                Commission = Math.Ceiling(total * AppSettings.CommissionRate),
                 CommissionRate = AppSettings.CommissionRate * 100,
-                Gift = decimal.Parse((AppSettings.GiftRate * totalQuantity).ToString()),
+                Gift = decimal.Parse(Math.Ceiling((AppSettings.GiftRate * totalQuantity)).ToString()),
                 Descent = totalQuantity,
                 Expense = 0M
             };

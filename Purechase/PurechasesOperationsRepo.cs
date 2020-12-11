@@ -113,16 +113,15 @@ namespace Purechase
         }
         public DashboardDTO GetDashboardData()
         {
-            int totalQuantity = GetTodayTotalQuantity();
-            decimal totalCommission = GetTodayTotalCommission();
-            decimal nawlon = GetTodayTotalNawlon();
+            var todayPurchases = GetAllDaily();
+           
 
             return new DashboardDTO()
             {
-                TotalPurchase = Math.Ceiling(GetTotalPurechase()),
-                TotalCommission = Math.Ceiling(totalCommission),
-                TotalGift = Math.Ceiling(0.5M * totalQuantity),
-                TotalDescent = totalQuantity
+                TotalPurchase = Math.Ceiling(todayPurchases.Sum(x => x.Total) + todayPurchases.Sum(x => x.Commission)+todayPurchases.Sum(x => x.Gift)+ todayPurchases.Sum(x => x.Descent)),
+                TotalCommission = Math.Ceiling(todayPurchases.Sum(x => x.Commission)),
+                TotalGift = Math.Ceiling(todayPurchases.Sum(x => x.Gift)),
+                TotalDescent = Math.Ceiling(todayPurchases.Sum(x => x.Descent))
             };
         }
         public IEnumerable<PurechasesHeader> GetPurchaseHeaderListByFarmerId(long farmerId)

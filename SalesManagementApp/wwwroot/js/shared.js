@@ -1,4 +1,9 @@
 ﻿
+$(document).ready(function () {
+    debugger;
+    getImagesUrl();
+});
+
 $(".validate").keydown(
     function () {
 
