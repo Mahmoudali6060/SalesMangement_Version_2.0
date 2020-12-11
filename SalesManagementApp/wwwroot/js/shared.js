@@ -1,7 +1,6 @@
 ﻿
 $(document).ready(function () {
-    debugger;
-    getImagesUrl();
+    setCompanyFolderInLocalStore();
 });
 
 $(".validate").keydown(
@@ -86,9 +85,36 @@ function getFarmerById(farmerId) {
 }
 
 
-function getImagesUrl() {
-    var imagesUrl = $("#imagesUrl").val();
-    return imagesUrl;
+function setCompanyFolderInLocalStore() {
+    //TO-Do>>You must refactor LATER ! >> Babe :) 
+    clearCompanyFolderFromLocalStore();
+    var companyFolder = $("#imagesUrl").val();//Company Folder 
+    localStorage.setItem('companyFolder', companyFolder);
+}
+
+function getCompanyFolderFromLocalStore() {
+    return localStorage.getItem('companyFolder');
+}
+
+function clearCompanyFolderFromLocalStore() {
+    return localStorage.removeItem('companyFolder');
+}
+
+function getApiUrl() {
+    return 'http://localhost:54600/';
+}
+
+function getImageUrl() {
+    return getApiUrl() +"/images/" + getCompanyFolderFromLocalStore();
+}
+
+function getImageFullPath(imageName) {
+    return getImageUrl() + "/" + imageName;
+}
+
+function setImage(elementId) {
+    let element = document.getElementById(elementId);
+    $(element).attr("src", getImageFullPath(elementId+".jpg"));
 }
 
 function getAllSellers() {

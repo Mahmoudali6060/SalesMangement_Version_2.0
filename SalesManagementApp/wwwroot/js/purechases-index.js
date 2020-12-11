@@ -1,6 +1,7 @@
 ﻿
 $(document).ready(function () {
     getAll();
+    setImage('purchase-header');
 });
 var purechaseHeaders = [];
 let headerId;
@@ -8,6 +9,8 @@ var total = 0;
 var selectedPurechaseHeader;
 var currentPage = 1;
 var recordsTotal;
+
+
 //>>>CRUD Operations Methods
 //Loading Purechase Header Data
 function getAll() {
@@ -137,7 +140,6 @@ function getPurechaseDetails(id) {
 
     preparePurechaseFooter(total, totalQuantity, totalWeight, selectedPurechaseHeader);
     $('#listModal').modal('show');
-    $("#purchase-header").attr("src", getImagesUrl() + "purchase-header.jpg");
     return html;
 }
 //Prepare Purechase Header to bind it in modal
@@ -296,7 +298,7 @@ function prepareReportHeader() {
                             <table style="width:100%;border:none;">
                                 <tr>
                                     <td style="width:100%;border:none;">
-                                        <img src="`+ `/images/El_Senosy/` + `/purchase-header.jpg" style="width:100%;" />
+                                        <img src="`+ getImageFullPath("purchase-header.jpg") + `" style="width:100%;" />
                                     </td>
                                 </tr>
                             </table>

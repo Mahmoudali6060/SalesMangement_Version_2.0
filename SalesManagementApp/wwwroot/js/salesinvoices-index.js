@@ -1,6 +1,8 @@
 ﻿$(document).ready(function () {
     getAll();
+    setImage('salesinvoice-header');
 });
+
 var salesinvoiceHeaders = [];
 var headerId;
 var selectedSalesinvoiceHeader;

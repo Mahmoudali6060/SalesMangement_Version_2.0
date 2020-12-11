@@ -84,3 +84,15 @@ thead {
 .is-printed {
     background-color: #e2e214 !important;
 }
+
+.img-logo{
+    width:250px ;
+}
+
+.title-logo {
+    font-size: 30px;
+    color: white;
+    font-weight: bold;
+    margin: 18px;
+}
+
