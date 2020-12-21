@@ -245,12 +245,12 @@ namespace Order.DataServiceLayer
                 }
                 subTotal = item.Price * item.Weight;
                 subTotal = Math.Ceiling(subTotal);
-                decimal decent = Math.Ceiling((AppSettings.Decentate * item.Quantity));
-                decimal gift = Math.Ceiling(decimal.Parse((AppSettings.GiftRate * item.Quantity).ToString()));
-                total += subTotal - (gift + decent);//
-
+                total += subTotal;
                 totalQuantity += item.Quantity;
             }
+
+            decimal totalGift = decimal.Parse(Math.Ceiling((AppSettings.GiftRate * totalQuantity)).ToString());
+            decimal toalDescent = Math.Ceiling(AppSettings.Decentate * totalQuantity);
             ///Prepare purechase Header
             return new PurechasesHeader()
             {
@@ -258,11 +258,11 @@ namespace Order.DataServiceLayer
                 FarmerId = orderHeader.OrderHeader.FarmerId,
                 PurechasesDetialsList = purechasesDetials,
                 Created = orderHeader.OrderHeader.Created,
-                Total = total - Math.Ceiling(total * AppSettings.CommissionRate),//صافي الفاتورة
+                Total = total - (Math.Ceiling(total * AppSettings.CommissionRate) + toalDescent + totalGift),//صافي الفاتورة
                 Commission = Math.Ceiling(total * AppSettings.CommissionRate),
                 CommissionRate = AppSettings.CommissionRate * 100,
-                Gift = decimal.Parse(Math.Ceiling((AppSettings.GiftRate * totalQuantity)).ToString()),
-                Descent = totalQuantity,
+                Gift = totalGift,
+                Descent = toalDescent,
                 Expense = 0M
             };
         }

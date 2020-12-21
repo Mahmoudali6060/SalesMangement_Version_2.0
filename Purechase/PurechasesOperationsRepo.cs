@@ -80,7 +80,7 @@ namespace Purechase
             DeletePurchaseDetails(purechasesHeader.Id, context);
             SetPurechasesHeaderId(purechasesHeader.Id, purechasesHeader.PurechasesDetialsList);
             AddPurechasesDetials(purechasesHeader.PurechasesDetialsList, context);
-            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id, purechasesHeader.Total, AccountTypesEnum.Clients,context);
+            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id, purechasesHeader.Total, AccountTypesEnum.Clients, context);
             return true;
         }
         public bool Update(PurechasesHeader purechasesHeader)
@@ -114,15 +114,15 @@ namespace Purechase
         public DashboardDTO GetDashboardData()
         {
             var todayPurchases = GetAllDaily();
-           
-
-            return new DashboardDTO()
+            DashboardDTO dashboardDTO = new DashboardDTO()
             {
-                TotalPurchase = Math.Ceiling(todayPurchases.Sum(x => x.Total) + todayPurchases.Sum(x => x.Commission)+todayPurchases.Sum(x => x.Gift)+ todayPurchases.Sum(x => x.Descent)),
+                TotalPurchase = Math.Ceiling(todayPurchases.Sum(x => x.Total)),// + todayPurchases.Sum(x => x.Commission)+todayPurchases.Sum(x => x.Gift)+ todayPurchases.Sum(x => x.Descent)),
                 TotalCommission = Math.Ceiling(todayPurchases.Sum(x => x.Commission)),
                 TotalGift = Math.Ceiling(todayPurchases.Sum(x => x.Gift)),
                 TotalDescent = Math.Ceiling(todayPurchases.Sum(x => x.Descent))
             };
+            dashboardDTO.TotalPurchase += dashboardDTO.TotalCommission + dashboardDTO.TotalGift + dashboardDTO.TotalDescent;
+            return dashboardDTO;
         }
         public IEnumerable<PurechasesHeader> GetPurchaseHeaderListByFarmerId(long farmerId)
         {
@@ -150,7 +150,7 @@ namespace Purechase
             _context.SaveChanges();
         }
 
-        private void DeletePurchaseDetails(long headerId,EntitiesDbContext context)
+        private void DeletePurchaseDetails(long headerId, EntitiesDbContext context)
         {
             IEnumerable<PurechasesDetials> purchaseDetails = context.PurechasesDetials.Where(x => x.PurechasesHeaderId == headerId);
             context.PurechasesDetials.RemoveRange(purchaseDetails);
