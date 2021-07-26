@@ -12,14 +12,14 @@ namespace Salesinvoice
         IEnumerable<SalesinvoicesHeader> GetAll();
         SalesinvoiceListDTO GetAll(int currentPage, string keyword, bool isToday);
         SalesinvoicesHeader GetById(long id);
-        SalesinvoicesHeader GetById(long id,EntitiesDbContext context);
+        SalesinvoicesHeader GetById(long id, EntitiesDbContext context);
         SalesinvoicesHeader Add(SalesinvoicesHeader entity, long orderHeaderId, EntitiesDbContext context);
         bool Update(SalesinvoicesHeader entity, long orderHeaderId, EntitiesDbContext context);
         bool Update(SalesinvoicesHeader entity, EntitiesDbContext context);
         bool Update(SalesinvoicesHeader entity);
-        bool Delete(long id,EntitiesDbContext context);
+        bool Delete(long id, EntitiesDbContext context);
         List<SalesinvoicesDetials> DeleteSalesinvoiceDetails(OrderHeader orderHeader, EntitiesDbContext context);
         void DeleteSalesinvoiceHeader(DateTime orderHeaderCreatedDate, EntitiesDbContext context);
-
+        IEnumerable<SalesinvoicesHeader> GetAllDaily();
     }
 }

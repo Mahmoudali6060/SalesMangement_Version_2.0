@@ -101,11 +101,11 @@ function clearCompanyFolderFromLocalStore() {
 }
 
 function getApiUrl() {
-    return 'http://localhost:54600/';
+    return 'http://192.168.1.1:50010/';
 }
 
 function getImageUrl() {
-    return getApiUrl() +"/images/" + getCompanyFolderFromLocalStore();
+    return getApiUrl() + "/images/" + getCompanyFolderFromLocalStore();
 }
 
 function getImageFullPath(imageName) {
@@ -114,7 +114,7 @@ function getImageFullPath(imageName) {
 
 function setImage(elementId) {
     let element = document.getElementById(elementId);
-    $(element).attr("src", getImageFullPath(elementId+".jpg"));
+    $(element).attr("src", getImageFullPath(elementId + ".jpg"));
 }
 
 function getAllSellers() {
@@ -196,15 +196,7 @@ function getRoleById(roleId) {
 }
 
 function convertToIndiaNumbers(text) {
-
-    //return text.replace(/0/g, '۰').replace(/1/g, '۱').replace(/2/g, '۲').replace(/3/g, '۳').replace(/4/g, '٤')
-    //    .replace(/5/g, '٥').replace(/6/g, '٦').replace(/7/g, '٧').replace(/8/g, '٨').replace(/9/g, '٩');
-
-    //var id = ['٠', '١', ' ٢', '۳', '٤', '٥', '٦', '۷', '۸', '۹'];
-    //return text.replace(/[0-9]/g, function (w) {
-    //    return id[+w]
-    //});
-    //text = 3.5;
+    //return text;
     text += "";
     let splitted = text.split(".");
     let part1;
@@ -221,31 +213,7 @@ function convertToIndiaNumbers(text) {
         result = "" + part2 + ', ' + "" + part1;
     }
     return result;
-    //if (text == undefined) return '';
-    //var str = $.trim(text.toString());
-    //if (str == "") return "";
-    //str = str.replace('0','۰');
-    //str = str.replace('1','۱');
-    //str = str.replace('2','۲');
-    //str = str.replace('3','۳');
-    //str = str.replace('4','٤');
-    //str = str.replace('5','٥');
-    //str = str.replace('6','٦');
-    //str = str.replace('7','۷');
-    //str = str.replace('8','۸');
-    //str = str.replace('9','۹');
-    //return str;
-
-    //String.prototype.toEnDigit = function () {
-    //    return this.replace(/[\u06F0-\u06F9]+/g, function (digit) {
-    //        var ret = '';
-    //        for (var i = 0, len = digit.length; i < len; i++) {
-    //            ret += String.fromCharCode(digit.charCodeAt(i) - 1728);
-    //        }
-
-    //        return ret;
-    //    });
-    //};
+   
 
 
 }
@@ -391,21 +359,27 @@ var elements = document.getElementsByClassName("arrow-togglable");
 //var length = elements.length;
 //var currentIndex = 0;
 
+///Prevent Arrows to move
 document.onkeydown = function (e) {
-    let targetIndex = e.target.tabIndex;
+    //debugger;
+    //let targetIndex = e.target.tabIndex;
 
-    let rowNumber = getRowNumber(e);
-    var index = targetIndex + (parseInt(rowNumber - 1) * 5);
-    switch (e.keyCode) {
-        case 39:
-            currentIndex = (index == 0) ? elements.length - 1 : --index;
-            elements[currentIndex].focus();
-            break;
-        case 37:
-            currentIndex = ((index + 1) == elements.length) ? 0 : ++index;
-            elements[currentIndex].focus();
-            break;
-    }
+    //let rowNumber = getRowNumber(e);
+    //var index = targetIndex + (parseInt(rowNumber - 1) * 5);
+    //switch (e.keyCode) {
+
+        ////Right Arrow
+        //case 39:
+        //    currentIndex = (index == 0) ? elements.length - 1 : --index;
+        //    elements[currentIndex].focus();
+        //    break;
+
+        ////Left Arrow
+        //case 37:
+        //    currentIndex = ((index + 1) == elements.length) ? 0 : ++index;
+        //    elements[currentIndex].focus();
+        //    break;
+   // }
 };
 
 function getBalanceByAccountId(accountId, accountTypeId) {

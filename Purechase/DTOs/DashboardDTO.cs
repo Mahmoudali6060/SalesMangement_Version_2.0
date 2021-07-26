@@ -10,5 +10,10 @@ namespace Purechase.DTOs
         public decimal TotalCommission { get; set; }
         public decimal TotalDescent { get; set; }
         public decimal TotalGift { get; set; }
+        public decimal TotalSalesinvoice { get; set; }
+        public int TotalQuantity { get; set; }
+        public int TotalSalesWeight { get; set; }
+        public int TotalPurchaseWeight { get; set; }
+
     }
 }

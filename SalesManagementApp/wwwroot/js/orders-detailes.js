@@ -130,10 +130,10 @@ function addOrderDetailsRow(quantity, weight, price, sellingPrice, sellerId) {
     html = '';
     html += '<tr id="orderDetailsRow' + orderDetailsRowNum + '">';
     html += '<td>' + orderDetailsRowNum + '</td>';
-    html += '<td>' + '<input tabIndex="0" class="form-control arrow-togglable" type="number" id="Quantity' + orderDetailsRowNum + '" value="' + quantity + '" >' + '</td>';
-    html += '<td>' + '<input tabIndex="1" class="form-control arrow-togglable" type="number" id="Weight' + orderDetailsRowNum + '"  value="' + weight + '" >' + '</td>';
-    html += '<td>' + '<input tabIndex="2" class="form-control arrow-togglable" type="number" id="Price' + orderDetailsRowNum + '"  value="' + price + '" >' + '</td>';
-    html += '<td>' + '<input tabIndex="3" class="form-control arrow-togglable" type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + null + '" >' + '</td>';
+    html += '<td>' + '<input tabIndex="100" class="form-control arrow-togglable" type="number" id="Quantity' + orderDetailsRowNum + '" value="' + quantity + '" >' + '</td>';
+    html += '<td>' + '<input tabIndex="101" class="form-control arrow-togglable" type="number" id="Weight' + orderDetailsRowNum + '"  value="' + weight + '" >' + '</td>';
+    html += '<td>' + '<input tabIndex="102" class="form-control arrow-togglable" type="number" id="Price' + orderDetailsRowNum + '"  value="' + price + '" >' + '</td>';
+    html += '<td>' + '<input tabIndex="103" class="form-control arrow-togglable" type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + null + '" >' + '</td>';
     html += '<td>' + setSellersInOrderDetails(orderDetailsRowNum); + '</td>';
     html += '<td>' +
         '<i class="icon-trash"  onclick="removeOrderDetailsRow(' + orderDetailsRowNum + ')"></i>' +
@@ -209,9 +209,9 @@ function removeOrderDetailsRow(rowNum) {
 //Preparing a selection of Seller included in Order Details
 function setSellersInOrderDetails(orderDetailsRowNum) {
     var html = '<div class="row"><div class="col-lg-8">';
-    html += '<select  tabIndex="4" class="form-control arrow-togglable"  id="Sellers' + orderDetailsRowNum + '">';
+    html += '<select  tabIndex="104" class="form-control arrow-togglable"  id="Sellers' + orderDetailsRowNum + '">';
     html += '</select></div>';
-    html += '<div class="col-lg-4"><button type="button"  class="btn btn-info" data-toggle="modal" data-target="#formSellerModal" onclick="clearSellerData(' + orderDetailsRowNum + ');"> تاجر جديد</button></div>';
+    html += '<div class="col-lg-4"><button tabIndex="105" type="button"  class="btn btn-info" data-toggle="modal" data-target="#formSellerModal" onclick="clearSellerData(' + orderDetailsRowNum + ');"> تاجر جديد</button></div>';
 
     return html;
 }

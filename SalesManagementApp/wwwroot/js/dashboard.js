@@ -26,4 +26,10 @@ function SetDashboardData(dashboard) {
     $('#TotalCommission').text(dashboard.TotalCommission);
     $('#TotalGift').text(dashboard.TotalGift);
     $('#TotalDescent').text(dashboard.TotalDescent);
+    $('#TotalSalesinvoice').text(dashboard.TotalSalesinvoice);
+    $('#TotalQuantity').text(dashboard.TotalQuantity);
+    $('#TotalSalesWeight').text(dashboard.TotalSalesWeight);
+    $('#TotalPurchaseWeight').text(dashboard.TotalPurchaseWeight);
+
+
 }

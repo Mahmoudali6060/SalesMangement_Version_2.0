@@ -134,6 +134,10 @@ namespace Salesinvoice
             }
         }
 
+        public IEnumerable<SalesinvoicesHeader> GetAllDaily()
+        {
+            return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
+        }
         #region Helper
         private IEnumerable<SalesinvoicesDetials> SetSalesinvoicesHeaderId(SalesinvoicesHeader salesinvoicesHeader, IEnumerable<SalesinvoicesDetials> salesinvoicesDetails)
         {
