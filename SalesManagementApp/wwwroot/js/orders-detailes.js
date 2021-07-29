@@ -68,12 +68,14 @@ function getById(id) {
 //Adding new entity
 function add() {
     //if (!validateForm()) return false;
+    disableButton('btnAdd');
     var entity = fillEntity();
     $.ajax({
         url: "/Orders/Add",
         data: entity,
         type: "POST",
         success: function (result) {
+            enableButton('btnAdd');
             if (result == true)
                 cancel();
             else {
@@ -87,12 +89,15 @@ function add() {
 }
 //Updating exsited entity by entityId
 function update() {
+    debugger;
+    disableButton('btnUpdate');
     var entity = fillEntity();
     $.ajax({
         url: "/Orders/Update",
         data: entity,
         type: "POST",
         success: function (result) {
+            enableButton('btnUpdate');
             if (result == true)
                 cancel();
             else {
@@ -103,6 +108,14 @@ function update() {
             swal("لم يتم التعديل", "حدث خطأ في التعديل", "خطأ");
         }
     });
+}
+
+function disableButton(id) {
+    $('#' + id).prop('disabled', true);
+}
+
+function enableButton(id) {
+    $('#' + id).prop('disabled', false);
 }
 
 //>>>End CRUD Operations Methods

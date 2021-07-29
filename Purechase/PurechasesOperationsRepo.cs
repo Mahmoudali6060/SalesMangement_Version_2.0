@@ -63,8 +63,6 @@ namespace Purechase
         }
         public IEnumerable<PurechasesHeader> GetAllDaily()
         {
-            //var date = DateTime.Now.ToShortDateString();
-            //var dateStr = "2/27/2021";
             return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
         }
         public PurechasesHeader GetById(long id)
