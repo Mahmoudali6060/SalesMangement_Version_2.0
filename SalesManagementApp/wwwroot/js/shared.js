@@ -105,7 +105,7 @@ function getApiUrl() {
 }
 
 function getImageUrl() {
-    return getApiUrl() + "/images/" + getCompanyFolderFromLocalStore();
+    return "/images/" + getCompanyFolderFromLocalStore();
 }
 
 function getImageFullPath(imageName) {
@@ -361,12 +361,17 @@ var elements = document.getElementsByClassName("arrow-togglable");
 
 ///Prevent Arrows to move
 document.onkeydown = function (e) {
-    //debugger;
+    debugger;
     //let targetIndex = e.target.tabIndex;
 
     //let rowNumber = getRowNumber(e);
     //var index = targetIndex + (parseInt(rowNumber - 1) * 5);
     //switch (e.keyCode) {
+
+    //    case 9:
+    //        currentIndex = ((index + 1) == elements.length) ? 0 : ++index;
+    //        elements[4].focus();
+    //        break;
 
         ////Right Arrow
         //case 39:

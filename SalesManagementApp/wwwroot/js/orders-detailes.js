@@ -17,6 +17,7 @@ var sellers;
 var farmers;
 orderDetailsRowNum = 0;
 orderDetailsNumList = [];//to fill rowIds list
+let index = 99;
 ///>>>END Variables
 
 //Setting of Farmer in select 
@@ -140,14 +141,15 @@ function fillOrderDetailsData(orderDetails) {
 function addOrderDetailsRow(quantity, weight, price, sellingPrice, sellerId) {
     orderDetailsRowNum += 1;
     orderDetailsNumList.push({ row: orderDetailsRowNum });
+   
     html = '';
     html += '<tr id="orderDetailsRow' + orderDetailsRowNum + '">';
     html += '<td>' + orderDetailsRowNum + '</td>';
-    html += '<td>' + '<input tabIndex="100" class="form-control arrow-togglable" type="number" id="Quantity' + orderDetailsRowNum + '" value="' + quantity + '" >' + '</td>';
-    html += '<td>' + '<input tabIndex="101" class="form-control arrow-togglable" type="number" id="Weight' + orderDetailsRowNum + '"  value="' + weight + '" >' + '</td>';
-    html += '<td>' + '<input tabIndex="102" class="form-control arrow-togglable" type="number" id="Price' + orderDetailsRowNum + '"  value="' + price + '" >' + '</td>';
-    html += '<td>' + '<input tabIndex="103" class="form-control arrow-togglable" type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + null + '" >' + '</td>';
-    html += '<td>' + setSellersInOrderDetails(orderDetailsRowNum); + '</td>';
+    html += '<td>' + '<input tabIndex="' + ++index + '" class="form-control arrow-togglable" type="number" id="Quantity' + orderDetailsRowNum + '" value="' + quantity + '" >' + '</td>';
+    html += '<td>' + '<input tabIndex="' + ++index + '" class="form-control arrow-togglable" type="number" id="Weight' + orderDetailsRowNum + '"  value="' + weight + '" >' + '</td>';
+    html += '<td>' + '<input tabIndex="' + ++index + '" class="form-control arrow-togglable" type="number" id="Price' + orderDetailsRowNum + '"  value="' + price + '" >' + '</td>';
+    html += '<td>' + '<input tabIndex="' + ++index + '" class="form-control arrow-togglable" type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + null + '" >' + '</td>';
+    html += '<td>' + setSellersInOrderDetails(orderDetailsRowNum, index); + '</td>';
     html += '<td>' +
         '<i class="icon-trash"  onclick="removeOrderDetailsRow(' + orderDetailsRowNum + ')"></i>' +
         '</td>';
@@ -220,11 +222,11 @@ function removeOrderDetailsRow(rowNum) {
     $('table#order-details-list tr#orderDetailsRow' + rowNum + '').remove();
 }
 //Preparing a selection of Seller included in Order Details
-function setSellersInOrderDetails(orderDetailsRowNum) {
+function setSellersInOrderDetails(orderDetailsRowNum, index) {
     var html = '<div class="row"><div class="col-lg-8">';
-    html += '<select  tabIndex="104" class="form-control arrow-togglable"  id="Sellers' + orderDetailsRowNum + '">';
+    html += '<select  tabIndex="' + ++index + '" class="form-control arrow-togglable"  id="Sellers' + orderDetailsRowNum + '">';
     html += '</select></div>';
-    html += '<div class="col-lg-4"><button tabIndex="105" type="button"  class="btn btn-info" data-toggle="modal" data-target="#formSellerModal" onclick="clearSellerData(' + orderDetailsRowNum + ');"> تاجر جديد</button></div>';
+    html += '<div class="col-lg-4"><button type="button"  class="btn btn-info" data-toggle="modal" data-target="#formSellerModal" onclick="clearSellerData(' + orderDetailsRowNum + ');"> تاجر جديد</button></div>';
 
     return html;
 }

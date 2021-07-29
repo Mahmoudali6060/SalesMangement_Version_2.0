@@ -235,7 +235,7 @@ function prepareReportHeader() {
                             <table style="width:100%;border:none;">
                                 <tr>
                                     <td style="width:100%;border:none;" align="center">
-                                        <img src="/images/El_Senosy//salesinvoice-Header.jpg" />
+                                        <img src="`+ getImageFullPath("salesinvoice-header.jpg") + `" style="width:100%;" />
                                     </td>
                                 </tr>
                                 <tr>
