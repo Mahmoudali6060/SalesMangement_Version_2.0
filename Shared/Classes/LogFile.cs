@@ -12,7 +12,7 @@ namespace Shared.Classes
         {
             try
             {
-                string fileName = @"E:\Logs\" + DateTime.Now.ToString("dd-MM-yyyy HH-mm-ss") + ".txt";
+                string fileName = @"D:\Logs\" + DateTime.Now.ToString("dd-MM-yyyy HH-mm-ss") + ".txt";
                 System.IO.File.WriteAllText(fileName, strMessage);
                 return true;
             }
