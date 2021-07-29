@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\Content\app-assets\js\scripts\sweet-alert\documentation.min.js" />
+    <Content Remove="wwwroot\Content\app-assets\js\scripts\sweet-alert\sweet-alert.min.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Controllers\SafeController.cs" />
   </ItemGroup>
 

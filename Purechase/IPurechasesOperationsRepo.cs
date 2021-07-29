@@ -18,7 +18,7 @@ namespace Purechase
         bool UpdateInPrinting(PurechasesHeader purechasesHeader);
         bool Delete(long id, EntitiesDbContext context);
         void DeleteRelatedPurechase(long orderHeaderId, EntitiesDbContext context);
-        DashboardDTO GetDashboardData();
+        DashboardDTO GetDashboardData(DateTime? selectedDate = null);
         IEnumerable<PurechasesHeader> GetPurchaseHeaderListByFarmerId(long farmerId);
     }
 }

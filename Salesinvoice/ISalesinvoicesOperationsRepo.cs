@@ -20,6 +20,6 @@ namespace Salesinvoice
         bool Delete(long id, EntitiesDbContext context);
         List<SalesinvoicesDetials> DeleteSalesinvoiceDetails(OrderHeader orderHeader, EntitiesDbContext context);
         void DeleteSalesinvoiceHeader(DateTime orderHeaderCreatedDate, EntitiesDbContext context);
-        IEnumerable<SalesinvoicesHeader> GetAllDaily();
+        IEnumerable<SalesinvoicesHeader> GetAllDaily(DateTime? date=null);
     }
 }

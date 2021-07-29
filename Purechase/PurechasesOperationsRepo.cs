@@ -61,9 +61,11 @@ namespace Purechase
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
-        public IEnumerable<PurechasesHeader> GetAllDaily()
+        public IEnumerable<PurechasesHeader> GetAllDaily(DateTime? date = null)
         {
-            return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
+            if (date == null)
+                return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
+            return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == date.Value.ToShortDateString()).OrderByDescending(x => x.Id);
         }
         public PurechasesHeader GetById(long id)
         {
@@ -115,10 +117,10 @@ namespace Purechase
             }
 
         }
-        public DashboardDTO GetDashboardData()
+        public DashboardDTO GetDashboardData(DateTime? selectedDate = null)
         {
-            var todayPurchases = GetAllDaily();
-            var todaySalesinvoice = _salesinvoicesOperationsRepo.GetAllDaily();
+            var todayPurchases = GetAllDaily(selectedDate);
+            var todaySalesinvoice = _salesinvoicesOperationsRepo.GetAllDaily(selectedDate);
 
             decimal total = CalculateTotalPurchase(todayPurchases);
             DashboardDTO dashboardDTO = new DashboardDTO()
@@ -129,7 +131,7 @@ namespace Purechase
                 TotalGift = todayPurchases.Sum(x => Math.Ceiling(x.Gift)),
                 TotalDescent = todayPurchases.Sum(x => Math.Ceiling(x.Descent)),
 
-                TotalSalesinvoice = todaySalesinvoice.Sum(x => x.Total),
+                TotalSalesinvoice = todaySalesinvoice.Sum(x => x.Total), //CalculateTotalSalesinvoice(todaySalesinvoice),
                 TotalQuantity = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Quantity)),
                 TotalSalesWeight = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Weight)),
                 TotalPurchaseWeight = todayPurchases.Sum(x => x.PurechasesDetialsList.Sum(y => y.Weight))
@@ -155,20 +157,20 @@ namespace Purechase
             return total;
         }
 
-        //private decimal CalculateTotalSalesinvoice(IEnumerable<SalesinvoicesHeader> salesinvoicesHeaders)
-        //{
-        //    decimal total = 0;
-        //    foreach (var salesinvoice in salesinvoicesHeaders)
-        //    {
-        //        foreach (var salesinvoiceDetails in salesinvoice.SalesinvoicesDetialsList)
-        //        {
-        //            decimal subTotal = 0;
-        //            subTotal = Math.Ceiling(salesinvoiceDetails. * purchaseDetail.Weight);
-        //            total += subTotal;
-        //        }
-        //    }
-        //    return total;
-        //}
+        private decimal CalculateTotalSalesinvoice(IEnumerable<SalesinvoicesHeader> salesinvoicesHeaders)
+        {
+            decimal total = 0;
+            foreach (var salesinvoice in salesinvoicesHeaders)
+            {
+                foreach (var salesinvoiceDetails in salesinvoice.SalesinvoicesDetialsList)
+                {
+                    decimal subTotal = 0;
+                    subTotal = Math.Ceiling(salesinvoiceDetails.Price * salesinvoiceDetails.Weight);
+                    total += subTotal;
+                }
+            }
+            return total;
+        }
 
         public IEnumerable<PurechasesHeader> GetPurchaseHeaderListByFarmerId(long farmerId)
         {
