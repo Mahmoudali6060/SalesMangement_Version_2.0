@@ -68,11 +68,12 @@ namespace Salesinvoice
         }
         public SalesinvoicesHeader Add(SalesinvoicesHeader salesinvoicesHeader, long orderHeaderId, EntitiesDbContext context)
         {
+            //To-Do
             //Check if Seller has at least one salesinvoice at this day or no
             SalesinvoicesHeader exsistedSalesHeader = GetSalesinvoiceHeaderByDateAndSellerId(salesinvoicesHeader.SalesinvoicesDate, salesinvoicesHeader.SellerId, context);
             if (exsistedSalesHeader == null)//It is the first salesinvoice to this Seller in this day
             {
-                context.Entry(salesinvoicesHeader).State = EntityState.Added;
+                context.SalesinvoicesHeaders.Add(salesinvoicesHeader);
                 context.SaveChanges();
             }
             if (salesinvoicesHeader.Id == 0) salesinvoicesHeader.Id = exsistedSalesHeader.Id;

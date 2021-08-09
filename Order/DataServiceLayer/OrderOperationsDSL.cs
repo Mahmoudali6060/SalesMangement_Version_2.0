@@ -139,7 +139,7 @@ namespace Order.DataServiceLayer
 
                         //[5] Update Salesinvoice
                         List<SalesinvoicesDetials> deletedSalesinvoicesDetials = _salesinvoicesOperationsRepo.DeleteSalesinvoiceDetails(entity.OrderHeader, context);//Delete SalesinvoiceDetails
-                        UpdateSalesInvoicTotal(deletedSalesinvoicesDetials,context);
+                        UpdateSalesInvoicTotal(deletedSalesinvoicesDetials, context);
                         _salesinvoicesOperationsRepo.DeleteSalesinvoiceHeader(entity.OrderHeader.Created, context);//Delete Old Salesinvoice related to this Order
                         var salesinvoicesHeaderList = PrepareSalesinvoicesEntity(entity);//Prepare Salesinvoice(Header and Details)
                         foreach (var salesinvoicesHeader in salesinvoicesHeaderList)
@@ -153,8 +153,9 @@ namespace Order.DataServiceLayer
                         transaction.Commit();
                         return true;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        LogFile.WriteLog(ex.Message);
                         transaction.Rollback();
                         return false;
                     }

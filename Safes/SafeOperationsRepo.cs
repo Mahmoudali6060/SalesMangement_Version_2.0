@@ -117,7 +117,7 @@ namespace Safes
 
         public bool UpdateByHeaderId(long headerId, decimal total, AccountTypesEnum accountTypesEnum,EntitiesDbContext context)
         {
-            Safe safe = context.Safes.SingleOrDefault(x => x.HeaderId == headerId && x.AccountTypeId == (int)accountTypesEnum);
+            Safe safe = context.Safes.FirstOrDefault(x => x.HeaderId == headerId && x.AccountTypeId == (int)accountTypesEnum);
             if (safe != null)
             {
                 if (accountTypesEnum == AccountTypesEnum.Sellers) safe.Outcoming = total;
