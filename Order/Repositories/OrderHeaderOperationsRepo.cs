@@ -24,14 +24,14 @@ namespace Order.Repositories
 
         public IEnumerable<OrderHeader> GetAll()
         {
-            return _context.OrderHeaders.Include("OrderDetails").Include("Farmer").ToList().OrderBy(x => x.Id);
+            return _context.OrderHeaders.Include("OrderDetails").Include("Farmer").ToList().OrderByDescending(x => x.OrderDate);
         }
         public OrderListDTO GetAll(int currentPage, string keyword, bool isToday)
         {
             var total = 0;
             var list = _orderHeaderEntity
                 .Include("OrderDetails").Include("Farmer")
-                .OrderBy(x => x.Id)
+                .OrderByDescending(x => x.OrderDate)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(keyword))
@@ -41,8 +41,8 @@ namespace Order.Repositories
 
             if (isToday)
             {
-                list = list.Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
-                total = list.Count(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString());
+                list = list.Where(x => x.OrderDate.ToShortDateString() == DateTime.Now.ToShortDateString());
+                total = list.Count(x => x.OrderDate.ToShortDateString() == DateTime.Now.ToShortDateString());
             }
             else
             {

@@ -139,8 +139,8 @@ namespace Salesinvoice
         public IEnumerable<SalesinvoicesHeader> GetAllDaily(DateTime? date = null)
         {
             if (date == null)
-                return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
-            return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == date.Value.ToShortDateString()).OrderByDescending(x => x.Id);
+                return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.SalesinvoicesDate.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
+            return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.SalesinvoicesDate.ToShortDateString() == date.Value.ToShortDateString()).OrderByDescending(x => x.Id);
         }
         #region Helper
         private IEnumerable<SalesinvoicesDetials> SetSalesinvoicesHeaderId(SalesinvoicesHeader salesinvoicesHeader, IEnumerable<SalesinvoicesDetials> salesinvoicesDetails)

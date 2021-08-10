@@ -64,8 +64,8 @@ namespace Purechase
         public IEnumerable<PurechasesHeader> GetAllDaily(DateTime? date = null)
         {
             if (date == null)
-                return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
-            return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.Created.ToShortDateString() == date.Value.ToShortDateString()).OrderByDescending(x => x.Id);
+                return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.PurechasesDate.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
+            return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.PurechasesDate.ToShortDateString() == date.Value.ToShortDateString()).OrderByDescending(x => x.Id);
         }
         public PurechasesHeader GetById(long id)
         {
@@ -206,30 +206,8 @@ namespace Purechase
             context.PurechasesDetials.RemoveRange(purchaseDetails);
             context.SaveChanges();
         }
-        private decimal GetTotalPurechase()
-        {
-            return GetAllDaily().Sum(x => x.Total);
-        }
-        private int GetTodayTotalQuantity()
-        {
-            return _context.PurechasesDetials.AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).Sum(x => x.Quantity);
-        }
-        private decimal GetTodayTotalCommission()
-        {
-            return GetAllDaily().Sum(x => x.Commission);
-        }
-        private decimal GetTodayTotalNawlon()
-        {
-            return GetAllDaily().Sum(x => x.Nawlon);
-        }
-        private int GetTodayTotalWeight()
-        {
-            return _context.PurechasesDetials.AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).Sum(x => x.Weight);
-        }
-        private decimal GetTodayTotalPrice()
-        {
-            return _context.PurechasesDetials.AsEnumerable().Where(x => x.Created.ToShortDateString() == DateTime.Now.ToShortDateString()).Sum(x => x.Price);
-        }
+   
+        
         public bool UpdateInPrinting(PurechasesHeader entity)
         {
             PurechasesHeader purechaseHeader = GetById(entity.Id);
