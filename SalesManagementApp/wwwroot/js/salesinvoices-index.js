@@ -129,6 +129,7 @@ function updateTotal() {
 //>>>Helper Methods 
 //Binding Salesinvoice Header --LoadData() call it
 function setSalesinvoiceHeader() {
+    debugger;
     var html = '';
     var i = 1;
     $.each(salesinvoiceHeaders, function (key, item) {
@@ -137,6 +138,7 @@ function setSalesinvoiceHeader() {
         html += '<td>' + item.Id + '</td>';
         html += '<td>' + getLocalDate(item.SalesinvoicesDate) + '</td>';
         html += '<td>' + getSellerById(item.SellerId).Name + '</td>';
+        html += calculateSalesinvoiceDetails(item);
         html += '<td>' + '' + '</td>';
         html += '<td>';
         html += '<i style = "color:blue;cursor:pointer" class="icon-search-plus"  onclick = "getSalesinvoiceDetails(' + item.Id + ')" ></i >';
@@ -147,6 +149,22 @@ function setSalesinvoiceHeader() {
         i++;
     });
     $('.tbody').html(html);
+}
+
+function calculateSalesinvoiceDetails(salesinvoiceHeader) {
+    debugger;
+    var totalQuantity = 0;
+    var total = 0;
+    for (var i = 0; i < salesinvoiceHeader.SalesinvoicesDetialsList.length; i++) {
+        let subTotal = Math.ceil((salesinvoiceHeader.SalesinvoicesDetialsList[i].Price * salesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + salesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa + salesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal);
+        total += subTotal;
+        totalQuantity += salesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity;
+    }
+    var html = '';
+    html += '<td>' + totalQuantity + '</td>';
+    html += '<td>' + total + '</td>';
+    return html;
+
 }
 //Getting Related SalesinvoiceDetails to show them in modal 
 function getSalesinvoiceDetails(id) {
