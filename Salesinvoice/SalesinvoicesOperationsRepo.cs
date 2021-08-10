@@ -73,7 +73,7 @@ namespace Salesinvoice
             SalesinvoicesHeader exsistedSalesHeader = GetSalesinvoiceHeaderByDateAndSellerId(salesinvoicesHeader.SalesinvoicesDate, salesinvoicesHeader.SellerId, context);
             if (exsistedSalesHeader == null)//It is the first salesinvoice to this Seller in this day
             {
-                context.SalesinvoicesHeaders.Add(salesinvoicesHeader);
+                context.Entry(salesinvoicesHeader).State = EntityState.Added;
                 context.SaveChanges();
             }
             if (salesinvoicesHeader.Id == 0) salesinvoicesHeader.Id = exsistedSalesHeader.Id;
@@ -82,6 +82,7 @@ namespace Salesinvoice
             AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, orderHeaderId, context);//Add SalesinvoiceDetails
             return UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, orderHeaderId, context);//Return updated salesinvoiceHeader
         }
+
         public bool Update(SalesinvoicesHeader salesinvoicesHeader, long orderHeaderId, EntitiesDbContext context)
         {
             _context.Entry(salesinvoicesHeader).State = EntityState.Modified;

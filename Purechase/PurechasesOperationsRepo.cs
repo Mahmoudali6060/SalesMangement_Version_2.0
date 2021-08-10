@@ -123,6 +123,8 @@ namespace Purechase
             var todaySalesinvoice = _salesinvoicesOperationsRepo.GetAllDaily(selectedDate);
 
             decimal total = CalculateTotalPurchase(todayPurchases);
+            decimal totalSalesinvoice = CalculateTotalSalesinvoice(todaySalesinvoice);
+
             DashboardDTO dashboardDTO = new DashboardDTO()
             {
                 //TotalPurchase = todayPurchases.Sum(x => Math.Ceiling(x.Total)),// + todayPurchases.Sum(x => x.Commission)+todayPurchases.Sum(x => x.Gift)+ todayPurchases.Sum(x => x.Descent)),
@@ -131,7 +133,7 @@ namespace Purechase
                 TotalGift = todayPurchases.Sum(x => Math.Ceiling(x.Gift)),
                 TotalDescent = todayPurchases.Sum(x => Math.Ceiling(x.Descent)),
 
-                TotalSalesinvoice = todaySalesinvoice.Sum(x => x.Total), //CalculateTotalSalesinvoice(todaySalesinvoice),
+                TotalSalesinvoice = totalSalesinvoice, //CalculateTotalSalesinvoice(todaySalesinvoice),
                 TotalQuantity = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Quantity)),
                 TotalSalesWeight = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Weight)),
                 TotalPurchaseWeight = todayPurchases.Sum(x => x.PurechasesDetialsList.Sum(y => y.Weight))
@@ -165,7 +167,7 @@ namespace Purechase
                 foreach (var salesinvoiceDetails in salesinvoice.SalesinvoicesDetialsList)
                 {
                     decimal subTotal = 0;
-                    subTotal = Math.Ceiling(salesinvoiceDetails.Price * salesinvoiceDetails.Weight);
+                    subTotal = Math.Ceiling(salesinvoiceDetails.Price * salesinvoiceDetails.Weight) + Math.Ceiling(salesinvoiceDetails.Byaa) + Math.Ceiling(salesinvoiceDetails.Mashal);
                     total += subTotal;
                 }
             }

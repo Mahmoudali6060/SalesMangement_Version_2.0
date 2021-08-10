@@ -92,7 +92,7 @@ namespace Order.DataServiceLayer
                         transaction.Commit();
                         return true;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
                         return false;
