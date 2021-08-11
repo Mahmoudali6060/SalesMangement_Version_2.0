@@ -257,12 +257,12 @@ function prepareReportHeader() {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="border:none;">
+                                    <td style="border:none;font-size: 20px;">
                                         التاريخ/ `+ convertToIndiaNumbers($("#Date").text()) + `
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="border:none;">
+                                    <td style="border:none;font-size: 20px;font-weight: bold;">
                                         المطلوب من السيد/ `+ $("#SellerName").text() + `
                                     </td>
                                 </tr>
@@ -276,9 +276,9 @@ function prepareReportContent(selectedSalesinvoiceHeader) {
 
     let reportcontent = `<div class="row" id="report-content">
                         <div class="col-lg-12" style="width:100%;">
-                                <table id="salesinvoice-details-table" class="table-report table table-bordered table-hover" style="margin: 10px 0px;">
+                                <table style="font-size: 25px;" id="salesinvoice-details-table" class="table-report table table-bordered table-hover" style="margin: 10px 0px;">
                                 <thead>
-                                    <tr>
+                                    <tr style="font-weight: bold;">
                                         <th>العدد</th>
                                         <th> الكيلو</th>
                                         <th>السعر</th>
@@ -328,7 +328,7 @@ function getReportContent(selectedSalesinvoiceHeader) {
 }
 
 function prepareSalesinvoiceTotalReport(html, total, totalWight, totalQuantity) {
-    html += '<tr style="background-color: #f7edbd;font-size: 20px;font-weight: bold;">';
+    html += '<tr style="background-color: #f7edbd;font-size: 25px;font-weight: bold;">';
     html += '<td>' + convertToIndiaNumbers(totalQuantity) + '</td>';
     html += '<td>' + convertToIndiaNumbers(totalWight) + '</td>';
     html += '<td>' + 'اجمالي الكشــــف' + '</td>';
