@@ -55,6 +55,7 @@ namespace Sellers
 
         public long Add(Seller seller)
         {
+            seller.Id = 0;
             _context.Entry(seller).State = EntityState.Added;
             _context.SaveChanges();
             return seller.Id;

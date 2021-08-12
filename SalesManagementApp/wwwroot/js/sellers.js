@@ -106,7 +106,7 @@ function update() {
 
     if (!validateForm()) return false;
     var entity = fillEntity();
-
+    entity.Id: $('#Id').val(),
     $.ajax({
         url: "/Sellers/Update",
         data: JSON.stringify(entity),
@@ -214,7 +214,6 @@ function hideAllValidationMessage() {
 //fill entity to make (Add or Update)
 function fillEntity() {
     var entity = {
-        Id: $('#Id').val(),
         Name: $('#Name').val(),
         Address: $('#Address').val(),
         Phone: $('#Phone').val(),
