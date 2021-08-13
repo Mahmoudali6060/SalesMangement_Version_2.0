@@ -133,7 +133,7 @@ namespace Purechase
                 TotalGift = todayPurchases.Sum(x => Math.Ceiling(x.Gift)),
                 TotalDescent = todayPurchases.Sum(x => Math.Ceiling(x.Descent)),
 
-                TotalSalesinvoice = totalSalesinvoice, //CalculateTotalSalesinvoice(todaySalesinvoice),
+                TotalSalesinvoice = totalSalesinvoice,//todaySalesinvoice.Sum(x => Math.Ceiling(x.Total)), //CalculateTotalSalesinvoice(todaySalesinvoice),
                 TotalQuantity = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Quantity)),
                 TotalSalesWeight = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Weight)),
                 TotalPurchaseWeight = todayPurchases.Sum(x => x.PurechasesDetialsList.Sum(y => y.Weight))
@@ -164,12 +164,12 @@ namespace Purechase
             decimal total = 0;
             foreach (var salesinvoice in salesinvoicesHeaders)
             {
+                decimal subTotal = 0;
                 foreach (var salesinvoiceDetails in salesinvoice.SalesinvoicesDetialsList)
                 {
-                    decimal subTotal = 0;
-                    subTotal = Math.Ceiling(salesinvoiceDetails.Price * salesinvoiceDetails.Weight) + Math.Ceiling(salesinvoiceDetails.Byaa) + Math.Ceiling(salesinvoiceDetails.Mashal);
-                    total += subTotal;
+                    subTotal += Math.Ceiling((salesinvoiceDetails.Price * salesinvoiceDetails.Weight)) + salesinvoiceDetails.Byaa + salesinvoiceDetails.Mashal;
                 }
+                total += subTotal;
             }
             return total;
         }
@@ -206,8 +206,8 @@ namespace Purechase
             context.PurechasesDetials.RemoveRange(purchaseDetails);
             context.SaveChanges();
         }
-   
-        
+
+
         public bool UpdateInPrinting(PurechasesHeader entity)
         {
             PurechasesHeader purechaseHeader = GetById(entity.Id);

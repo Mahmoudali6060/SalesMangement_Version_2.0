@@ -276,7 +276,7 @@ function prepareReportContent(selectedSalesinvoiceHeader) {
 
     let reportcontent = `<div class="row" id="report-content">
                         <div class="col-lg-12" style="width:100%;">
-                                <table style="font-size: 25px;" id="salesinvoice-details-table" class="table-report table table-bordered table-hover" style="margin: 10px 0px;">
+                                <table style="border:2px;margin: 10px 0px;font-size: 25px;" id="salesinvoice-details-table" class="table-report table table-bordered table-hover" >
                                 <thead>
                                     <tr style="font-weight: bold;">
                                         <th>العدد</th>
