@@ -13,6 +13,9 @@ namespace Database.Entities
         public decimal Byaa { get; set; }
         public DateTime OrderDate { get; set; }
         public long SalesinvoicesHeaderId { get; set; }
+        public long? FarmerId { get; set; }
         public virtual SalesinvoicesHeader SalesinvoicesHeader { get; set; }
+        public virtual Farmer Farmer { get; set; }
+
     }
 }

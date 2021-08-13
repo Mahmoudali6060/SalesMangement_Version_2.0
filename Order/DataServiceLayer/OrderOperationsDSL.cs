@@ -283,7 +283,8 @@ namespace Order.DataServiceLayer
                     Price = item.SellingPrice,
                     Byaa = 3 * item.Quantity,
                     Mashal = 3 * item.Quantity,
-                    OrderDate = orderHeader.OrderHeader.Created
+                    OrderDate = orderHeader.OrderHeader.Created,
+                    FarmerId=orderHeader.OrderHeader.FarmerId
                 });
                 total += (item.Weight * item.SellingPrice) + (AppSettings.MashalRate + AppSettings.ByaaRate) * item.Quantity;
                 ///Prepare Salesinvoices Header

@@ -42,5 +42,11 @@ namespace SalesManagementApp.Controllers
             return Json(_salesinvoicesOperationsRepo.Update(salesinvoicesHeader));
         }
 
+        public JsonResult UpdateInPrinting(SalesinvoicesHeader salesinvoicesHeader)
+        {
+            return Json(_salesinvoicesOperationsRepo.UpdateInPrinting(salesinvoicesHeader));
+        }
+
+
     }
 }

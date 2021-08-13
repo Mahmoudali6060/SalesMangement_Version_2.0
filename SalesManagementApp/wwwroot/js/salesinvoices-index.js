@@ -133,7 +133,14 @@ function setSalesinvoiceHeader() {
     var html = '';
     var i = 1;
     $.each(salesinvoiceHeaders, function (key, item) {
-        html += '<tr>';
+        if (item.IsPrinted == true) {
+            html += '<tr class="is-printed" style="cursor:pointer;" >';
+        }
+
+        else {
+            html += '<tr id="salesinvoice-header' + item.Id + '" style="cursor:pointer;" >';
+        }
+
         html += '<td>' + i + '</td>';
         html += '<td>' + item.Id + '</td>';
         html += '<td>' + getLocalDate(item.SalesinvoicesDate) + '</td>';
@@ -181,11 +188,12 @@ function getSalesinvoiceDetails(id) {
         let rowNumber = i + 1;
         html += '<tr>';
         let subTotal = Math.ceil((selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price * selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight) + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal);
-        html += '<td style="width: 30%;">' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity + '</td>';
+        html += '<td   >' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight + '</td>';
         html += '<td>' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Price + '</td>';
         html += '<td>' + '<input class="form-control" type="number" id="Byaa' + rowNumber + '" value="' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Byaa + '"  onchange="onSelectedByaaChange(' + rowNumber + ')">' + '</td>';
         html += '<td>' + '<input  class="form-control" type="number" id="Mashal' + rowNumber + '" value="' + selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Mashal + '" onchange="onSelectedMashalChange(' + rowNumber + ')">' + '</td>';
+        html += '<td style="width: 30%;">' + gatFarmerName(selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].FarmerId) + '</td>';
         html += '<td id="SubTotal' + rowNumber + '">' + subTotal + '</td>';
         html += '</tr>';
 
@@ -204,6 +212,13 @@ function getSalesinvoiceDetails(id) {
     prepareSalesinvoiceHeader(selectedSalesinvoiceHeader);
     $('#listModal').modal('show');
 }
+
+function gatFarmerName(farmerId) {
+    let farmer = getFarmerById(farmerId);
+    if (farmer != null)
+        return farmer.Name;
+    return "";
+}
 //Prepare Salesinvoice Header to bind it in modal
 function prepareSalesinvoiceHeader(selectedSalesinvoiceHeader) {
 
@@ -220,6 +235,7 @@ function prepareSalesinvoiceTotal(html, selectedSalesinvoiceHeader, totalWight, 
     html += '<td>' + '' + '</td>';
     html += '<td>' + '<input readonly="readonly" class="form-control" type="number" id="totalByaa" value="' + selectedSalesinvoiceHeader.ByaaTotal + '"  onchange="onTotalByaaChange()" >' + '</td>';
     html += '<td>' + '<input readonly="readonly" class="form-control" type="number" id="totalMashal" value="' + selectedSalesinvoiceHeader.MashalTotal + '" onchange="onTotalMashalChange()" >' + '</td>';
+    html += '<td>' + '' + '</td>';
     html += '<td><span id="total">' + Math.ceil(selectedSalesinvoiceHeader.Total) + '</span></td>';
     html += '</tr>';
     return html;
@@ -229,8 +245,10 @@ function printReport(id) {
     if (id != undefined)
         headerId = id;
 
-    selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == headerId);
-    update();
+    let selectedSalesinvoiceHeader = salesinvoiceHeaders.find(x => x.Id == headerId);
+    updateInPrinting(selectedSalesinvoiceHeader);
+    setIsPrintedClass();
+
     prepareSalesinvoiceHeader(selectedSalesinvoiceHeader);
     var reportHeader = prepareReportHeader();
     var reportContent = prepareReportContent(selectedSalesinvoiceHeader);
@@ -247,6 +265,29 @@ function printReport(id) {
 
 }
 
+
+function updateInPrinting(purechasesHeader) {
+    $.ajax({
+        url: "/Salesinvoices/UpdateInPrinting",
+        data: purechasesHeader,
+        type: "POST",
+
+        success: function (result) {
+
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
+
+function setIsPrintedClass() {
+    var element = document.getElementById('salesinvoice-header' + headerId);
+    if (element != null) {
+        element.classList.add("is-printed");
+        element.cells[5].innerText = 'تم طباعة الطشف';
+    }
+}
 function prepareReportHeader() {
     let reportHeader = `<div class="row" id="report-header">
                         <div class="col-lg-12">

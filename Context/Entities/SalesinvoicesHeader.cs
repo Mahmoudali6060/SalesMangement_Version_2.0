@@ -12,6 +12,8 @@ namespace Database.Entities
         public decimal Total { get; set; }
         public decimal ByaaTotal { get; set; }
         public decimal MashalTotal { get; set; }
+        public bool? IsPrinted { get; set; }
+
         public virtual ICollection<SalesinvoicesDetials> SalesinvoicesDetialsList { get; set; }
         public virtual Seller Seller { get; set; }
     }

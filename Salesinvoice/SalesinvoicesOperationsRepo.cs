@@ -79,33 +79,39 @@ namespace Salesinvoice
             if (salesinvoicesHeader.Id == 0) salesinvoicesHeader.Id = exsistedSalesHeader.Id;
 
             SetSalesinvoicesHeaderId(salesinvoicesHeader, salesinvoicesHeader.SalesinvoicesDetialsList);//Set SalesinvoiceHeaderId
-            AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, orderHeaderId, context);//Add SalesinvoiceDetails
-            return UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, orderHeaderId, context);//Return updated salesinvoiceHeader
+            AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, context);//Add SalesinvoiceDetails
+            return UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, context);//Return updated salesinvoiceHeader
         }
 
-        public bool Update(SalesinvoicesHeader salesinvoicesHeader, long orderHeaderId, EntitiesDbContext context)
-        {
-            _context.Entry(salesinvoicesHeader).State = EntityState.Modified;
-            _context.SaveChanges();
-            DeleteSalesinvoicesDetials(salesinvoicesHeader.Id, context);
-            SetSalesinvoicesHeaderId(salesinvoicesHeader, salesinvoicesHeader.SalesinvoicesDetialsList);
-            AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, orderHeaderId, context);
-            UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, orderHeaderId, context);
-            return true;
-        }
+     
 
         public bool Update(SalesinvoicesHeader salesinvoicesHeader, EntitiesDbContext context)
         {
             context.SalesinvoicesHeaders.Update(salesinvoicesHeader);
             context.SaveChanges();
+            
+            DeleteSalesinvoicesDetials(salesinvoicesHeader.Id, context);
+            SetSalesinvoicesHeaderId(salesinvoicesHeader, salesinvoicesHeader.SalesinvoicesDetialsList);
+            AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, context);
+            UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, context);
             return true;
         }
         public bool Update(SalesinvoicesHeader salesinvoicesHeader)
         {
-            _context.Entry(salesinvoicesHeader).State = EntityState.Modified;
+            _context.SalesinvoicesHeaders.Update(salesinvoicesHeader);
             _context.SaveChanges();
-            _safeOperationsRepo.UpdateByHeaderId(salesinvoicesHeader.Id, salesinvoicesHeader.Total, AccountTypesEnum.Sellers);
+
+            //DeleteSalesinvoicesDetials(salesinvoicesHeader.Id, _context);
+            //SetSalesinvoicesHeaderId(salesinvoicesHeader, salesinvoicesHeader.SalesinvoicesDetialsList);
+            //AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, _context);
+            //UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, _context);
             return true;
+        }
+
+        public bool UpdateInPrinting(SalesinvoicesHeader entity)
+        {
+            entity.IsPrinted = true;
+            return Update(entity);
         }
         public bool Delete(long id, EntitiesDbContext context)
         {
@@ -152,12 +158,12 @@ namespace Salesinvoice
             }
             return salesinvoicesDetails;
         }
-        private void AddSalesinvoicesDetials(IEnumerable<SalesinvoicesDetials> salesinvoicesDetialsList, long orderHeaderId, EntitiesDbContext context)
+        private void AddSalesinvoicesDetials(IEnumerable<SalesinvoicesDetials> salesinvoicesDetialsList, EntitiesDbContext context)
         {
             context.SalesinvoicesDetials.AddRange(salesinvoicesDetialsList);
             context.SaveChanges();
         }
-        private SalesinvoicesHeader UpdateSalesinvoiceTotal(IEnumerable<SalesinvoicesDetials> salesinvoicesDetialsList, long orderHeaderId, EntitiesDbContext context)
+        private SalesinvoicesHeader UpdateSalesinvoiceTotal(IEnumerable<SalesinvoicesDetials> salesinvoicesDetialsList, EntitiesDbContext context)
         {
             decimal total = 0;//Calculate Total
             decimal mashalTotal = 0;//Calculate Mashal Total
