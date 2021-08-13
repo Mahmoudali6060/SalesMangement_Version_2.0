@@ -24,6 +24,7 @@ function getAll() {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (result) {
+            debugger;
             var safeListDto = JSON.parse(result);//Set Data in safeListDto
             safeList = safeListDto.List;//set List of safe
             preparePagination(safeListDto);//prepare pagination labels(Current Page and number of records)
@@ -97,7 +98,7 @@ function setFarmerAccountStatement(safeListDto) {
 function printReport(safeList) {
     var reportHeader = prepareReportHeader();//Client Name 
     var reportContent = prepareReportContent(safeList);//Draw content of report 
-    var reportFooter = prepareReportFooter();
+    var reportFooter = prepareReportFooter(safeList);
     var newWin = window.open('', 'Print-Window');
     newWin.document.open();
     var reportHead = getReportHead(' كشف حساب عميل');
@@ -161,7 +162,7 @@ function getReportContent(safeList) {
     return html;
 }
 
-function prepareReportFooter() {
+function prepareReportFooter(safeList) {
     var totalIncoming = 0;
     var totalOutcoming = 0;
 
