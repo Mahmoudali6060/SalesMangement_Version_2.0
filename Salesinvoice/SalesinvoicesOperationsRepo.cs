@@ -90,10 +90,10 @@ namespace Salesinvoice
             context.SalesinvoicesHeaders.Update(salesinvoicesHeader);
             context.SaveChanges();
             
-            DeleteSalesinvoicesDetials(salesinvoicesHeader.Id, context);
-            SetSalesinvoicesHeaderId(salesinvoicesHeader, salesinvoicesHeader.SalesinvoicesDetialsList);
-            AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, context);
-            UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, context);
+            //DeleteSalesinvoicesDetials(salesinvoicesHeader.Id, context);
+            //SetSalesinvoicesHeaderId(salesinvoicesHeader, salesinvoicesHeader.SalesinvoicesDetialsList);
+            //AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, context);
+            //UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, context);
             return true;
         }
         public bool Update(SalesinvoicesHeader salesinvoicesHeader)

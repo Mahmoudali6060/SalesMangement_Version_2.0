@@ -1,0 +1,7 @@
+Add this column to SalesinoiceDetails table
+
+* FarmerId	bigint	Checked
+
+Add the following column to SalesinvoiceHeader table
+
+* IsPrinted	bit	Checked
