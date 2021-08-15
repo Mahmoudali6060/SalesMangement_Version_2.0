@@ -106,7 +106,7 @@ function update() {
 
     if (!validateForm()) return false;
     var entity = fillEntity();
-    entity.Id: $('#Id').val(),
+    entity.Id= $('#Id').val(),
     $.ajax({
         url: "/Sellers/Update",
         data: JSON.stringify(entity),
