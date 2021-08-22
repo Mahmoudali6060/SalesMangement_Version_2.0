@@ -75,7 +75,10 @@ namespace SalesManagementApp
 
             services.AddTransient<IRoleOperationsRepo, RoleOperationsRepo>();
 
-
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueCountLimit = int.MaxValue;
+            });
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -111,7 +111,7 @@ function filter() {
 function printReport(safeList) {
     var reportHeader = prepareReportHeader();//Seller Name 
     var reportContent = prepareReportContent(safeList);//Draw content of report 
-    var reportFooter = prepareReportFooter();
+    var reportFooter = prepareReportFooter(safeList);
     var newWin = window.open('', 'Print-Window');
     newWin.document.open();
     var reportHead = getReportHead(' كشف حساب تاجر');
@@ -177,13 +177,13 @@ function getReportContent(safeList) {
     return html;
 }
 
-function prepareReportFooter() {
+function prepareReportFooter(safeList) {
     var totalIncoming = 0;
     var totalOutcoming = 0;
 
     for (let item of safeList) {
-        totalIncoming += item.Incoming;
-        totalOutcoming += item.Outcoming;
+        totalIncoming += Math.ceil(item.Incoming);
+        totalOutcoming += Math.ceil(item.Outcoming);
     }
     var balance = totalIncoming - totalOutcoming;
     var description;

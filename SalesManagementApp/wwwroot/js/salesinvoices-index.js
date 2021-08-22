@@ -109,8 +109,8 @@ function updateTotal() {
     var i = 1;
     for (let item of selectedSalesinvoiceHeader.SalesinvoicesDetialsList) {
         subTotal = 0;
-        subTotal += (item.Price * item.Weight) + item.Byaa + item.Mashal;
-        $("#SubTotal" + i).text(Math.ceil(subTotal));
+        subTotal += Math.ceil(item.Price * item.Weight) + item.Byaa + item.Mashal;
+        $("#SubTotal" + i).text(subTotal);
         i++;
         total += subTotal;
         totalByaa += item.Byaa;
@@ -267,6 +267,7 @@ function printReport(id) {
 
 
 function updateInPrinting(purechasesHeader) {
+    debugger;
     $.ajax({
         url: "/Salesinvoices/UpdateInPrinting",
         data: purechasesHeader,
@@ -285,7 +286,7 @@ function setIsPrintedClass() {
     var element = document.getElementById('salesinvoice-header' + headerId);
     if (element != null) {
         element.classList.add("is-printed");
-        element.cells[5].innerText = 'تم طباعة الطشف';
+        element.cells[6].innerText = 'تم طباعة الطشف';
     }
 }
 function prepareReportHeader() {
