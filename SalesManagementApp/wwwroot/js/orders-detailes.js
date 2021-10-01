@@ -148,7 +148,7 @@ function addOrderDetailsRow(quantity, weight, price, sellingPrice, sellerId) {
     html += '<td>' + '<input tabIndex="' + ++index + '" class="form-control arrow-togglable" type="number" id="Quantity' + orderDetailsRowNum + '" value="' + quantity + '" >' + '</td>';
     html += '<td>' + '<input tabIndex="' + ++index + '" class="form-control arrow-togglable" type="number" id="Weight' + orderDetailsRowNum + '"  value="' + weight + '" >' + '</td>';
     html += '<td>' + '<input tabIndex="' + ++index + '" class="form-control arrow-togglable" type="number" id="Price' + orderDetailsRowNum + '"  value="' + price + '" >' + '</td>';
-    html += '<td>' + '<input tabIndex="' + ++index + '" class="form-control arrow-togglable" type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + null + '" >' + '</td>';
+    html += '<td>' + '<input tabIndex="' + ++index + '" class="form-control arrow-togglable" type="number" id="SellingPrice' + orderDetailsRowNum + '"  value="' + sellingPrice + '" >' + '</td>';
     html += '<td>' + setSellersInOrderDetails(orderDetailsRowNum, index); + '</td>';
     html += '<td>' +
         '<i class="icon-trash"  onclick="removeOrderDetailsRow(' + orderDetailsRowNum + ')"></i>' +

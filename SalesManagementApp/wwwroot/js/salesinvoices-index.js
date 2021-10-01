@@ -361,7 +361,7 @@ function getReportContent(selectedSalesinvoiceHeader) {
         //total += subTotal;
         totalQuantity += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Quantity;
         totalWight += selectedSalesinvoiceHeader.SalesinvoicesDetialsList[i].Weight;
-        total += subTotal;
+        total += Math.ceil(subTotal);
 
     }
     selectedSalesinvoiceHeader.Total = total;
