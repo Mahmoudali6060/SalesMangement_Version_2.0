@@ -5,14 +5,15 @@ using System.Text;
 
 namespace Account.Users
 {
-   public interface IUserOperationsRepo
+    public interface IUserOperationsRepo
     {
         IEnumerable<User> GetAll();
         User GetById(long id);
-        bool Add(User entity);
-        bool Update(User entity);
+        UserDTO GetUserDTOById(long id);
+        bool Add(UserDTO entity);
+        bool Update(UserDTO entity);
         bool Delete(long id);
-        User Login(string username,string password);
+        User Login(string username, string password);
         bool Logout();
     }
 }

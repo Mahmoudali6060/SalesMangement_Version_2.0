@@ -101,7 +101,9 @@ function clearCompanyFolderFromLocalStore() {
 }
 
 function getApiUrl() {
-    return 'http://192.168.1.1:50010/';
+    //return 'http://192.168.1.1:50010/';
+    return 'http://localhost:54600/';
+
 }
 
 function getImageUrl() {
@@ -219,7 +221,7 @@ function convertToIndiaNumbers(text) {
 }
 
 function getfolder(e) {
-    debugger;
+    
     var files = e.target.files;
     var path = files[0].webkitRelativePath;
     var Folder = path.split("/");
@@ -227,14 +229,14 @@ function getfolder(e) {
 }
 
 function backupDatabase() {
-    debugger;
+    
     var databaseEntity = fillDatabaseEntity();
     $.ajax({
         url: "/Database/BackupDatabase",
         data: databaseEntity,
         type: "POST",
         success: function () {
-            debugger;
+            
             //alert("Done");
             $('#database-Form').modal('hide');
             //swal("نسخ البيانات", "تم انشاء قاعدة بيانات احتياكية بنجاح !", "عملية ناجحة");
@@ -242,7 +244,7 @@ function backupDatabase() {
 
         },
         error: function () {
-            debugger;
+            
             alert("حدث خطأ في نسخ قاعدة البيانات ");
         }
     });
@@ -361,7 +363,7 @@ var elements = document.getElementsByClassName("arrow-togglable");
 
 ///Prevent Arrows to move
 document.onkeydown = function (e) {
-    debugger;
+    
     //let targetIndex = e.target.tabIndex;
 
     //let rowNumber = getRowNumber(e);

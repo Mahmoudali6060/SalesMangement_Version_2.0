@@ -1365,6 +1365,7 @@
   <ItemGroup>
     <Folder Include="Logs\" />
     <Folder Include="Reports\" />
+    <Folder Include="wwwroot\images\Users\" />
   </ItemGroup>
 
 </Project>

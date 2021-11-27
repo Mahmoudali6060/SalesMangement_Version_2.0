@@ -62,17 +62,18 @@ function getAllSafeList() {
 function setSellerAccountStatement(safeListDto) {
     var html = '';
     var i = 1;
-  
+
     $.each(safeList, function (key, item) {
+        let invoiceId = getInvoiceId(item.Notes);
         html += '<tr>';
         html += '<td>' + i + '</td>';
         html += '<td>' + getLocalDate(item.Date) + '</td>';
-        html += '<td>' + Math.ceil( item.Outcoming )+ '</td>';
+        html += '<td>' + Math.ceil(item.Outcoming) + '</td>';
         html += '<td>' + Math.ceil(item.Incoming) + '</td>';
-        html += '<td>' + item.Notes + '</td>';
+        html += '<td> <a class="link-primary" onclick="showNotesDetails(' + invoiceId + ')">' + item.Notes + ' </a>' + '</td>';
         html += '</tr>';
         i++;
-      
+
     });
 
     $("#incomingTotal").text(Math.ceil(safeListDto.TotalIncoming));
@@ -93,6 +94,22 @@ function setSellerAccountStatement(safeListDto) {
     }
 }
 
+function getInvoiceId(notes) {
+    if (notes != null && notes.includes(":")) {
+        var splittedNotes = notes.split(':');
+        if (splittedNotes.length > 1)
+            return splittedNotes[1];
+    }
+    return null;
+}
+
+function showNotesDetails(invoiceId) {
+    debugger;
+    //Got to Purchase Page and Pass purcchaseId 
+    //getPurechaseDetails(invoiceId);
+    //location.href = '@Url.Action("Index", "Purechases")';//?purcchaseId=' + purcchaseId ;
+    location.href = "/Salesinvoices/Index";
+}
 //Filtering
 function filter() {
     var value = $("#search").val();

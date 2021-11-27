@@ -63,23 +63,24 @@ function getAllSafeList() {
 function setFarmerAccountStatement(safeListDto) {
     var html = '';
     var i = 1;
-   
+
     $.each(safeList, function (key, item) {
+        let purchaseId = getPurchaseId(item.Notes);
         html += '<tr>';
         html += '<td>' + i + '</td>';
         html += '<td>' + getLocalDate(item.Date) + '</td>';
-        html += '<td>' + Math.ceil( item.Outcoming )+ '</td>';
-        html += '<td>' + Math.ceil(item.Incoming )+ '</td>';
-        html += '<td>' + item.Notes + '</td>';
+        html += '<td>' + Math.ceil(item.Outcoming) + '</td>';
+        html += '<td>' + Math.ceil(item.Incoming) + '</td>';
+        html += '<td> <a class="link-primary" onclick="showNotesDetails(' + purchaseId + ')">' + item.Notes + ' </a>' + '</td>';
         html += '</tr>';
         i++;
-       
+
     });
 
     $("#incomingTotal").text(Math.ceil(safeListDto.TotalIncoming));
     $("#outcomingTotal").text(Math.ceil(safeListDto.TotalOutcoming));
-    $("#balance").text(Math.ceil((Math.abs(safeListDto.TotalIncoming - safeListDto.TotalOutcoming ))));
-    if (Math.abs(safeListDto.TotalIncoming > safeListDto.TotalOutcoming) ){
+    $("#balance").text(Math.ceil((Math.abs(safeListDto.TotalIncoming - safeListDto.TotalOutcoming))));
+    if (Math.abs(safeListDto.TotalIncoming > safeListDto.TotalOutcoming)) {
         $("#balance-description").text("جملة ما له");
     }
     else {
@@ -93,7 +94,22 @@ function setFarmerAccountStatement(safeListDto) {
     }
 }
 
+function getPurchaseId(notes) {
+    if (notes !=null && notes.includes(":")) {
+        var splittedNotes = notes.split(':');
+        if (splittedNotes.length > 1)
+            return splittedNotes[1];
+    }
+    return null;
+}
 
+function showNotesDetails(purcchaseId) {
+    debugger;
+    //Got to Purchase Page and Pass purcchaseId 
+    //getPurechaseDetails(invoiceId);
+    //location.href = '@Url.Action("Index", "Purechases")';//?purcchaseId=' + purcchaseId ;
+    location.href = "/Purechases/Index";
+}
 
 function printReport(safeList) {
     var reportHeader = prepareReportHeader();//Client Name 
@@ -168,7 +184,7 @@ function prepareReportFooter(safeList) {
 
     for (let item of safeList) {
         totalIncoming += Math.ceil(item.Incoming);
-        totalOutcoming += Math.ceil( item.Outcoming);
+        totalOutcoming += Math.ceil(item.Outcoming);
     }
     var balance = totalIncoming - totalOutcoming;
     var description;

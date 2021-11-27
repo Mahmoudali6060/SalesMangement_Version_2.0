@@ -26,8 +26,8 @@
             <div class="row">
                 <div id="admin" class="col s12">
                     <div class="card material-table">
-                                <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> مستخدم جديد</button>
-                                <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
+                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> مستخدم جديد</button>
+                        <input type="text" class="form-control" id="search" name="search" onkeyup='filter();' placeholder="بحث" />
                         <table id="users-table" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -59,7 +59,7 @@
             <div class="modal-body">
                 <form action="" method="post">
                     <div class="form-group">
-                        <input type="hidden" class="form-control" id="Id" placeholder="Id"  />
+                        <input type="hidden" class="form-control" id="Id" placeholder="Id" />
                     </div>
                     <div class="form-group">
                         <label for="FirstName">الاسم الاول  <i style="color:red">*</i></label>
@@ -82,6 +82,12 @@
                         <label for="Roles">الصلاحية </label>
                         <select id="Roles" name="Roles" class="form-control"></select>
                     </div>
+                    <div class="form-group">
+                        <label for="file-upload">صورة الملف الشخصي </label>
+                        <input type="file" id="file-upload" accept="image/*" onchange="showPreview(event);">
+                        <img id="imageBase64" class="img">
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">

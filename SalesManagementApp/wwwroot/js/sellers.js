@@ -92,9 +92,14 @@ function add() {
         data: entity,
         type: "POST",
         success: function (result) {
-            $('#formModal').modal('hide');
-            clearData();
-            getAll();
+            if (result > 0) {
+                $('#formModal').modal('hide');
+                clearData();
+                getAll();
+            }
+            else {
+                swal("خطأ", "هذا التاجر موجود فعليا");
+            }
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -106,22 +111,22 @@ function update() {
 
     if (!validateForm()) return false;
     var entity = fillEntity();
-    entity.Id= $('#Id').val(),
-    $.ajax({
-        url: "/Sellers/Update",
-        data: JSON.stringify(entity),
-        type: "POST",
-        contentType: "application/json;charset=utf-8",
-        dataType: "json",
-        success: function (result) {
-            $('#formModal').modal('hide');
-            clearData();
-            getAll();
-        },
-        error: function (errormessage) {
-            alert(errormessage.responseText);
-        }
-    });
+    entity.Id = $('#Id').val(),
+        $.ajax({
+            url: "/Sellers/Update",
+            data: JSON.stringify(entity),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#formModal').modal('hide');
+                clearData();
+                getAll();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
 }
 //Deleteing entity by Id
 function delele(id) {

@@ -3,6 +3,9 @@
     fillRolesDropDownList();
     turnOnTab('formModal');//to allow tab in form modal >>>is called From shared.js
 });
+//Variables
+var imageBase64 = null;
+var imageUrl = null;
 
 //////////////////////////////////////CRUD Operations Methods
 //Loading data (list of entity)
@@ -50,6 +53,7 @@ function getAllUsers() {
 }
 //Loading the data(entity) based upon entityId
 function getById(id) {
+    debugger;
     hideAllValidationMessage();
     var user = getUserById(id);
     $('#Id').val(user.Id);
@@ -61,9 +65,25 @@ function getById(id) {
     $('#formModal').modal('show');
     $('#btnUpdate').show();
     $('#btnAdd').hide();
-
+    imageUrl = user.ImageUrl;
+    if (imageUrl != null) {
+        setImageBase64("/images/Users/" + imageUrl);
+        imageBase64 = user.ImageBase64;
+    }
     return false;
 }
+
+
+
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
 
 function getUserById(userId) {
     var user;
@@ -92,9 +112,15 @@ function add() {
         data: entity,
         type: "POST",
         success: function (result) {
-            $('#formModal').modal('hide');
-            clearData();
-            getAll();
+            if (result == true) {
+                //$('#formModal').modal('hide');
+                //clearData();
+                //getAll();
+                location.reload();
+            }
+            else {
+                swal("خطأ", "هذا المستخدم موجود بالفعل");
+            }
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -113,9 +139,15 @@ function update() {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (result) {
-            $('#formModal').modal('hide');
-            clearData();
-            getAll();
+            if (result == true) {
+                //$('#formModal').modal('hide');
+                //clearData();
+                //getAll();
+                location.reload();
+            }
+            else {
+                swal("خطأ", "هذا المستخدم موجود بالفعل");
+            }
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -148,9 +180,9 @@ function delele(id) {
                             text: "تم حذف السجل بنجاح !",
                             type: "success"
                         },
-                        function () {
-                            getAll();
-                        });
+                            function () {
+                                getAll();
+                            });
                 })
                 .error(function (data) {
                     swal("لم يتم الحذف", "حدث خطأ في الحذف", "خطأ");
@@ -175,18 +207,21 @@ function fillRolesDropDownList() {
 //Clearing the textboxes
 function clearData() {
     $('#Id').val("");
-    $('#Name').val("");
-    $('#Address').val("");
-    $('#Phone').val("");
-    //$('#OppenningBalance').val("");
-    $('#Notes').val("");
+    $('#FirstName').val("");
+    $('#LastName').val("");
+    $('#Username').val("");
+    $('#Password').val("");
+    $('#Roles').val("");
+    $('#file-upload').val("");
+
     $('#btnUpdate').hide();
     $('#btnAdd').show();
-    $('#Name').css('border-color', 'lightgrey');
-    $('#Address').css('border-color', 'lightgrey');
-    $('#Mobile').css('border-color', 'lightgrey');
-    //$('#OppenningBalance').css('border-color', 'lightgrey');
-    $('#Notes').css('border-color', 'lightgrey');
+    $('#FirstName').css('border-color', 'lightgrey');
+    $('#LastName').css('border-color', 'lightgrey');
+    $('#Username').css('border-color', 'lightgrey');
+    $('#Password').css('border-color', 'lightgrey');
+    setImageBase64('');
+    imageBase64 = null;
     hideAllValidationMessage();
 }
 //Valdidation using jquery
@@ -228,10 +263,35 @@ function fillEntity() {
         LastName: $('#LastName').val(),
         Username: $('#Username').val(),
         RoleId: $('#Roles').val(),
-        Password: $('#Password').val()
+        Password: $('#Password').val(),
+        ImageBase64: imageBase64,
+        ImageUrl: imageUrl
     };
     return entity;
 }
-////////////////////////////End Helper Methods 
+
+function showPreview(event) {
+    if (event.target.files.length > 0) {
+        var file = event.target.files[0];
+        var src = URL.createObjectURL(file);
+        setImageBase64(src);
+        generateImageToBase64(file);
+    }
+}
+
+function setImageBase64(src) {
+    var preview = document.getElementById("imageBase64");
+    preview.src = src;
+}
+
+function generateImageToBase64(file) {
+    var reader = new FileReader();
+    reader.onloadend = function () {
+        imageBase64 = reader.result;
+    }
+    reader.readAsDataURL(file);
+}
+
+////////////////////////////End Helper Methods
 
 

@@ -141,7 +141,7 @@ function fillOrderDetailsData(orderDetails) {
 function addOrderDetailsRow(quantity, weight, price, sellingPrice, sellerId) {
     orderDetailsRowNum += 1;
     orderDetailsNumList.push({ row: orderDetailsRowNum });
-   
+
     html = '';
     html += '<tr id="orderDetailsRow' + orderDetailsRowNum + '">';
     html += '<td>' + orderDetailsRowNum + '</td>';
@@ -247,9 +247,14 @@ function addFarmer() {
         data: entity,
         type: "POST",
         success: function (result) {
-            $('#formModal').modal('hide');
-            entity.Id = result;
-            addFarmerToDropDownList(entity);
+            if (result > 0) {
+                $('#formModal').modal('hide');
+                entity.Id = result;
+                addFarmerToDropDownList(entity);
+            }
+            else {
+                swal("خطأ", "هذا العميل موجود فعليا");
+            }
             //clearData();
             //getAll();
         },
@@ -320,11 +325,17 @@ function addSeller() {
         data: entity,
         type: "POST",
         success: function (result) {
-            $('#formSellerModal').modal('hide');
-            entity.Id = result;
-            addSellerToDropDownList(entity);
-            //clearData();
-            //getAll();
+            if (result > 0) {
+                $('#formSellerModal').modal('hide');
+                entity.Id = result;
+                addSellerToDropDownList(entity);
+                //clearData();
+                //getAll();
+            }
+            else {
+                swal("خطأ", "هذا التاجر موجود فعليا");
+            }
+
         },
         error: function (errormessage) {
             alert(errormessage.responseText);

@@ -36,16 +36,16 @@ namespace SalesManagementApp.Controllers
         }
         public JsonResult GetById(long id)
         {
-            var user = Helper.SerializeObject(_userOperationsRepo.GetById(id));
+            var user = Helper.SerializeObject(_userOperationsRepo.GetUserDTOById(id));
             return Json(user);
         }
 
-        public JsonResult Add(User user)
+        public JsonResult Add(UserDTO user)
         {
             return Json(_userOperationsRepo.Add(user));
         }
 
-        public JsonResult Update([FromBody] User user)
+        public JsonResult Update([FromBody] UserDTO user)
         {
             return Json(_userOperationsRepo.Update(user));
         }

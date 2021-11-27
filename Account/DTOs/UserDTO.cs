@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Database.Entities
 {
-    public class User : BaseEntity
+    public class UserDTO : BaseEntity
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -12,9 +12,8 @@ namespace Database.Entities
         public string Password { get; set; }
         public long RoleId { get; set; }
         public long? CompanyId { get; set; }
+        public string ImageBase64 { get; set; }
         public string ImageUrl { get; set; }
-        public virtual Role Role { get; set; }
-        public virtual Company Company { get; set; }
 
     }
 }

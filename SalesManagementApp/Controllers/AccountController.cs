@@ -7,6 +7,7 @@ using Account.Users;
 using Account.Account;
 using Account.Models;
 using Database.Backup;
+using Newtonsoft.Json;
 
 namespace SalesManagementApp.Controllers
 {
@@ -36,6 +37,17 @@ namespace SalesManagementApp.Controllers
                 HttpContext.Session.SetString("_LoggedUserRole", user.Role.Name);
                 HttpContext.Session.SetString("_LoggedUserName", user.Username);
                 HttpContext.Session.SetString("_ImagesUrl", user.Company.LogoUrl);
+                HttpContext.Session.SetString("_UserFullName", user.FirstName + " " + user.LastName);
+                HttpContext.Session.SetString("_ProfileImageUrl", user.ImageUrl);
+
+                //user.Role = null;
+                //user.Company = null;
+                //HttpContext.Session.SetString("_User", JsonConvert.SerializeObject(user));
+
+                //// Retrieve
+                //var str = HttpContext.Session.GetString(key);
+                //var obj = JsonConvert.DeserializeObject<User>(str);
+
                 return RedirectToAction(loggedUser.ActionName, loggedUser.ControllerName);
             }
         }

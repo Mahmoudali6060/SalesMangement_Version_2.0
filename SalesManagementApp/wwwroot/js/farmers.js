@@ -95,6 +95,7 @@ function getById(id) {
 }
 //Adding new entity
 function add() {
+    
     if (!validateForm()) return false;
     var entity = fillEntity();
     $.ajax({
@@ -102,9 +103,14 @@ function add() {
         data: entity,
         type: "POST",
         success: function (result) {
-            $('#formModal').modal('hide');
-            clearData();
-            getAll();
+            if (result > 0) {
+                $('#formModal').modal('hide');
+                clearData();
+                getAll();
+            }
+            else {
+                swal("خطأ","هذا العميل موجود فعليا");
+            }
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
