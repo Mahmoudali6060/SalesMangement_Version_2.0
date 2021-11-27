@@ -215,13 +215,13 @@ function convertToIndiaNumbers(text) {
         result = "" + part2 + ', ' + "" + part1;
     }
     return result;
-   
+
 
 
 }
 
 function getfolder(e) {
-    
+
     var files = e.target.files;
     var path = files[0].webkitRelativePath;
     var Folder = path.split("/");
@@ -229,14 +229,14 @@ function getfolder(e) {
 }
 
 function backupDatabase() {
-    
+
     var databaseEntity = fillDatabaseEntity();
     $.ajax({
         url: "/Database/BackupDatabase",
         data: databaseEntity,
         type: "POST",
         success: function () {
-            
+
             //alert("Done");
             $('#database-Form').modal('hide');
             //swal("نسخ البيانات", "تم انشاء قاعدة بيانات احتياكية بنجاح !", "عملية ناجحة");
@@ -244,7 +244,7 @@ function backupDatabase() {
 
         },
         error: function () {
-            
+
             alert("حدث خطأ في نسخ قاعدة البيانات ");
         }
     });
@@ -363,7 +363,7 @@ var elements = document.getElementsByClassName("arrow-togglable");
 
 ///Prevent Arrows to move
 document.onkeydown = function (e) {
-    
+
     //let targetIndex = e.target.tabIndex;
 
     //let rowNumber = getRowNumber(e);
@@ -375,18 +375,18 @@ document.onkeydown = function (e) {
     //        elements[4].focus();
     //        break;
 
-        ////Right Arrow
-        //case 39:
-        //    currentIndex = (index == 0) ? elements.length - 1 : --index;
-        //    elements[currentIndex].focus();
-        //    break;
+    ////Right Arrow
+    //case 39:
+    //    currentIndex = (index == 0) ? elements.length - 1 : --index;
+    //    elements[currentIndex].focus();
+    //    break;
 
-        ////Left Arrow
-        //case 37:
-        //    currentIndex = ((index + 1) == elements.length) ? 0 : ++index;
-        //    elements[currentIndex].focus();
-        //    break;
-   // }
+    ////Left Arrow
+    //case 37:
+    //    currentIndex = ((index + 1) == elements.length) ? 0 : ++index;
+    //    elements[currentIndex].focus();
+    //    break;
+    // }
 };
 
 function getBalanceByAccountId(accountId, accountTypeId) {
@@ -424,4 +424,10 @@ function getRowNumber(e) {
     if (e.target.id.startsWith("Sellers")) {
         return e.target.id.split('Sellers')[1];
     }
+}
+
+function selectRow(event, index) {
+    var table = document.getElementsByTagName("table");
+    var rows = table[0].getElementsByTagName("tr");
+    rows[index].style.backgroundColor = event.target.checked ? "#cedbf3" : "white";
 }

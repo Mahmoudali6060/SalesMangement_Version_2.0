@@ -18,6 +18,7 @@ function getAll() {
         if (item.Notes == null)
             item.Notes = "";
         html += '<tr>';
+        html += '<td><input type="checkbox" name="cb' + i + '" onclick="selectRow(event,' + i + ')"></td>';
         html += '<td>' + i + '</td>';
         html += '<td>' + item.Name + '</td>';
         html += '<td>' + item.Address + '</td>';
@@ -40,6 +41,11 @@ function getAll() {
     //}
 }
 
+
+function selectAll() {
+    var table = document.getElementById("farmers-table");
+    table.style.backgroundColor = "#cedbf3";
+}
 function getPagedFarmers(currentPage) {
     var keyword = $("#search").val().toLowerCase();
     var url = "/Farmers/GetPagedList?currentPage=" + currentPage;
@@ -95,7 +101,7 @@ function getById(id) {
 }
 //Adding new entity
 function add() {
-    
+
     if (!validateForm()) return false;
     var entity = fillEntity();
     $.ajax({
@@ -109,7 +115,7 @@ function add() {
                 getAll();
             }
             else {
-                swal("خطأ","هذا العميل موجود فعليا");
+                swal("خطأ", "هذا العميل موجود فعليا");
             }
         },
         error: function (errormessage) {
