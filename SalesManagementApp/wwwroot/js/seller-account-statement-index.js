@@ -66,6 +66,7 @@ function setSellerAccountStatement(safeListDto) {
     $.each(safeList, function (key, item) {
         let invoiceId = getInvoiceId(item.Notes);
         html += '<tr>';
+        html += '<td><input type="checkbox" name="cb' + i + '" onclick="selectRow(' + "'seller-account-statement-header-table'" + ',event,' + i + ')"></td>';
         html += '<td>' + i + '</td>';
         html += '<td>' + getLocalDate(item.Date) + '</td>';
         html += '<td>' + Math.ceil(item.Outcoming) + '</td>';
@@ -104,7 +105,7 @@ function getInvoiceId(notes) {
 }
 
 function showNotesDetails(invoiceId) {
-    debugger;
+
     //Got to Purchase Page and Pass purcchaseId 
     //getPurechaseDetails(invoiceId);
     //location.href = '@Url.Action("Index", "Purechases")';//?purcchaseId=' + purcchaseId ;

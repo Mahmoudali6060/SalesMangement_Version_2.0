@@ -4,7 +4,7 @@
 });
 
 function search() {
-    debugger;
+    
     let transactionDate = $('#TransactionDate').val();
     var url = `/Transaction/List?selectedDate=${transactionDate}`;
     $.ajax({

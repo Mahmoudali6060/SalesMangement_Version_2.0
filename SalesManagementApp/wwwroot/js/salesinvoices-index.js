@@ -129,7 +129,7 @@ function updateTotal() {
 //>>>Helper Methods 
 //Binding Salesinvoice Header --LoadData() call it
 function setSalesinvoiceHeader() {
-    debugger;
+
     var html = '';
     var i = 1;
     $.each(salesinvoiceHeaders, function (key, item) {
@@ -140,7 +140,7 @@ function setSalesinvoiceHeader() {
         else {
             html += '<tr id="salesinvoice-header' + item.Id + '" style="cursor:pointer;" >';
         }
-
+        html += '<td><input type="checkbox" name="cb' + i + '" onclick="selectRow(' + "'salesinvoice-header-table'" + ',event,' + i + ')"></td>';
         html += '<td>' + i + '</td>';
         html += '<td>' + item.Id + '</td>';
         html += '<td>' + getLocalDate(item.SalesinvoicesDate) + '</td>';
@@ -159,7 +159,7 @@ function setSalesinvoiceHeader() {
 }
 
 function calculateSalesinvoiceDetails(salesinvoiceHeader) {
-    debugger;
+
     var totalQuantity = 0;
     var total = 0;
     for (var i = 0; i < salesinvoiceHeader.SalesinvoicesDetialsList.length; i++) {
@@ -267,7 +267,7 @@ function printReport(id) {
 
 
 function updateInPrinting(purechasesHeader) {
-    debugger;
+
     $.ajax({
         url: "/Salesinvoices/UpdateInPrinting",
         data: purechasesHeader,

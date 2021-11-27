@@ -90,7 +90,7 @@ function setPurechaseHeader() {
         else {
             html += '<tr id="purechase-header' + item.Id + '" style="cursor:pointer;" onclick="getPurechaseDetails(' + item.Id + ')">';
         }
-
+        html += '<td><input type="checkbox" name="cb' + i + '" onclick="selectRow(' + "'purechase-header-table'" + ',event,' + i + ')"></td>';
         html += '<td>' + i + '</td>';
         html += '<td>' + item.Id + '</td>';
         html += '<td>' + getLocalDate(item.PurechasesDate) + '</td>';
@@ -284,7 +284,7 @@ function printReport() {
     newWin.document.close();
 
     //setTimeout(function () {
-    //    debugger;
+    //    
     //    newWin.close();
     //    let isToday = parseFloat($("#today").val());
     //    getAll(isToday);

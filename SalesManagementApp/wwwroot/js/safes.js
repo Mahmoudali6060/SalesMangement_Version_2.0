@@ -93,6 +93,8 @@ function getAll() {
         if (item.Notes == null)
             item.Notes = "";
         html += '<tr>';
+
+        html += '<td><input type="checkbox" name="cb' + i + '" onclick="selectRow(' + "'safes-table'" + ',event,' + i + ')"></td>';
         html += '<td>' + i + '</td>';
         html += '<td>' + getLocalDate(item.Date) + '</td>';
         html += '<td>' + item.Outcoming + '</td>';

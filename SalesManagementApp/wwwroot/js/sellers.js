@@ -18,6 +18,7 @@ function getAll() {
         if (item.Notes == null)
             item.Notes = "";
         html += '<tr>';
+        html += '<td><input type="checkbox" name="cb' + i + '" onclick="selectRow(' + "'sellers-table'" + ',event,' + i + ')"></td>';
         html += '<td>' + i + '</td>';
         html += '<td>' + item.Name + '</td>';
         html += '<td>' + item.Address + '</td>';

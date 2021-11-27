@@ -90,7 +90,7 @@ function add() {
 }
 //Updating exsited entity by entityId
 function update() {
-    debugger;
+    
     disableButton('btnUpdate');
     var entity = fillEntity();
     $.ajax({

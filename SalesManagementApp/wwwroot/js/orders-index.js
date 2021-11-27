@@ -64,6 +64,7 @@ function setOrderHeader() {
     var i = 1;
     $.each(orderHeaders, function (key, item) {
         html += '<tr>';
+        html += '<td><input type="checkbox" name="cb' + i + '" onclick="selectRow(' + "'order-header-table'" + ',event,' + i + ')"></td>';
         html += '<td>' + i + '</td>';
         html += '<td>' + item.Id + '</td>';
         html += '<td>' + getLocalDate(item.OrderDate) + '</td>';

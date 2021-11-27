@@ -17,6 +17,7 @@ function getAll() {
     $.each(usersList, function (key, item) {
         html += '<tr>';
         html += '<td>' + i + '</td>';
+        html += '<td><input type="checkbox" name="cb' + i + '" onclick="selectRow(' + "'users-table'" + ',event,' + i + ')"></td>';
         html += '<td>' + item.FirstName + '</td>';
         html += '<td>' + item.LastName + '</td>';
         html += '<td>' + item.Username + '</td>';
@@ -53,7 +54,7 @@ function getAllUsers() {
 }
 //Loading the data(entity) based upon entityId
 function getById(id) {
-    debugger;
+
     hideAllValidationMessage();
     var user = getUserById(id);
     $('#Id').val(user.Id);

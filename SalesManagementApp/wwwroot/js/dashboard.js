@@ -21,7 +21,7 @@ function getDashboardData() {
 }
 
 function SetDashboardData(dashboard) {
-    debugger;
+    
     $('#TotalPurchase').text(dashboard.TotalPurchase);
     $('#TotalCommission').text(dashboard.TotalCommission);
     $('#TotalGift').text(dashboard.TotalGift);

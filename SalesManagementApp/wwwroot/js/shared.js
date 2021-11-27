@@ -426,8 +426,9 @@ function getRowNumber(e) {
     }
 }
 
-function selectRow(event, index) {
-    var table = document.getElementsByTagName("table");
-    var rows = table[0].getElementsByTagName("tr");
+function selectRow(tableId, event, index) {
+    debugger;
+    var table = document.getElementById(tableId);
+    var rows = table.getElementsByTagName("tr");
     rows[index].style.backgroundColor = event.target.checked ? "#cedbf3" : "white";
 }

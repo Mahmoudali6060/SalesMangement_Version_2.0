@@ -29,7 +29,7 @@ function getAll() {
 
 //Loading the data(entity) based upon entityId
 function getById(id) {
-    debugger;
+    
     hideAllValidationMessage();
     var role = getRoleById(id);
     $('#Id').val(role.Id);
