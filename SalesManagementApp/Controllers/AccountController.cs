@@ -38,6 +38,7 @@ namespace SalesManagementApp.Controllers
                 HttpContext.Session.SetString("_LoggedUserName", user.Username);
                 HttpContext.Session.SetString("_ImagesUrl", user.Company.LogoUrl);
                 HttpContext.Session.SetString("_UserFullName", user.FirstName + " " + user.LastName);
+                if (user.ImageUrl == null) user.ImageUrl = "default-avatar.jpg";
                 HttpContext.Session.SetString("_ProfileImageUrl", user.ImageUrl);
 
                 //user.Role = null;
