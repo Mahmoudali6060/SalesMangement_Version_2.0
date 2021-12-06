@@ -250,7 +250,7 @@ namespace Order.DataServiceLayer
                 totalQuantity += item.Quantity;
             }
 
-            decimal totalGift = decimal.Parse(Math.Ceiling((AppSettings.GiftRate * totalQuantity)).ToString());
+            decimal totalGift = 3;// decimal.Parse(Math.Ceiling((AppSettings.GiftRate * totalQuantity)).ToString());
             decimal toalDescent = Math.Ceiling(AppSettings.Decentate * totalQuantity);
             ///Prepare purechase Header
             return new PurechasesHeader()
@@ -284,7 +284,7 @@ namespace Order.DataServiceLayer
                     Byaa = 3 * item.Quantity,
                     Mashal = 3 * item.Quantity,
                     OrderDate = orderHeader.OrderHeader.Created,
-                    FarmerId=orderHeader.OrderHeader.FarmerId
+                    FarmerId = orderHeader.OrderHeader.FarmerId
                 });
                 total += (item.Weight * item.SellingPrice) + (AppSettings.MashalRate + AppSettings.ByaaRate) * item.Quantity;
                 ///Prepare Salesinvoices Header
