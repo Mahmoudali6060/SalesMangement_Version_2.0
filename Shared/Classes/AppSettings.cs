@@ -8,9 +8,9 @@ namespace Shared.Classes
     {
 
         public const decimal CommissionRate = 0.09M;
-        public const decimal GiftRate = 0.5M;
-        public const decimal Decentate = 1M;
-        public const decimal ByaaRate = 3M;
-        public const decimal MashalRate = 3M;
+        public const decimal GiftRate = 1M;
+        public const decimal Decentate = 1.5M;
+        public const decimal ByaaRate = 4M;
+        public const decimal MashalRate = 4M;
     }
 }

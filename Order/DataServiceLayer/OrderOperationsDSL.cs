@@ -281,8 +281,8 @@ namespace Order.DataServiceLayer
                     Quantity = item.Quantity,
                     Weight = item.Weight,
                     Price = item.SellingPrice,
-                    Byaa = 3 * item.Quantity,
-                    Mashal = 3 * item.Quantity,
+                    Byaa = AppSettings.ByaaRate * item.Quantity,
+                    Mashal = AppSettings.MashalRate * item.Quantity,
                     OrderDate = orderHeader.OrderHeader.Created,
                     FarmerId = orderHeader.OrderHeader.FarmerId
                 });
