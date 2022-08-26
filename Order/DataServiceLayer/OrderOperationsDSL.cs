@@ -250,7 +250,7 @@ namespace Order.DataServiceLayer
                 totalQuantity += item.Quantity;
             }
 
-            decimal totalGift = 3;// decimal.Parse(Math.Ceiling((AppSettings.GiftRate * totalQuantity)).ToString());
+            decimal totalGift = decimal.Parse(Math.Ceiling((AppSettings.GiftRate * totalQuantity)).ToString());
             decimal toalDescent = Math.Ceiling(AppSettings.Decentate * totalQuantity);
             ///Prepare purechase Header
             return new PurechasesHeader()
