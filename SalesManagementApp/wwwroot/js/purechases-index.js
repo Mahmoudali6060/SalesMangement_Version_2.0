@@ -230,8 +230,8 @@ function updateTotalAfterDiscount() {
     selectedPurechaseHeader.CommissionRate = $("#CommissionPercentage").val();
 }
 
-function updateInPrinting(isTransfered) {
-    let purechasesHeader = preparePurechasesEntity(isTransfered);
+function updateInPrinting() {
+    let purechasesHeader = preparePurechasesEntity();
     $.ajax({
         url: "/Purechases/UpdateInPrinting",
         data: purechasesHeader,
@@ -246,7 +246,7 @@ function updateInPrinting(isTransfered) {
     });
 }
 
-function preparePurechasesEntity(isTransfered) {
+function preparePurechasesEntity() {
     var entity = {
         Id: headerId,
         CommissionRate: $('#CommissionPercentage').val(),
@@ -256,7 +256,7 @@ function preparePurechasesEntity(isTransfered) {
         Total: $('#TotalAfterDiscount').text(),
         Gift: $('#Gift').val(),
         Descent: $('#Descent').val(),
-        IsTransfered: isTransfered
+        IsTransfered: selectedPurechaseHeader.IsTransfered
 
     };
     return entity;
@@ -275,13 +275,14 @@ function discount() {
     if (selectedPurechaseHeader.IsTransfered == true) {
         toastr.warning('هذه الفاتورة تم تخصيمها من قبل', 'تنبيه !')
     }
-    printReport(true)
+    selectedPurechaseHeader.IsTransfered = true;
+    printReport()
 }
 
 //print report
-function printReport(isTransfered) {
+function printReport() {
 
-    updateInPrinting(isTransfered);
+    updateInPrinting();
     setIsPrintedClass();
     var reportHeader = prepareReportHeader();
     var reportContent = prepareReportContent();
