@@ -30,6 +30,9 @@ function SetDashboardData(dashboard) {
     $('#TotalQuantity').text(dashboard.TotalQuantity);
     $('#TotalSalesWeight').text(dashboard.TotalSalesWeight);
     $('#TotalPurchaseWeight').text(dashboard.TotalPurchaseWeight);
+    $('#TotalClientsAccountStatement').text(dashboard.TotalClientsAccountStatement);
+    $('#TotalSellersAccountStatement').text(dashboard.TotalSellersAccountStatement);
+
 
 
 }

@@ -14,6 +14,7 @@ namespace Purechase.DTOs
         public int TotalQuantity { get; set; }
         public int TotalSalesWeight { get; set; }
         public int TotalPurchaseWeight { get; set; }
-
+        public decimal TotalClientsAccountStatement { get; set; }
+        public decimal TotalSellersAccountStatement { get; set; }
     }
 }

@@ -67,6 +67,13 @@ namespace Purechase
                 return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.PurechasesDate.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
             return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.PurechasesDate.ToShortDateString() == date.Value.ToShortDateString()).OrderByDescending(x => x.Id);
         }
+
+        public IEnumerable<Safe> GetAllSafes(string dateFrom = null, string dateTo = null)
+        {
+            if (dateFrom == null && dateFrom == null)//Daily
+                return _context.Safes.AsEnumerable().Where(x =>x.IsTransfered==true&& x.Date.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
+            return null;
+        }
         public PurechasesHeader GetById(long id)
         {
             return _purechasesHeaderEntity.SingleOrDefault(s => s.Id == id);
@@ -121,6 +128,7 @@ namespace Purechase
         {
             var todayPurchases = GetAllDaily(selectedDate);
             var todaySalesinvoice = _salesinvoicesOperationsRepo.GetAllDaily(selectedDate);
+            var safeList = GetAllSafes();
 
             decimal total = CalculateTotalPurchase(todayPurchases);
             decimal totalSalesinvoice = CalculateTotalSalesinvoice(todaySalesinvoice);
@@ -136,7 +144,11 @@ namespace Purechase
                 TotalSalesinvoice = totalSalesinvoice,//todaySalesinvoice.Sum(x => Math.Ceiling(x.Total)), //CalculateTotalSalesinvoice(todaySalesinvoice),
                 TotalQuantity = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Quantity)),
                 TotalSalesWeight = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Weight)),
-                TotalPurchaseWeight = todayPurchases.Sum(x => x.PurechasesDetialsList.Sum(y => y.Weight))
+                TotalPurchaseWeight = todayPurchases.Sum(x => x.PurechasesDetialsList.Sum(y => y.Weight)),
+                TotalClientsAccountStatement = safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Clients).Sum(x => Math.Abs(x.Incoming - x.Outcoming)),
+                TotalSellersAccountStatement = safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Sellers).Sum(x => Math.Abs(x.Outcoming - x.Incoming))
+
+
 
 
             };
@@ -149,12 +161,7 @@ namespace Purechase
             decimal total = 0;
             foreach (var purchase in todayPurchases)
             {
-                foreach (var purchaseDetail in purchase.PurechasesDetialsList)
-                {
-                    decimal subTotal = 0;
-                    subTotal = Math.Ceiling(purchaseDetail.Price * purchaseDetail.Weight);
-                    total += subTotal;
-                }
+                total += purchase.Total;
             }
             return total;
         }
@@ -220,12 +227,12 @@ namespace Purechase
             purechaseHeader.IsPrinted = true;
             purechaseHeader.IsTransfered = entity.IsTransfered;
 
-            
-           
+
+
 
             _context.Entry(purechaseHeader).State = EntityState.Modified;
             _context.SaveChanges();
-            _safeOperationsRepo.TransferToSafe(entity.Id, entity.Total, AccountTypesEnum.Clients,_context);
+            _safeOperationsRepo.TransferToSafe(entity.Id, entity.Total, AccountTypesEnum.Clients, _context);
             return true;
         }
         #endregion
