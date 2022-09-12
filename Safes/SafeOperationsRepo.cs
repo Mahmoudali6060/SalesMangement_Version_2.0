@@ -115,7 +115,7 @@ namespace Safes
             return false;
         }
 
-        public bool UpdateByHeaderId(long headerId, decimal total, AccountTypesEnum accountTypesEnum,EntitiesDbContext context)
+        public bool UpdateByHeaderId(long headerId, decimal total, AccountTypesEnum accountTypesEnum, EntitiesDbContext context)
         {
             Safe safe = context.Safes.FirstOrDefault(x => x.HeaderId == headerId && x.AccountTypeId == (int)accountTypesEnum);
             if (safe != null)
@@ -123,6 +123,22 @@ namespace Safes
                 if (accountTypesEnum == AccountTypesEnum.Sellers) safe.Outcoming = total;
                 else safe.Incoming = total;
 
+                context.Safes.Update(safe);
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool TransferToSafe(long headerId, decimal total, AccountTypesEnum accountTypesEnum, EntitiesDbContext context)
+        {
+            Safe safe = context.Safes.FirstOrDefault(x => x.HeaderId == headerId && x.AccountTypeId == (int)accountTypesEnum);
+            if (safe != null)
+            {
+                if (accountTypesEnum == AccountTypesEnum.Sellers) safe.Outcoming = total;
+                else safe.Incoming = total;
+
+                safe.IsTransfered = true;
                 context.Safes.Update(safe);
                 context.SaveChanges();
                 return true;
@@ -145,12 +161,12 @@ namespace Safes
         public SafeDTO GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, int currentPage)
         {
             var safes = _safeEntity
-                        .Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum)
+                        .Where(s => s.IsTransfered == true && s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum)
                         .OrderBy(x => x.Date);
 
             return new SafeDTO()
             {
-                Total = _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).Count(),
+                Total = _safeEntity.Where(s => s.IsTransfered == true && s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).Count(),
                 List = safes
                 .Skip((currentPage - 1) * PageSettings.PageSize)
                 .Take(PageSettings.PageSize)

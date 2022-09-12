@@ -218,10 +218,14 @@ namespace Purechase
             purechaseHeader.Descent = entity.Descent;
             purechaseHeader.Expense = entity.Expense;
             purechaseHeader.IsPrinted = true;
+            purechaseHeader.IsTransfered = entity.IsTransfered;
+
+            
+           
 
             _context.Entry(purechaseHeader).State = EntityState.Modified;
             _context.SaveChanges();
-            _safeOperationsRepo.UpdateByHeaderId(entity.Id, entity.Total, AccountTypesEnum.Clients);
+            _safeOperationsRepo.TransferToSafe(entity.Id, entity.Total, AccountTypesEnum.Clients,_context);
             return true;
         }
         #endregion

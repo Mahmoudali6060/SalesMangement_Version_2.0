@@ -51,6 +51,7 @@
                                     <th>اسم العميل</th>
                                     <th>ملاحظات</th>
                                     <th>حالة الطباعة</th>
+                                    <th>حالة التخصيم</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -131,7 +132,7 @@
                         <div class="col-lg-12">
                             <table style="width:100%;">
                                 <tr>
-                                    <td style="width:60%;">
+                                    <td style="width:30;">
                                         <table border="1">
                                             <tr>
                                                 <td>اجمالي العدد</td>
@@ -153,6 +154,18 @@
                                                 <td>صافي الفاتورة</td>
                                                 <td> <span id="TotalAfterDiscount"></span></td>
                                             </tr>
+                                        </table>
+                                    </td>
+
+                                    <td style="width:30;" >
+                                        <table id="isTransfered">
+                                            <tr>
+                                                <td style="color:red">تنبيـــــــه !</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color:red">هذه الفاتورة تم تخصيمها من قبل</td>
+                                            </tr>
+
                                         </table>
                                     </td>
 
@@ -194,6 +207,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="printReport();">تعديل وطباعة</button>
+                <button type="button" class="btn btn-danger" onclick="discount();">تخصييم وطباعة</button>
                 <button type="button" class="btn btn-info" onclick="update();">تعديل</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">الغاء</button>
             </div>

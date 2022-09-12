@@ -1,0 +1,17 @@
+{
+
+  "Sprint_Sep_2022": {
+    {
+      "Name": "Add IsTransfer Col to Safe",
+      "Description": "",
+      "Command": "ALTER TABLE SalesManagement.Safes ADD IsTransfered bit;"
+    },
+    {
+      "Name": "Add IsTransfer Col to PurechasesHeaders",
+      "Description": "",
+      "Command": "ALTER TABLE SalesManagement.PurechasesHeaders ADD IsTransfered bit;"
+    }
+
+  }
+
+}

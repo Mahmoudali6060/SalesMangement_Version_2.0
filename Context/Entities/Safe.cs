@@ -14,6 +14,7 @@ namespace Database.Entities
         public decimal Outcoming { get; set; }
         public string Notes { get; set; }
         public bool IsHidden { get; set; }
+        public bool IsTransfered { get; set; }//Is transfered to selected account statement
         public long HeaderId { get; set; }
         public long OrderId { get; set; }
     }

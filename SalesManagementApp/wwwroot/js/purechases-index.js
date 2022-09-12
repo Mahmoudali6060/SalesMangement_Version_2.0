@@ -99,6 +99,9 @@ function setPurechaseHeader() {
         if (item.IsPrinted == true) html += '<td>' + 'تم طباعة الفاتورة' + '</td>';
         else html += '<td>' + '' + '</td>';
 
+        if (item.IsTransfered == true) html += '<td>' + 'مُخَّمصة' + '</td>';
+        else html += '<td>' + ' غير مُخَّمصة' + '</td>';
+
         html += '<td><i style="color:blue;cursor:pointer" class="icon-search-plus"  onclick="getPurechaseDetails(' + item.Id + ')"></i></td>';
         html += '</tr>';
         i++;
@@ -167,6 +170,13 @@ function preparePurechaseFooter(total, totalQuantity, totalWeight, selectedPurec
 
     $('#TotalQuantity').text(Math.ceil(totalQuantity));
     $('#TotalWeight').text(Math.ceil(totalWeight));
+
+
+    if (selectedPurechaseHeader.IsTransfered == true) {
+        document.getElementById('isTransfered').style.display = 'block';
+    } else {
+        document.getElementById('isTransfered').style.display = 'none';
+    }
 }
 
 //gettting nawlon value is changed
@@ -220,8 +230,8 @@ function updateTotalAfterDiscount() {
     selectedPurechaseHeader.CommissionRate = $("#CommissionPercentage").val();
 }
 
-function updateInPrinting() {
-    let purechasesHeader = preparePurechasesEntity();
+function updateInPrinting(isTransfered) {
+    let purechasesHeader = preparePurechasesEntity(isTransfered);
     $.ajax({
         url: "/Purechases/UpdateInPrinting",
         data: purechasesHeader,
@@ -236,7 +246,7 @@ function updateInPrinting() {
     });
 }
 
-function preparePurechasesEntity() {
+function preparePurechasesEntity(isTransfered) {
     var entity = {
         Id: headerId,
         CommissionRate: $('#CommissionPercentage').val(),
@@ -246,6 +256,7 @@ function preparePurechasesEntity() {
         Total: $('#TotalAfterDiscount').text(),
         Gift: $('#Gift').val(),
         Descent: $('#Descent').val(),
+        IsTransfered: isTransfered
 
     };
     return entity;
@@ -259,10 +270,18 @@ function setIsPrintedClass() {
         element.cells[5].innerText = 'تم طباعة الفاتورة';
     }
 }
-//print report
-function printReport() {
 
-    updateInPrinting();
+function discount() {
+    if (selectedPurechaseHeader.IsTransfered == true) {
+        toastr.warning('هذه الفاتورة تم تخصيمها من قبل', 'تنبيه !')
+    }
+    printReport(true)
+}
+
+//print report
+function printReport(isTransfered) {
+
+    updateInPrinting(isTransfered);
     setIsPrintedClass();
     var reportHeader = prepareReportHeader();
     var reportContent = prepareReportContent();
@@ -273,7 +292,6 @@ function printReport() {
     newWin.document.open();
 
     var selectedPurechaseHeader = purechaseHeaders.find(x => x.Id == headerId);
-
     var reportHead = selectedPurechaseHeader.IsPrinted == true ? getReportHead('فاتورة - بدل فاقد') : getReportHead('فاتورة');
 
 
@@ -378,7 +396,7 @@ function prepareReportFooter() {
                         <div class="col-lg-12">
                             <table style="width:100%;border:none;">
                                 <tr>
-                                    <td style="width:70%;border:none;">
+                                    <td style="width:50%;border:none;">
                                         <table>
                                            
                                             <tr>
@@ -399,6 +417,9 @@ function prepareReportFooter() {
                                             </tr>
                                         </table>
                                     </td>
+
+
+                                   
 
                                     <td style="width:30%;border:none;">
                                         <table>
