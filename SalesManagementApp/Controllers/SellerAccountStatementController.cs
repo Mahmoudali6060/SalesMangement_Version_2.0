@@ -23,15 +23,15 @@ namespace SalesManagementApp.Controllers
             return View();
         }
 
-        public JsonResult List(long sellerId)
+        public JsonResult List(long sellerId, string dateFrom, string dateTo)
         {
-            var safeList = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(sellerId, AccountTypesEnum.Sellers));
+            var safeList = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(sellerId, AccountTypesEnum.Sellers,dateFrom,dateTo));
             return Json(safeList);
         }
 
-        public JsonResult GetPagedList(long sellerId, int currentPage)
+        public JsonResult GetPagedList(long sellerId, int currentPage, string dateFrom, string dateTo)
         {
-            var safeDto = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(sellerId, AccountTypesEnum.Sellers, currentPage));
+            var safeDto = Helper.SerializeObject(_safeOperationsRepo.GetByAccountId(sellerId, AccountTypesEnum.Sellers, currentPage, dateFrom, dateTo));
             return Json(safeDto);
         }
 

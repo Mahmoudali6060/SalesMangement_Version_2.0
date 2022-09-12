@@ -23,6 +23,25 @@
         <input type="hidden" id="sellerId" value="@ViewBag.sellerId" />
         <div class="content-body">
             <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="DateFrom">التاريخ من </label>
+                        <input type="date" id="DateFrom" class="form-control" style="height: 37px;">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="DateTo">التاريخ إلى </label>
+                        <input type="date" id="DateTo" class="form-control" style="height: 37px;">
+                    </div>
+                </div>
+                <br />
+                <div class="col-md-1">
+                    <button type="button" style="margin:10px;" class="btn btn-primary" onclick="search();"> بحـــث </button>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col s12">
                     <div class="card">
                         <table id="total-table" class="table table-bordered table-hover">
@@ -79,7 +98,7 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-primary" onclick="getAllSafeList();">طباعة</button>
+                        <button type="button" class="btn btn-primary" onclick="prepareReport();">طباعة</button>
 
                     </div>
                 </div>

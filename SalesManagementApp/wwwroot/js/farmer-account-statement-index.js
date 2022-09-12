@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     setFarmerData();
-    getAll(farmerId);
+    //getAll(farmerId);
 });
 
 var safeList = [];//Display the Safe in tables (for pgination)
@@ -9,22 +9,34 @@ var outcomingTotal = 0;//اجمالي المدفوعات
 var currentPage = 1;//For set and get current page
 var allSafeList = [];//For displaying all data in report
 var farmerId;
+var dateFrom;
+var dateTo;
 //Set Label of farmer Data
 function setFarmerData() {
     farmerId = parseInt($("#farmerId").val());
     $("#farmerName").text(getFarmerById(farmerId).Name);
 }
+
+function search() {
+    setDates();
+    getAll();
+}
+
+function setDates() {
+    dateFrom = $('#DateFrom').val();
+    dateTo = $('#DateTo').val();
+}
 //>>>CRUD Operations Methods
 //Loading  All Data based on current page
 function getAll() {
-    var url = `/FarmerAccountStatement/GetPagedList?farmerId=${farmerId}&&currentPage=${currentPage}`;
+    var url = `/FarmerAccountStatement/GetPagedList?farmerId=${farmerId}&&currentPage=${currentPage}&&dateFrom=${dateFrom}&&dateTo=${dateTo}`;
     $.ajax({
         url: url,
         type: "GET",
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (result) {
-            
+
             var safeListDto = JSON.parse(result);//Set Data in safeListDto
             safeList = safeListDto.List;//set List of safe
             preparePagination(safeListDto);//prepare pagination labels(Current Page and number of records)
@@ -36,11 +48,16 @@ function getAll() {
     });
 }
 
+function prepareReport() {
+    setDates();
+    getAllSafeList();
+}
+
 //Get All for report
 function getAllSafeList() {
     farmerId = parseInt($("#farmerId").val());
     allSafeList = [];
-    var url = "/FarmerAccountStatement/List?farmerId=" + farmerId;
+    var url = "/FarmerAccountStatement/List?farmerId=" + farmerId + "&&dateFrom=" + dateFrom + "&&dateTo=" + dateTo;
     $.ajax({
         url: url,
         type: "GET",
@@ -96,7 +113,7 @@ function setFarmerAccountStatement(safeListDto) {
 }
 
 function getPurchaseId(notes) {
-    if (notes !=null && notes.includes(":")) {
+    if (notes != null && notes.includes(":")) {
         var splittedNotes = notes.split(':');
         if (splittedNotes.length > 1)
             return splittedNotes[1];
@@ -105,7 +122,7 @@ function getPurchaseId(notes) {
 }
 
 function showNotesDetails(purcchaseId) {
-    
+
     //Got to Purchase Page and Pass purcchaseId 
     //getPurechaseDetails(invoiceId);
     //location.href = '@Url.Action("Index", "Purechases")';//?purcchaseId=' + purcchaseId ;
@@ -230,7 +247,7 @@ function prepareReportFooter(safeList) {
 
 function next() {
     currentPage++;
-    getAll();
+    search();
 }
 
 function back() {
@@ -241,13 +258,13 @@ function back() {
         return;
     }
 
-    getAll();
+    search();
 }
 
 function getToPageNumber() {
     currentPage = $("#pageNumber").val();
     if (currentPage > 0)
-        this.getAll();
+        this.search();
 }
 
 function preparePagination(safeListDto) {

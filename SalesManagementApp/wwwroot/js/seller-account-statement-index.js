@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     setSellerData();
-    getAll(sellerId);
+    //getAll(sellerId);
 });
 
 var safeList = [];//Display the Safe in tables (for pgination)
@@ -9,6 +9,19 @@ var outcomingTotal = 0;//اجمالي المدفوعات
 var currentPage = 1;//For set and get current page
 var allSafeList = [];//For displaying all data in report
 var sellerId;
+var dateFrom;
+var dateTo;
+
+function search() {
+    setDates();
+    getAll();
+}
+
+function setDates() {
+    dateFrom = $('#DateFrom').val();
+    dateTo = $('#DateTo').val();
+}
+
 //Set Label of seller Data
 function setSellerData() {
     sellerId = parseInt($("#sellerId").val());
@@ -17,7 +30,7 @@ function setSellerData() {
 //>>>CRUD Operations Methods
 //Loading  All Data based on current page
 function getAll() {
-    var url = `/SellerAccountStatement/GetPagedList?sellerId=${sellerId}&&currentPage=${currentPage}`;
+    var url = `/SellerAccountStatement/GetPagedList?sellerId=${sellerId}&&currentPage=${currentPage}&&dateFrom=${dateFrom}&&dateTo=${dateTo}`;
     $.ajax({
         url: url,
         type: "GET",
@@ -35,11 +48,16 @@ function getAll() {
     });
 }
 
+function prepareReport() {
+    setDates();
+    getAllSafeList();
+}
+
 //Get All for report
 function getAllSafeList() {
     sellerId = parseInt($("#sellerId").val());
     allSafeList = [];
-    var url = "/SellerAccountStatement/List?sellerId=" + sellerId;
+    var url = "/SellerAccountStatement/List?sellerId=" + sellerId + "&&dateFrom=" + dateFrom + "&&dateTo=" + dateTo;
     $.ajax({
         url: url,
         type: "GET",
@@ -246,7 +264,7 @@ function prepareReportFooter(safeList) {
 
 function next() {
     currentPage++;
-    getAll();
+    search();
 }
 
 function back() {
@@ -257,13 +275,13 @@ function back() {
         return;
     }
 
-    getAll();
+    search();
 }
 
 function getToPageNumber() {
     currentPage = $("#pageNumber").val();
     if (currentPage > 0)
-        this.getAll();
+        this.search();
 }
 
 function preparePagination(safeListDto) {

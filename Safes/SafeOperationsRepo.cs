@@ -51,9 +51,13 @@ namespace Safes
             return _safeEntity.SingleOrDefault(s => s.Id == id);
         }
 
-        public IEnumerable<Safe> GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum)
+        public IEnumerable<Safe> GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, string dateFrom, string dateTo)
         {
-            return _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).AsEnumerable();
+            if (string.IsNullOrWhiteSpace(dateFrom) && string.IsNullOrWhiteSpace(dateTo))
+            {
+                return _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).AsEnumerable();
+            }
+            return _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum && s.Date >= DateTime.Parse(dateFrom) && s.Date <= DateTime.Parse(dateTo)).AsEnumerable();
         }
 
         public long Add(Safe safe)
@@ -158,11 +162,21 @@ namespace Safes
             return false;
         }
 
-        public SafeDTO GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, int currentPage)
+        public SafeDTO GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, int currentPage, string dateFrom, string dateTo)
         {
-            var safes = _safeEntity
+            IEnumerable<Safe> safes = null;
+            if (string.IsNullOrWhiteSpace(dateFrom) && string.IsNullOrWhiteSpace(dateTo))
+            {
+                safes = _safeEntity
                         .Where(s => s.IsTransfered == true && s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum)
                         .OrderBy(x => x.Date);
+            }
+            else
+            {
+                safes = _safeEntity
+                      .Where(s => s.IsTransfered == true && s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum && s.Date >= DateTime.Parse(dateFrom) && s.Date <= DateTime.Parse(dateTo))
+                      .OrderBy(x => x.Date);
+            }
 
             return new SafeDTO()
             {
@@ -190,7 +204,7 @@ namespace Safes
 
         public BalanceDTO GetBalanceByAccountId(long accountId, AccountTypesEnum accountTypesEnum)
         {
-            var safes = GetByAccountId(accountId, accountTypesEnum);
+            var safes = GetByAccountId(accountId, accountTypesEnum, null, null);
             decimal totalOutcoming = 0;
             decimal totalIncoming = 0;
             foreach (Safe safe in safes)
