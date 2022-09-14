@@ -61,18 +61,18 @@ namespace Purechase
                 List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
-        public IEnumerable<PurechasesHeader> GetAllDaily(DateTime? date = null)
+        public IEnumerable<PurechasesHeader> GetAllDaily(DateTime? dateFrom = null, DateTime? dateTo = null)
         {
-            if (date == null)
+            if (dateFrom == null && dateTo == null)
                 return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.PurechasesDate.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
-            return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.PurechasesDate.ToShortDateString() == date.Value.ToShortDateString()).OrderByDescending(x => x.Id);
+            return _purechasesHeaderEntity.Include("PurechasesDetialsList").AsEnumerable().Where(x => x.PurechasesDate.Date >= dateFrom.Value.Date && x.PurechasesDate.Date <= dateTo.Value.Date).OrderByDescending(x => x.Id);
         }
 
-        public IEnumerable<Safe> GetAllSafes(string dateFrom = null, string dateTo = null)
+        public IEnumerable<Safe> GetAllSafes(DateTime? dateFrom = null, DateTime? dateTo = null)
         {
             if (dateFrom == null && dateFrom == null)//Daily
-                return _context.Safes.AsEnumerable().Where(x =>x.IsTransfered==true&& x.Date.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
-            return null;
+                return _context.Safes.AsEnumerable().Where(x => x.IsTransfered == true && x.Date.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
+            return _context.Safes.AsEnumerable().Where(x => x.IsTransfered == true && x.Date.Date >= dateFrom.Value.Date && x.Date.Date <= dateTo.Value.Date).OrderByDescending(x => x.Id);
         }
         public PurechasesHeader GetById(long id)
         {
@@ -124,11 +124,11 @@ namespace Purechase
             }
 
         }
-        public DashboardDTO GetDashboardData(DateTime? selectedDate = null)
+        public DashboardDTO GetDashboardData(DateTime? dateFrom = null, DateTime? dateTo = null)
         {
-            var todayPurchases = GetAllDaily(selectedDate);
-            var todaySalesinvoice = _salesinvoicesOperationsRepo.GetAllDaily(selectedDate);
-            var safeList = GetAllSafes();
+            var todayPurchases = GetAllDaily(dateFrom, dateTo);
+            var todaySalesinvoice = _salesinvoicesOperationsRepo.GetAllDaily(dateFrom, dateTo);
+            var safeList = GetAllSafes(dateFrom,dateTo);
 
             decimal total = CalculateTotalPurchase(todayPurchases);
             decimal totalSalesinvoice = CalculateTotalSalesinvoice(todaySalesinvoice);
@@ -147,9 +147,6 @@ namespace Purechase
                 TotalPurchaseWeight = todayPurchases.Sum(x => x.PurechasesDetialsList.Sum(y => y.Weight)),
                 TotalClientsAccountStatement = safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Clients).Sum(x => Math.Abs(x.Incoming - x.Outcoming)),
                 TotalSellersAccountStatement = safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Sellers).Sum(x => Math.Abs(x.Outcoming - x.Incoming))
-
-
-
 
             };
             //dashboardDTO.TotalPurchase += dashboardDTO.TotalCommission + dashboardDTO.TotalGift + dashboardDTO.TotalDescent;

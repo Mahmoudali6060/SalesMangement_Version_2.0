@@ -83,13 +83,13 @@ namespace Salesinvoice
             return UpdateSalesinvoiceTotal(salesinvoicesHeader.SalesinvoicesDetialsList, context);//Return updated salesinvoiceHeader
         }
 
-     
+
 
         public bool Update(SalesinvoicesHeader salesinvoicesHeader, EntitiesDbContext context)
         {
             context.SalesinvoicesHeaders.Update(salesinvoicesHeader);
             context.SaveChanges();
-            
+
             //DeleteSalesinvoicesDetials(salesinvoicesHeader.Id, context);
             //SetSalesinvoicesHeaderId(salesinvoicesHeader, salesinvoicesHeader.SalesinvoicesDetialsList);
             //AddSalesinvoicesDetials(salesinvoicesHeader.SalesinvoicesDetialsList, context);
@@ -142,11 +142,11 @@ namespace Salesinvoice
             }
         }
 
-        public IEnumerable<SalesinvoicesHeader> GetAllDaily(DateTime? date = null)
+        public IEnumerable<SalesinvoicesHeader> GetAllDaily(DateTime? dateFrom = null, DateTime? dateTo = null)
         {
-            if (date == null)
+            if (dateFrom == null && dateTo == null)
                 return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.SalesinvoicesDate.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
-            return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.SalesinvoicesDate.ToShortDateString() == date.Value.ToShortDateString()).OrderByDescending(x => x.Id);
+            return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.SalesinvoicesDate.Date >= dateFrom.Value.Date && x.SalesinvoicesDate.Date <= dateTo.Value.Date).OrderByDescending(x => x.Id);
         }
         #region Helper
         private IEnumerable<SalesinvoicesDetials> SetSalesinvoicesHeaderId(SalesinvoicesHeader salesinvoicesHeader, IEnumerable<SalesinvoicesDetials> salesinvoicesDetails)

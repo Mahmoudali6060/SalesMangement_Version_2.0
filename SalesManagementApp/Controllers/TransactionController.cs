@@ -23,9 +23,9 @@ namespace SalesManagementApp.Controllers
             return View();
         }
 
-        public JsonResult List(string selectedDate)
+        public JsonResult List(string dateFrom,string dateTo)
         {
-            var dashboard = Helper.SerializeObject(_purechasesOperationsRepo.GetDashboardData(DateTime.Parse(selectedDate)));
+            var dashboard = Helper.SerializeObject(_purechasesOperationsRepo.GetDashboardData(DateTime.Parse(dateFrom), DateTime.Parse(dateTo)));
             return Json(dashboard);
         }
 

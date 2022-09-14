@@ -1,12 +1,14 @@
 ﻿$(document).ready(function () {
-    $('#TransactionDate').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
-    search();//Load All Dashboard Data
+    //$('#TransactionDate').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
+    //search();//Load All Dashboard Data
 });
 
 function search() {
     
-    let transactionDate = $('#TransactionDate').val();
-    var url = `/Transaction/List?selectedDate=${transactionDate}`;
+    let dateFrom = $('#DateFrom').val();
+    let dateTo = $('#DateTo').val();
+
+    var url = `/Transaction/List?dateFrom=${dateFrom}&&dateTo=${dateTo}`;
     $.ajax({
         url: url,
         type: "GET",
@@ -33,4 +35,7 @@ function SetDashboardData(dashboard) {
     $('#TotalQuantity').text(dashboard.TotalQuantity);
     $('#TotalSalesWeight').text(dashboard.TotalSalesWeight);
     $('#TotalPurchaseWeight').text(dashboard.TotalPurchaseWeight);
+    $('#TotalClientsAccountStatement').text(dashboard.TotalClientsAccountStatement);
+    $('#TotalSellersAccountStatement').text(dashboard.TotalSellersAccountStatement);
+
 }

@@ -238,7 +238,7 @@ function updateInPrinting() {
         type: "POST",
 
         success: function (result) {
-
+            getAll();
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -284,6 +284,7 @@ function printReport() {
 
     updateInPrinting();
     setIsPrintedClass();
+   
     var reportHeader = prepareReportHeader();
     var reportContent = prepareReportContent();
     var reportFooter = prepareReportFooter();
