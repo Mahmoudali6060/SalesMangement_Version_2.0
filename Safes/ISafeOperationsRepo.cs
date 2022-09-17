@@ -12,7 +12,7 @@ namespace Safes
     public interface ISafeOperationsRepo
     {
         IEnumerable<Safe> GetAll();
-        SafeDTO GetAll(int currentPage, string keyword);
+        SafeDTO GetAll(int currentPage, string dateFrom,string dateTo,AccountTypesEnum accountTypesId);
         Safe GetById(long id);
         long Add(Safe entity);
         long Add(Safe entity, EntitiesDbContext context);

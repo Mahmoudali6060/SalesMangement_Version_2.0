@@ -194,8 +194,18 @@
 
                 @if (Context.Session.GetString("_LoggedUserRole") == "مدير")
                 {
-                    <li @if (controllerName == "Safes") { <text> class="active" </text> }>
+                    @*<li @if (controllerName == "Safes") { <text> class="active" </text> }>
                         <a href='@Url.Action("Index", "Safes")'><i class="icon-users"></i><span data-i18n="nav.form_layouts.form_layout_basic" class="menu-title"> الخزنـــــــــة </span></a>
+                    </li>*@
+
+
+                    <li>
+                        <a href="#"><i class="icon-list-numbered"></i><span data-i18n="nav.dash.main" class="menu-title"> الخزنة  </span></a>
+                        <ul class="menu-content">
+                            <li @if (controllerName == "Safes" && actionName == "Index") { <text> class="active" </text> }>
+                                <a href='@Url.Action("Index", "Safes")' data-i18n="nav.dash.main" class="menu-item">صندوق النقدية   </a>
+                            </li>
+                        </ul>
                     </li>
                 }
                 @if (Context.Session.GetString("_LoggedUserRole") == "مدير")

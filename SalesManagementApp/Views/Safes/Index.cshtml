@@ -24,17 +24,35 @@
         </div>
         <div class="content-body">
             <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="DateFrom">التاريخ من </label>
+                        <input type="date" id="DateFrom" class="form-control" style="height: 37px;">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="DateTo">التاريخ إلى </label>
+                        <input type="date" id="DateTo" class="form-control" style="height: 37px;">
+                    </div>
+                </div>
+                <br />
+                <div class="col-md-1">
+                    <button type="button" style="margin:10px;" class="btn btn-primary" onclick="filter();"> بحـــث </button>
+                </div>
+            </div>
+            <div class="row">
                 <div id="admin" class="col s12">
                     <div class="card material-table">
                         <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> سجل جديد</button>
-                        <div class="row">
+                        @*<div class="row">
                             <div class="col-lg-6">
                                 <input type="text" class="form-control col-lg-6" id="search" name="search" placeholder="ادخل كلمة البحث" />
                             </div>
                             <div class="col-lg-3">
                                 <input type="button" class="btn btn-info" onclick="filter();" value="بحث" />
                             </div>
-                        </div>
+                        </div>*@
 
 
                         <table id="safes-table" class="table table-bordered table-hover">

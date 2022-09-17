@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
-    getAll();//Load Data in Table when documents is ready
+    //getAll();//Load Data in Table when documents is ready
+   
     turnOnTab('formModal');//to allow tab in form modal >>>is called From shared.js
     $('#Date').val(getLocalDateForInput(new Date().toUTCString()));
     hideAllDropDownLists();
@@ -80,9 +81,11 @@ function fillSellersDropDownList(id) {
 
 //Loading data (list of entity)
 function getAll() {
-    this.sellers = getAllSellers();
-    this.farmers = getAllFarmers();
-    var safeDto = getPagedSafes(this.currentPage);
+  
+    let dateFrom = $('#DateFrom').val();
+    let dateTo = $('#DateTo').val();
+
+    var safeDto = getPagedSafes(this.currentPage, dateFrom, dateTo);
     var safesList = safeDto.List;
     preparePagination(safeDto);
 
@@ -303,6 +306,8 @@ function clearData() {
     //$('#OppenningBalance').css('border-color', 'lightgrey');
     $('#Notes').css('border-color', 'lightgrey');
     hideAllValidationMessage();
+    this.sellers = getAllSellers();
+    this.farmers = getAllFarmers();
 }
 //Valdidation using jquery
 function validateForm() {
@@ -352,11 +357,11 @@ function fillEntity() {
     return entity;
 }
 
-function getPagedSafes(currentPage) {
-    var keyword = $("#search").val().toLowerCase();
-    var url = "/Safes/GetPagedList?currentPage=" + currentPage;
-    if (!isEmpty(keyword))
-        url = url + "&&keyword=" + keyword;
+function getPagedSafes(currentPage,dateFrom,dateTo) {
+    //var keyword = $("#search").val().toLowerCase();
+    var url = "/Safes/GetPagedList?currentPage=" + currentPage + "&&dateFrom=" + dateFrom + "&&dateTo=" + dateTo +"&&accountTypesId=null";
+    //if (!isEmpty(keyword))
+    //    url = url + "&&keyword=" + keyword;
 
     var safes = [];
     $.ajax({
@@ -378,6 +383,8 @@ function getPagedSafes(currentPage) {
 //Filtering data
 function filter() {
     this.currentPage = 1;
+    let dateFrom = $('#DateFrom').val();
+    let dateTo = $('#DateTo').val();
     getAll();
 }
 ///Pagination Methods

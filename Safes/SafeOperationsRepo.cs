@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Database;
 using Database.Entities;
@@ -27,22 +28,23 @@ namespace Safes
             return _safeEntity.Where(x => x.IsHidden == false).AsEnumerable();
         }
 
-        public SafeDTO GetAll(int currentPage, string keyword)
+        public SafeDTO GetAll(int currentPage, string dateFrom, string dateTo, AccountTypesEnum accountTypesId)
         {
-            var list = _safeEntity
-                .Where(x => x.IsHidden == false)
+            IEnumerable<Safe> safeList = new List<Safe>();
+            if (!string.IsNullOrWhiteSpace(dateFrom) && !string.IsNullOrWhiteSpace(dateTo))
+            {
+                safeList = _safeEntity
+                .Where(x => x.IsHidden == false
+                && x.Date.Date >= DateTime.Parse(dateFrom).Date && x.Date.Date <= DateTime.Parse(dateTo).Date
+                )
                 .OrderByDescending(x => x.Id)
                 .AsEnumerable();
-
-            if (!string.IsNullOrWhiteSpace(keyword))
-            {
-                list = list.Where(x => x.Date.ToString("dd/MM/yyyy").Contains(keyword));
             }
 
             return new SafeDTO()
             {
-                Total = list.Where(x => x.IsHidden == false).Count(),
-                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
+                Total = safeList.Where(x => x.IsHidden == false).Count(),
+                List = safeList.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
 
