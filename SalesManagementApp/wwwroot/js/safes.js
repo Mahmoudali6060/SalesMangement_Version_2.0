@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     //getAll();//Load Data in Table when documents is ready
-   
+    setAccountTypeList();
     turnOnTab('formModal');//to allow tab in form modal >>>is called From shared.js
     $('#Date').val(getLocalDateForInput(new Date().toUTCString()));
     hideAllDropDownLists();
@@ -9,8 +9,14 @@
 var sellers = [];
 var farmers = [];
 var safeList = [];
+
 var currentPage = 1;
 var recordsTotal;
+
+function setAccountTypeList() {
+    this.sellers = getAllSellers();
+    this.farmers = getAllFarmers();
+}
 //////////////////////////////// Drop Down List Handling
 function hideAllDropDownLists() {
     $(".ClientId").hide();
@@ -81,11 +87,11 @@ function fillSellersDropDownList(id) {
 
 //Loading data (list of entity)
 function getAll() {
-  
+
     let dateFrom = $('#DateFrom').val();
     let dateTo = $('#DateTo').val();
 
-    var safeDto = getPagedSafes(this.currentPage, dateFrom, dateTo);
+    var safeDto = getPagedSafes(this.currentPage, dateFrom, dateTo, 0);
     var safesList = safeDto.List;
     preparePagination(safeDto);
 
@@ -111,6 +117,60 @@ function getAll() {
     });
     $('.tbody').html(html);
 
+}
+
+function getAllClientsSellers() {
+
+    let dateFrom = $('#DateFrom').val();
+    let dateTo = $('#DateTo').val();
+
+    var clientsSafeDto = getPagedSafes(this.currentPage, dateFrom, dateTo, 1);
+    var sellersSafeDto = getPagedSafes(this.currentPage, dateFrom, dateTo, 2);
+
+    var clientsSafeList = clientsSafeDto.List;
+    var sellersSafeList = sellersSafeDto.List;
+
+    prepareClientsPagination(clientsSafeDto);
+    prepareSellersPagination(sellersSafeDto);
+
+
+    if (sellersSafeList && sellersSafeList.length > 0) { 
+    var html_safe_sellers = '';
+    var i = 1;
+    $.each(sellersSafeList, function (key, item) {
+        if (item.Notes == null)
+            item.Notes = "";
+        html_safe_sellers += '<tr>';
+
+        html_safe_sellers += '<td>' + i + '</td>';
+        //html_safe_sellers += '<td>' + getLocalDate(item.Date) + '</td>';
+        html_safe_sellers += '<td>' + item.Outcoming + '</td>';
+        html_safe_sellers += '<td>' + sellers.find(x => x.Id == item.AccountId)?.Name + '</td>';
+        html_safe_sellers += '<td><i  style="color:red;cursor:pointer" class="icon-trash"  onclick="delele(' + item.Id + ')"></i>  <i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i></td>';
+        html_safe_sellers += '</tr>';
+        i++;
+    });
+        $('.tbody_sellersSafeList').html(html_safe_sellers);
+}
+
+    if (clientsSafeList && clientsSafeList.length > 0) {
+        var html_safe_clients = '';
+        var i = 1;
+        $.each(clientsSafeList, function (key, item) {
+
+            html_safe_clients += '<tr>';
+
+            html_safe_clients += '<td>' + i + '</td>';
+            //html_safe_sellers += '<td>' + getLocalDate(item.Date) + '</td>';
+            html_safe_clients += '<td>' + item.Incoming + '</td>';
+            html_safe_clients += '<td>' + item.Incoming + '</td>';
+            html_safe_clients += '<td>' + farmers.find(x => x.Id == item.AccountId)?.Name + '</td>';
+            html_safe_clients += '<td><i  style="color:red;cursor:pointer" class="icon-trash"  onclick="delele(' + item.Id + ')"></i>  <i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i></td>';
+            html_safe_clients += '</tr>';
+            i++;
+        });
+        $('.tbody_safe_clientsList').html(html_safe_clients);
+    }
 }
 
 function setAccountTypeName(item) {
@@ -306,8 +366,7 @@ function clearData() {
     //$('#OppenningBalance').css('border-color', 'lightgrey');
     $('#Notes').css('border-color', 'lightgrey');
     hideAllValidationMessage();
-    this.sellers = getAllSellers();
-    this.farmers = getAllFarmers();
+
 }
 //Valdidation using jquery
 function validateForm() {
@@ -357,9 +416,9 @@ function fillEntity() {
     return entity;
 }
 
-function getPagedSafes(currentPage,dateFrom,dateTo) {
+function getPagedSafes(currentPage, dateFrom, dateTo, accountTypesId) {
     //var keyword = $("#search").val().toLowerCase();
-    var url = "/Safes/GetPagedList?currentPage=" + currentPage + "&&dateFrom=" + dateFrom + "&&dateTo=" + dateTo +"&&accountTypesId=null";
+    var url = "/Safes/GetPagedList?currentPage=" + currentPage + "&&dateFrom=" + dateFrom + "&&dateTo=" + dateTo + "&&accountTypesId=" + accountTypesId;
     //if (!isEmpty(keyword))
     //    url = url + "&&keyword=" + keyword;
 
@@ -383,8 +442,8 @@ function getPagedSafes(currentPage,dateFrom,dateTo) {
 //Filtering data
 function filter() {
     this.currentPage = 1;
-    let dateFrom = $('#DateFrom').val();
-    let dateTo = $('#DateTo').val();
+    //let dateFrom = $('#DateFrom').val();
+    //let dateTo = $('#DateTo').val();
     getAll();
 }
 ///Pagination Methods
@@ -410,11 +469,33 @@ function getToPageNumber() {
         this.getAll();
 }
 
-function preparePagination(farmerDto) {
-    recordsTotal = farmerDto.Total;
+function preparePagination(safeDto) {
+    recordsTotal = safeDto.Total;
     $("#recordsTotal").text(recordsTotal);
     $("#pageNumber").val(this.currentPage);
 }
+
+
+function prepareClientsPagination(safeDto) {
+    recordsTotal = safeDto.Total;
+    $("#recordsTotal_Clinets").text(recordsTotal);
+    $("#pageNumber_Clinets").val(this.currentPage);
+}
+
+
+function prepareSellersPagination(safeDto) {
+    recordsTotal = safeDto.Total;
+    $("#recordsTotal_Sellers").text(recordsTotal);
+    $("#pageNumber_Sellers").val(this.currentPage);
+}
+
+
 //End Pagination Methods
 
 ////////////////////////////End Helper Methods
+
+////////////////////////////>>>>>Clients/Sellers Details
+
+
+////////////////////////////>>>>>End Clients/Sellers Details
+

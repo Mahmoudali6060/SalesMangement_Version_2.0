@@ -36,6 +36,7 @@ namespace Safes
                 safeList = _safeEntity
                 .Where(x => x.IsHidden == false
                 && x.Date.Date >= DateTime.Parse(dateFrom).Date && x.Date.Date <= DateTime.Parse(dateTo).Date
+                &&(accountTypesId>0 &&x.AccountTypeId==(int) accountTypesId)
                 )
                 .OrderByDescending(x => x.Id)
                 .AsEnumerable();

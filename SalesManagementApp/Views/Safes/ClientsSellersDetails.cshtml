@@ -1,13 +1,13 @@
 ﻿
 @{
-    ViewData["Title"] = "صندوق النقدية";
+    ViewData["Title"] = "العملاء والموردين";
 }
 
 <div class="app-content content container-fluid">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-6 col-xs-12 mb-1">
-                <h5>الخزنة</h5>
+                <h5>العملاء والموردين</h5>
             </div>
             <div class="content-header-right breadcrumbs-right breadcrumbs-top col-md-6 col-xs-12">
                 <div id="myTable" class="breadcrumb-wrapper col-xs-12">
@@ -16,7 +16,7 @@
                             <a href="index.html">الرئيسية</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            الخزنة
+                            العملاء والموردين
                         </li>
                     </ol>
                 </div>
@@ -38,11 +38,11 @@
                 </div>
                 <br />
                 <div class="col-md-1">
-                    <button type="button" style="margin:10px;" class="btn btn-primary" onclick="filter();"> بحـــث </button>
+                    <button type="button" style="margin:10px;" class="btn btn-primary" onclick="getAllClientsSellers();"> بحـــث </button>
                 </div>
             </div>
             <div class="row">
-                <div id="admin" class="col s12">
+                <div id="admin" class="col-lg-6">
                     <div class="card material-table">
                         <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> سجل جديد</button>
                         @*<div class="row">
@@ -54,25 +54,26 @@
                             </div>
                         </div>*@
 
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h4>الوارد من التجار</h4>
+                            </div>
+                        </div>
 
                         <table id="safes-table" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th></th>
                                     <th>م </th>
-                                    <th>التاريخ</th>
-                                    <th>المدفوع</th>
-                                    <th>الوارد</th>
-                                    <th>نوع الحساب</th>
-                                    <th>التفاصيل</th>
-                                    <th>ملاحظات</th>
+                                    <th>المبلغ</th>
+                                    <th>الاسم</th>
                                     <th></th>
+
                                 </tr>
                             </thead>
-                            <tbody class="tbody"></tbody>
+                            <tbody class="tbody_sellersSafeList"></tbody>
                         </table>
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-8">
                                 <button onclick="next()">التالي</button>
                                 <input id="pageNumber" value="1" onchange="getToPageNumber()" />
                                 <button onclick="back()">السابق</button>
@@ -85,6 +86,50 @@
                         </div>
                     </div>
                 </div>
+                <div id="admin" class="col-lg-6">
+                    <div class="card material-table">
+                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> سجل جديد</button>
+                        @*<div class="row">
+                        <div class="col-lg-6">
+                        <input type="text" class="form-control col-lg-6" id="search" name="search" placeholder="ادخل كلمة البحث" />
+                        </div>
+                        <div class="col-lg-3">
+                        <input type="button" class="btn btn-info" onclick="filter();" value="بحث" />
+                        </div>
+                        </div>*@
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h4> الصادر الى المزارعين</h4>
+                            </div>
+                        </div>
+
+                        <table id="safes-table" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>م </th>
+                                    <th>نولون</th>
+                                    <th>المبلغ</th>
+                                    <th>الاسم</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody_safe_clientsList"></tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <button onclick="next()">التالي</button>
+                                <input id="pageNumber" value="1" onchange="getToPageNumber()" />
+                                <button onclick="back()">السابق</button>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <span>عدد السجلات</span>:
+                                <span id="recordsTotal">40</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

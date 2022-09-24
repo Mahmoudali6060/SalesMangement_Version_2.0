@@ -24,6 +24,15 @@ namespace SalesManagementApp.Controllers
             return View();
         }
 
+        public ActionResult ClientsSellersDetails()
+        {
+            //BackupService backupService = new BackupService("Server=.\\SQLEXPRESS;Database=TabarakDb;Trusted_Connection=True;", @"F:\Backup");
+            //backupService.BackupDatabase("TabarakDb");
+            return View();
+        }
+
+        
+
         public JsonResult List()
         {
             var safeList = Helper.SerializeObject(_safeOperationsRepo.GetAll());

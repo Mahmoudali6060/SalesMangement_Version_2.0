@@ -205,6 +205,10 @@
                             <li @if (controllerName == "Safes" && actionName == "Index") { <text> class="active" </text> }>
                                 <a href='@Url.Action("Index", "Safes")' data-i18n="nav.dash.main" class="menu-item">صندوق النقدية   </a>
                             </li>
+                            <li @if (controllerName == "Safes" && actionName == "ClientsSellersDetails") { <text> class="active" </text> }>
+                                <a href='@Url.Action("ClientsSellersDetails", "Safes")' data-i18n="nav.dash.main" class="menu-item">  العملاء والموردين  </a>
+                            </li>
+                            
                         </ul>
                     </li>
                 }
