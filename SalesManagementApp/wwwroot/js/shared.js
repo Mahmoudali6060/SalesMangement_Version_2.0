@@ -451,3 +451,12 @@ function selectRow(tableId, event, index) {
     var rows = table.getElementsByTagName("tr");
     rows[index].style.backgroundColor = event.target.checked ? "#cedbf3" : "white";
 }
+
+
+function disableButton(id) {
+    $('#' + id).prop('disabled', true);
+}
+
+function enableButton(id) {
+    $('#' + id).prop('disabled', false);
+}

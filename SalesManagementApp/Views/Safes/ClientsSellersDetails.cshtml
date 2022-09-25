@@ -44,7 +44,7 @@
             <div class="row">
                 <div id="admin" class="col-lg-6">
                     <div class="card material-table">
-                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> سجل جديد</button>
+                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="addSafe_Seller();"> سجل جديد</button>
                         @*<div class="row">
                             <div class="col-lg-6">
                                 <input type="text" class="form-control col-lg-6" id="search" name="search" placeholder="ادخل كلمة البحث" />
@@ -66,6 +66,7 @@
                                     <th>م </th>
                                     <th>المبلغ</th>
                                     <th>الاسم</th>
+                                    <th>التاريخ</th>
                                     <th></th>
 
                                 </tr>
@@ -74,21 +75,21 @@
                         </table>
                         <div class="row">
                             <div class="col-lg-8">
-                                <button onclick="next()">التالي</button>
-                                <input id="pageNumber" value="1" onchange="getToPageNumber()" />
-                                <button onclick="back()">السابق</button>
+                                <button onclick="next_Seller()">التالي</button>
+                                <input id="pageNumber_Seller" value="1" onchange="getToPageNumber_Seller()" />
+                                <button onclick="back_Seller()">السابق</button>
                             </div>
 
                             <div class="col-lg-4">
                                 <span>عدد السجلات</span>:
-                                <span id="recordsTotal">40</span>
+                                <span id="recordsTotal_Seller"></span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div id="admin" class="col-lg-6">
                     <div class="card material-table">
-                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="clearData();"> سجل جديد</button>
+                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="addSafe_Client();"> سجل جديد</button>
                         @*<div class="row">
                         <div class="col-lg-6">
                         <input type="text" class="form-control col-lg-6" id="search" name="search" placeholder="ادخل كلمة البحث" />
@@ -107,9 +108,9 @@
                             <thead>
                                 <tr>
                                     <th>م </th>
-                                    <th>نولون</th>
                                     <th>المبلغ</th>
                                     <th>الاسم</th>
+                                    <th>التاريخ</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -117,14 +118,14 @@
                         </table>
                         <div class="row">
                             <div class="col-lg-8">
-                                <button onclick="next()">التالي</button>
-                                <input id="pageNumber" value="1" onchange="getToPageNumber()" />
-                                <button onclick="back()">السابق</button>
+                                <button onclick="next_Client()">التالي</button>
+                                <input id="pageNumber_Client" value="1" onchange="getToPageNumber_Client()" />
+                                <button onclick="back_Client()">السابق</button>
                             </div>
 
                             <div class="col-lg-4">
                                 <span>عدد السجلات</span>:
-                                <span id="recordsTotal">40</span>
+                                <span id="recordsTotal_Client"></span>
                             </div>
                         </div>
                     </div>
@@ -180,13 +181,14 @@
                         <input type="text" class="form-control" id="Borrow" placeholder="سلف من الغير" />
                     </div>
 
-                    <div class="form-group">
-                        <label for="Outcoming">المدفوع </label>
-                        <input type="number" class="form-control" id="Outcoming" placeholder="صادر" />
+
+                    <div class="form-group Outcoming">
+                        <label for="Outcoming">المبلغ </label>
+                    <input type="number" class="form-control" id="Outcoming" placeholder="المبلغ الصادر الى المزارع" />
                     </div>
-                    <div class="form-group">
-                        <label for="Incoming">وارد</label>
-                        <input type="text" class="form-control" id="Incoming" placeholder="وراد" />
+                    <div class="form-group Incoming">
+                        <label for="Incoming">المبلغ</label>
+                        <input type="number" class="form-control" id="Incoming" placeholder="المبلغ الوارد من التجار" />
                     </div>
                     <div class="form-group">
                         <label for="Notes">ملاحظات</label>

@@ -17,7 +17,7 @@ namespace Database.Entities
         public decimal Descent { get; set; }
         public decimal? Expense { get; set; }
         public bool? IsPrinted { get; set; }
-        public bool IsTransfered { get; set; }//Is transfered to selected account statement
+        public bool? IsTransfered { get; set; }//Is transfered to selected account statement
 
         public virtual ICollection<PurechasesDetials> PurechasesDetialsList { get; set; }
         public virtual Farmer Farmer{ get; set; }

@@ -89,7 +89,7 @@ function setFarmerAccountStatement(safeListDto) {
         html += '<td>' + getLocalDate(item.Date) + '</td>';
         html += '<td>' + Math.ceil(item.Outcoming) + '</td>';
         html += '<td>' + Math.ceil(item.Incoming) + '</td>';
-        html += '<td> <a class="link-primary" onclick="showNotesDetails(' + purchaseId + ')">' + item.Notes + ' </a>' + '</td>';
+        html += '<td> <a class="link-primary" onclick="showNotesDetails(' + purchaseId + ')">' + item.Notes ? item.Notes:'' + ' </a>' + '</td>';
         html += '</tr>';
         i++;
 

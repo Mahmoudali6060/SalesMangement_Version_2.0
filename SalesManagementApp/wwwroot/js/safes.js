@@ -13,6 +13,12 @@ var safeList = [];
 var currentPage = 1;
 var recordsTotal;
 
+var currentPage_Seller = 1;
+var recordsTotal_Seller;
+
+var currentPage_Client = 1;
+var recordsTotal_Client;
+
 function setAccountTypeList() {
     this.sellers = getAllSellers();
     this.farmers = getAllFarmers();
@@ -23,6 +29,8 @@ function hideAllDropDownLists() {
     $(".SellerId").hide();
     $(".OtherAccount").hide();
     $(".Borrow").hide();
+    $('.Outcoming').hide();
+    $('.Incoming').hide();
 }
 
 $("#AccountTypeId").change(function () {
@@ -30,14 +38,28 @@ $("#AccountTypeId").change(function () {
     setDropDownListByAccountTypeId(accountTypeId);
 });
 
+function addSafe_Seller() {
+    clearData();
+    $("#AccountTypeId").val(2);
+    setDropDownListByAccountTypeId(2);
+}
+
+function addSafe_Client() {
+    clearData();
+    $("#AccountTypeId").val(1);
+    setDropDownListByAccountTypeId(1);
+}
+
 function setDropDownListByAccountTypeId(accountTypeId, accountId) {
     hideAllDropDownLists();
     switch (parseInt(accountTypeId)) {
         case 1:
             fillFarmersDropDownList(accountId);
+            $('.Outcoming').show();
             break;
         case 2:
             fillSellersDropDownList(accountId);
+            $('.Incoming').show();
             break;
         case 3:
             $(".Borrow").show();
@@ -119,58 +141,67 @@ function getAll() {
 
 }
 
-function getAllClientsSellers() {
+function getAllClientsSellers(){
+    getAllSafe_Clients();
+    getAllSafe_Sellers();
+
+}
+
+function getAllSafe_Clients() {
 
     let dateFrom = $('#DateFrom').val();
     let dateTo = $('#DateTo').val();
 
-    var clientsSafeDto = getPagedSafes(this.currentPage, dateFrom, dateTo, 1);
-    var sellersSafeDto = getPagedSafes(this.currentPage, dateFrom, dateTo, 2);
-
+    var clientsSafeDto = getPagedSafes(this.currentPage_Client, dateFrom, dateTo, 1);
     var clientsSafeList = clientsSafeDto.List;
-    var sellersSafeList = sellersSafeDto.List;
-
     prepareClientsPagination(clientsSafeDto);
-    prepareSellersPagination(sellersSafeDto);
-
-
-    if (sellersSafeList && sellersSafeList.length > 0) { 
-    var html_safe_sellers = '';
-    var i = 1;
-    $.each(sellersSafeList, function (key, item) {
-        if (item.Notes == null)
-            item.Notes = "";
-        html_safe_sellers += '<tr>';
-
-        html_safe_sellers += '<td>' + i + '</td>';
-        //html_safe_sellers += '<td>' + getLocalDate(item.Date) + '</td>';
-        html_safe_sellers += '<td>' + item.Outcoming + '</td>';
-        html_safe_sellers += '<td>' + sellers.find(x => x.Id == item.AccountId)?.Name + '</td>';
-        html_safe_sellers += '<td><i  style="color:red;cursor:pointer" class="icon-trash"  onclick="delele(' + item.Id + ')"></i>  <i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i></td>';
-        html_safe_sellers += '</tr>';
-        i++;
-    });
-        $('.tbody_sellersSafeList').html(html_safe_sellers);
-}
-
     if (clientsSafeList && clientsSafeList.length > 0) {
         var html_safe_clients = '';
         var i = 1;
         $.each(clientsSafeList, function (key, item) {
 
             html_safe_clients += '<tr>';
-
             html_safe_clients += '<td>' + i + '</td>';
-            //html_safe_sellers += '<td>' + getLocalDate(item.Date) + '</td>';
-            html_safe_clients += '<td>' + item.Incoming + '</td>';
-            html_safe_clients += '<td>' + item.Incoming + '</td>';
+            html_safe_clients += '<td>' + item.Outcoming + '</td>';
             html_safe_clients += '<td>' + farmers.find(x => x.Id == item.AccountId)?.Name + '</td>';
+            html_safe_clients += '<td>' + getLocalDate(item.Date) + '</td>';
             html_safe_clients += '<td><i  style="color:red;cursor:pointer" class="icon-trash"  onclick="delele(' + item.Id + ')"></i>  <i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i></td>';
             html_safe_clients += '</tr>';
             i++;
         });
         $('.tbody_safe_clientsList').html(html_safe_clients);
     }
+}
+
+function getAllSafe_Sellers() {
+
+    let dateFrom = $('#DateFrom').val();
+    let dateTo = $('#DateTo').val();
+
+
+    var sellersSafeDto = getPagedSafes(this.currentPage_Seller, dateFrom, dateTo, 2);
+    var sellersSafeList = sellersSafeDto.List;
+    prepareSellersPagination(sellersSafeDto);
+
+    if (sellersSafeList && sellersSafeList.length > 0) {
+        var html_safe_sellers = '';
+        var i = 1;
+        $.each(sellersSafeList, function (key, item) {
+            if (item.Notes == null)
+                item.Notes = "";
+            html_safe_sellers += '<tr>';
+            html_safe_sellers += '<td>' + i + '</td>';
+            html_safe_sellers += '<td>' + item.Incoming + '</td>';
+            html_safe_sellers += '<td>' + sellers.find(x => x.Id == item.AccountId)?.Name + '</td>';
+            html_safe_sellers += '<td>' + getLocalDate(item.Date) + '</td>';
+            html_safe_sellers += '<td><i  style="color:red;cursor:pointer" class="icon-trash"  onclick="delele(' + item.Id + ')"></i>  <i style="color:green;cursor:pointer" class="icon-pencil2" onclick="return getById(' + item.Id + ')"></i></td>';
+            html_safe_sellers += '</tr>';
+            i++;
+        });
+        $('.tbody_sellersSafeList').html(html_safe_sellers);
+    }
+
+
 }
 
 function setAccountTypeName(item) {
@@ -273,6 +304,7 @@ function getSafeById(safeId) {
 
 //Adding new entity
 function add() {
+    disableButton('btnAdd');
     //if (!validateForm()) return false;
     var entity = fillEntity();
     $.ajax({
@@ -280,9 +312,13 @@ function add() {
         data: entity,
         type: "POST",
         success: function (result) {
-            $('#formModal').modal('hide');
-            clearData();
-            getAll();
+            //$('#formModal').modal('hide');
+            toastr.success('تم إضافة السجل بنجاح');
+            clearBasicData();
+            enableButton('btnAdd');
+
+            //clearData();
+            //getAll();
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -368,6 +404,12 @@ function clearData() {
     hideAllValidationMessage();
 
 }
+
+function clearBasicData() {
+    $('#Outcoming').val("");
+    $('#Incoming').val("");
+    $('#Notes').val("");
+}
 //Valdidation using jquery
 function validateForm() {
     var isValid = true;
@@ -395,7 +437,8 @@ function fillEntity() {
         AccountTypeId: $('#AccountTypeId').val(),
         Outcoming: $('#Outcoming').val(),
         Incoming: $('#Incoming').val(),
-        Notes: $('#Notes').val()
+        Notes: $('#Notes').val(),
+        IsTransfered: true
     };
     switch (entity.AccountTypeId) {
         case "1":
@@ -452,6 +495,7 @@ function next() {
     getAll();
 }
 
+
 function back() {
     currentPage--;
     if (currentPage <= 0) {
@@ -463,10 +507,76 @@ function back() {
     getAll();
 }
 
+//Client Pagination
+function next_Client() {
+    currentPage_Client++;
+    getAllSafe_Clients();
+}
+
+
+function back_Client() {
+    currentPage_Client--;
+    if (currentPage_Client <= 0) {
+        $("#pageNumber_Client").val(1);
+        currentPage_Client = 1;
+        return;
+    }
+
+    getAllSafe_Clients();
+}
+
+function getToPageNumber_Client() {
+    currentPage_Client = $("#pageNumber_Client").val();
+    if (currentPage_Client > 0)
+        this.getAllSafe_Clients();
+}
+
+
+function prepareClientsPagination(safeDto) {
+    recordsTotal_Client = safeDto.Total;
+    $("#recordsTotal_Client").text(recordsTotal_Client);
+    $("#pageNumber_Client").val(this.currentPage_Client);
+}
+
+
+//End Client Pagination
+
+//Seller Pagination
+function next_Seller() {
+    currentPage_Seller++;
+    getAllSafe_Sellers();
+}
+
+function back_Seller() {
+    currentPage_Seller--;
+    if (currentPage_Seller <= 0) {
+        $("#pageNumber_Seller").val(1);
+        currentPage_Seller = 1;
+        return;
+    }
+
+    getAllSafe_Sellers();
+}
+
+function getToPageNumber_Seller() {
+    currentPage_Seller = $("#pageNumber_Seller").val();
+    if (currentPage_Seller > 0)
+        this.getAllSafe_Sellers();
+}
+
+
+function prepareSellersPagination(safeDto) {
+    recordsTotal_Seller = safeDto.Total;
+    $("#recordsTotal_Seller").text(recordsTotal_Seller);
+    $("#pageNumber_Seller").val(this.currentPage_Seller);
+}
+
+//End Seller Pagination
+
 function getToPageNumber() {
     currentPage = $("#pageNumber").val();
     if (currentPage > 0)
-        this.getAll();
+        this.getAllClientsSellers();
 }
 
 function preparePagination(safeDto) {
@@ -474,21 +584,6 @@ function preparePagination(safeDto) {
     $("#recordsTotal").text(recordsTotal);
     $("#pageNumber").val(this.currentPage);
 }
-
-
-function prepareClientsPagination(safeDto) {
-    recordsTotal = safeDto.Total;
-    $("#recordsTotal_Clinets").text(recordsTotal);
-    $("#pageNumber_Clinets").val(this.currentPage);
-}
-
-
-function prepareSellersPagination(safeDto) {
-    recordsTotal = safeDto.Total;
-    $("#recordsTotal_Sellers").text(recordsTotal);
-    $("#pageNumber_Sellers").val(this.currentPage);
-}
-
 
 //End Pagination Methods
 

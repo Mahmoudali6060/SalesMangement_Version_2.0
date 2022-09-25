@@ -18,6 +18,7 @@ var farmers;
 orderDetailsRowNum = 0;
 orderDetailsNumList = [];//to fill rowIds list
 let index = 99;
+isTransfered = false;
 ///>>>END Variables
 
 //Setting of Farmer in select 
@@ -111,13 +112,6 @@ function update() {
     });
 }
 
-function disableButton(id) {
-    $('#' + id).prop('disabled', true);
-}
-
-function enableButton(id) {
-    $('#' + id).prop('disabled', false);
-}
 
 //>>>End CRUD Operations Methods
 
@@ -130,6 +124,7 @@ function fillOrderHeaderData(orderHeader) {
     $('#CreatedDate').val(orderHeader.Created);
     $('#Number').val(orderHeader.Number);
     $('#Farmers').val(orderHeader.FarmerId);
+    isTransfered = orderHeader.IsTransfered;
 }
 //Bindign Order Details in table
 function fillOrderDetailsData(orderDetails) {
@@ -188,7 +183,8 @@ function getOrderHeader() {
         OrderDate: $('#OrderDate').val(),
         Created: $('#CreatedDate').val(),
         Number: $('#Number').val(),
-        FarmerId: $('#Farmers').val()
+        FarmerId: $('#Farmers').val(),
+        IsTransfered:isTransfered
     };
     return orderHeader;
 }

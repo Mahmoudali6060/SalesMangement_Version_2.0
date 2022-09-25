@@ -9,6 +9,7 @@ namespace Database.Entities
         public string Number { get; set; }
         public DateTime OrderDate { get; set; }
         public long FarmerId { get; set; }
+        public bool? IsTransfered { get; set; }//Is transfered to selected account statement
         public virtual Farmer Farmer { get; set; }
         public virtual ICollection<OrderDetails> OrderDetails { get; set; }
         //public virtual ICollection<SalesinvoicesHeader> SalesinvoicesHeadersList { get; set; }

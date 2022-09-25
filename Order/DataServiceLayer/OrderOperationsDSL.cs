@@ -64,16 +64,17 @@ namespace Order.DataServiceLayer
                     try
                     {
                         //[1] Save Order (Header and Details)
+                        entity.OrderHeader.IsTransfered = false;
                         _orderHeaderOperationsRepo.Add(entity.OrderHeader, context);//Save in OrderHeader Table (Master Table)
                         entity.OrderDetails = SetOrderHeaderId(entity.OrderHeader.Id, entity.OrderDetails);//set OrderHeaderId to OrderDetails table
                         _orderDetailsOperationsRepo.AddRange(entity.OrderDetails, context);//Save in OrderDetails table (details for master table)
 
                         //[2] Save Purecchase pill
-                        PurechasesHeader purechasesHeader = PreparePurechasesEntity(entity,false);//Prepare PurchaseEntity(Header and details for Cleint)
+                        PurechasesHeader purechasesHeader = PreparePurechasesEntity(entity);//Prepare PurchaseEntity(Header and details for Cleint)
                         _purechasesOperationsRepo.Add(purechasesHeader, context);//Add Purchase(Header and Details)
 
                         //[3] Save farmer safe in Safe Entity as hidden rows
-                        Safe farmerSafe = PrepareFarmerSafeEntityForCreate(purechasesHeader, entity.OrderHeader.Id);//Prepare Safe for Client
+                        Safe farmerSafe = PrepareFarmerSafeEntity(purechasesHeader, entity.OrderHeader.Id);//Prepare Safe for Client
                         _safeOperationsRepo.Add(farmerSafe, context);//Add Client Safe row
 
                         //[4]Save Order_Purechase
@@ -116,8 +117,9 @@ namespace Order.DataServiceLayer
                         _orderDetailsOperationsRepo.AddRange(entity.OrderDetails, context);//Adding of new Order Details
 
                         //[2] Update Purechase (Master and Details)
-                        PurechasesHeader purechasesHeader = PreparePurechasesEntity(entity,true);
                         var orderHeader = _order_PurechaseOperationsRepo.GetByOrderHeaderId(entity.OrderHeader.Id);
+                        PurechasesHeader purechasesHeader = PreparePurechasesEntity(entity);
+
                         if (orderHeader != null && orderHeader.PurechasesHeaderId != 0)
                         {
                             purechasesHeader.Id = orderHeader.PurechasesHeaderId;
@@ -130,7 +132,7 @@ namespace Order.DataServiceLayer
 
                         //[3] Update Client Safe 
                         _safeOperationsRepo.DeleteByOrderId(entity.OrderHeader.Id, context);
-                        var safe = PrepareFarmerSafeEntityForUpdate(purechasesHeader, entity.OrderHeader.Id);
+                        var safe = PrepareFarmerSafeEntity(purechasesHeader, entity.OrderHeader.Id);
                         _safeOperationsRepo.Add(safe, context);
 
                         //[4]Update Order_Purechase
@@ -219,7 +221,7 @@ namespace Order.DataServiceLayer
             }
             return orderDetails;
         }
-        private PurechasesHeader PreparePurechasesEntity(OrderDTO orderHeader,bool isUpdate)
+        private PurechasesHeader PreparePurechasesEntity(OrderDTO orderHeader)
         {
             ///Prepare purechase Details
             List<PurechasesDetials> purechasesDetials = new List<PurechasesDetials>();//To add PurchaseDetail row in this list
@@ -265,7 +267,7 @@ namespace Order.DataServiceLayer
                 Gift = totalGift,
                 Descent = toalDescent,
                 Expense = 0M,
-                IsTransfered = isUpdate,//Is Transfered to Farmer Account Statment
+                IsTransfered = orderHeader.OrderHeader.IsTransfered,//Is Transfered to Farmer Account Statment
 
             };
         }
@@ -311,7 +313,7 @@ namespace Order.DataServiceLayer
                 PurechasesHeaderId = purechasesHeaderId
             };
         }
-        private Safe PrepareFarmerSafeEntityForCreate(PurechasesHeader entity, long orderId)
+        private Safe PrepareFarmerSafeEntity(PurechasesHeader entity, long orderId)
         {
             return new Safe()
             {
@@ -321,29 +323,14 @@ namespace Order.DataServiceLayer
                 Incoming = entity.Total,
                 Notes = $"الفاتورة رقم :{entity.Id}",
                 IsHidden = true,
-                IsTransfered = false,//Is Transfered to Farmer Account Statment
+                IsTransfered = entity.IsTransfered,
                 HeaderId = entity.Id,
                 OrderId = orderId
             };
 
         }
 
-        private Safe PrepareFarmerSafeEntityForUpdate(PurechasesHeader entity, long orderId)
-        {
-            return new Safe()
-            {
-                Date = entity.PurechasesDate,
-                AccountId = entity.FarmerId,
-                AccountTypeId = (int)AccountTypesEnum.Clients,
-                Incoming = entity.Total,
-                Notes = $"الفاتورة رقم :{entity.Id}",
-                IsHidden = true,
-                IsTransfered = true,
-                HeaderId = entity.Id,
-                OrderId = orderId
-            };
-
-        }
+     
         private Safe PrepareSellerSafeEntity(SalesinvoicesHeader entity, decimal total, long orderId)
         {
             return new Safe()

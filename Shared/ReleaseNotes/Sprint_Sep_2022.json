@@ -12,6 +12,12 @@
       "Command": "ALTER TABLE SalesManagement.PurechasesHeaders ADD IsTransfered bit;"
     }
 
+    {
+      "Name": "Add IsTransfer Col to OrderHeader",
+      "Description": "",
+      "Command": "ALTER TABLE SalesManagement.OrderHeaders ADD IsTransfered bit;"
+    }
+
   }
 
 }
