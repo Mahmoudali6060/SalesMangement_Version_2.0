@@ -44,6 +44,11 @@ namespace SalesManagementApp
             });
 
             services.AddMvc();
+            //Set Session Timeout. Default is 20 minutes.
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(300);
+            });
             // Add the whole configuration object here.
             services.AddSingleton<IConfiguration>(Configuration);
 
