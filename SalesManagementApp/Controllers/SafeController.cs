@@ -5,6 +5,9 @@ using Safes;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Classes;
 using Shared.Enums;
+using System.Collections.Generic;
+using System.Linq;
+using Safes.DTOs;
 
 namespace SalesManagementApp.Controllers
 {
@@ -61,6 +64,13 @@ namespace SalesManagementApp.Controllers
             return Json(_safeOperationsRepo.Add(safe));
         }
 
+        [HttpPost]
+        public JsonResult SaveRange(SafeDTO safeDTO)
+        {
+            return Json(_safeOperationsRepo.SaveRange(safeDTO.List.ToList()));
+        }
+
+        
         public JsonResult Update([FromBody] Safe safe)
         {
             return Json(_safeOperationsRepo.Update(safe));

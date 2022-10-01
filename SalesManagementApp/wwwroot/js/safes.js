@@ -19,6 +19,16 @@ var recordsTotal_Seller;
 var currentPage_Client = 1;
 var recordsTotal_Client;
 
+clientSafeRowNum = 1;
+clientSafeNumList = [];//to fill rowIds list
+
+sellerSafeRowNum = 1;
+sellerSafeNumList = [];
+
+var sellersSafeList = [];
+var clientsSafeList = [];
+
+
 function setAccountTypeList() {
     this.sellers = getAllSellers();
     this.farmers = getAllFarmers();
@@ -141,7 +151,7 @@ function getAll() {
 
 }
 
-function getAllClientsSellers(){
+function getAllClientsSellers() {
     getAllSafe_Clients();
     getAllSafe_Sellers();
 
@@ -153,7 +163,7 @@ function getAllSafe_Clients() {
     let dateTo = $('#DateTo').val();
 
     var clientsSafeDto = getPagedSafes(this.currentPage_Client, dateFrom, dateTo, 1);
-    var clientsSafeList = clientsSafeDto.List;
+    clientsSafeList = clientsSafeDto.List;
     prepareClientsPagination(clientsSafeDto);
     if (clientsSafeList && clientsSafeList.length > 0) {
         var html_safe_clients = '';
@@ -170,6 +180,11 @@ function getAllSafe_Clients() {
             i++;
         });
         $('.tbody_safe_clientsList').html(html_safe_clients);
+        clientSafeRowNum = i;
+
+    }
+    else {
+        $('.tbody_safe_clientsList').html('');
     }
 }
 
@@ -180,7 +195,7 @@ function getAllSafe_Sellers() {
 
 
     var sellersSafeDto = getPagedSafes(this.currentPage_Seller, dateFrom, dateTo, 2);
-    var sellersSafeList = sellersSafeDto.List;
+    sellersSafeList = sellersSafeDto.List;
     prepareSellersPagination(sellersSafeDto);
 
     if (sellersSafeList && sellersSafeList.length > 0) {
@@ -199,6 +214,10 @@ function getAllSafe_Sellers() {
             i++;
         });
         $('.tbody_sellersSafeList').html(html_safe_sellers);
+
+    }
+    else {
+        $('.tbody_sellersSafeList').html('');
     }
 
 
@@ -336,9 +355,10 @@ function update() {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (result) {
+            toastr.success('تم التعديل بنجاح');
             $('#formModal').modal('hide');
             clearData();
-            getAll();
+            //getAll();
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -590,7 +610,164 @@ function preparePagination(safeDto) {
 ////////////////////////////End Helper Methods
 
 ////////////////////////////>>>>>Clients/Sellers Details
+//Adding Row in Client Safe 
+function addClientSafeRow() {
+    clientSafeNumList.push({ row: clientSafeRowNum });
+    var html = '';
+    html += '<tr id="clientSafeRowNum' + clientSafeRowNum + '">';
+    html += '<td>' + clientSafeRowNum + '</td>';
+    html += '<td>' + '<input tabIndex="' + clientSafeRowNum + '" class="form-control arrow-togglable" type="number" id="ClientAmount' + clientSafeRowNum + '" >' + '</td>';
+    html += '<td>' + '<select  tabIndex="' + clientSafeRowNum + '" class="form-control arrow-togglable"  id="Clients' + clientSafeRowNum + '"> </select>' + '</td>';
+    html += '<td>' + '<input tabIndex="' + clientSafeRowNum + '" class="form-control arrow-togglable" type="Date" id="ClientDate' + clientSafeRowNum + '" >' + '</td>';
+    html += '<td><i  style="color:red;cursor:pointer" class="icon-trash"  onclick="removeClientSafeRow(' + clientSafeRowNum + ')"></i>  </td>';
+    html += '</tr>';
+    $('.tbody_safe_clientsList').append(html); // Append new row of selected product
+    fillClientsDropDownList(clientSafeRowNum);
+    clientSafeRowNum += 1;
+}
+//Adding All Clients to drop down list
+function fillClientsDropDownList(clientSafeRowNum) {
+    clients = farmers;
+    var options = ''; //For clients dropdownList
+    var i = 1;
+    options += '<option>اختر اسم المزارع</option>';
+    $.each(clients, function (key, item) {
+        options += '<option value="' + item.Id + '">' + item.Name + '</option>';//Add Option to clients DropDownList
+        i++;
+    });
+    $('#Clients' + clientSafeRowNum + '').html(options);
 
+}
+
+function removeClientSafeRow(rowNum) {
+    clientSafeNumList = clientSafeNumList.filter(x => x.row != rowNum);
+    $('table#safes-table-client tr#clientSafeRowNum' + rowNum + '').remove();
+}
+
+function prepareClientSafeList() {
+    var clientsSafeList = [];
+    for (let i of clientSafeNumList) {
+        let entity = {
+            AccountId: $('#Clients'+i.row).val()  ,
+            AccountTypeId: 1,
+            Date: $('#ClientDate' + i.row).val(),
+            HeaderId: 0,
+            Id: 0,
+            Incoming: 0,
+            IsHidden: false,
+            IsTransfered: true,
+            Notes: null,
+            OrderId: 0,
+            OtherAccountName: null,
+            Outcoming: $('#ClientAmount' + i.row).val()
+        }
+        clientsSafeList.push(entity);
+    }
+    return clientsSafeList;
+}
+
+function saveClientSafeRange() {
+    disableButton('btnSaveClientSafeRange');
+    var clientsSafeList=prepareClientSafeList();
+    var safeDTO = {};
+    safeDTO.List = clientsSafeList
+    $.ajax({
+        url: "/Safes/SaveRange",
+        data: safeDTO,
+        type: "POST",
+
+        success: function (result) {
+            //$('#formModal').modal('hide');
+            toastr.success('تم الحفظ بنجاح');
+            enableButton('btnSaveClientSafeRange');
+            //clearData();
+            //getAll();
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
+
+
+///////Seller Safe
+function addSellerSafeRow() {
+    sellerSafeNumList.push({ row: sellerSafeRowNum });
+    var html = '';
+    html += '<tr id="sellerSafeRowNum' + sellerSafeRowNum + '">';
+    html += '<td>' + sellerSafeRowNum + '</td>';
+    html += '<td>' + '<input tabIndex="' + sellerSafeRowNum + '" class="form-control arrow-togglable" type="number" id="SellerAmount' + sellerSafeRowNum + '" >' + '</td>';
+    html += '<td>' + '<select  tabIndex="' + sellerSafeRowNum + '" class="form-control arrow-togglable"  id="Sellers' + sellerSafeRowNum + '"> </select>' + '</td>';
+    html += '<td>' + '<input tabIndex="' + sellerSafeRowNum + '" class="form-control arrow-togglable" type="Date" id="SellerDate' + sellerSafeRowNum + '" >' + '</td>';
+    html += '<td><i  style="color:red;cursor:pointer" class="icon-trash"  onclick="removeSellerSafeRow(' + sellerSafeRowNum + ')"></i>  </td>';
+    html += '</tr>';
+    $('.tbody_sellersSafeList').append(html); // Append new row of selected product
+    fillSellersDropDownListForAddRange(sellerSafeRowNum);
+    sellerSafeRowNum += 1;
+}
+//Adding All Sellers to drop down list
+function fillSellersDropDownListForAddRange(sellerSafeRowNum) {
+    sellers = sellers;
+    var options = ''; //For sellers dropdownList
+    var i = 1;
+    options += '<option>اختر اسم التاجر</option>';
+    $.each(sellers, function (key, item) {
+        options += '<option value="' + item.Id + '">' + item.Name + '</option>';//Add Option to sellers DropDownList
+        i++;
+    });
+    $('#Sellers' + sellerSafeRowNum + '').html(options);
+
+}
+
+function removeSellerSafeRow(rowNum) {
+    sellerSafeNumList = sellerSafeNumList.filter(x => x.row != rowNum);
+    $('table#safes-table-seller tr#sellerSafeRowNum' + rowNum + '').remove();
+}
+
+function prepareSellerSafeList() {
+    var sellersSafeList = [];
+    for (let i of sellerSafeNumList) {
+        let entity = {
+            AccountId: $('#Sellers' + i.row).val(),
+            AccountTypeId: 2,
+            Date: $('#SellerDate' + i.row).val(),
+            HeaderId: 0,
+            Id: 0,
+            Incoming: $('#SellerAmount' + i.row).val(),
+            IsHidden: false,
+            IsTransfered: true,
+            Notes: null,
+            OrderId: 0,
+            OtherAccountName: null,
+            Outcoming: 0
+        }
+        sellersSafeList.push(entity);
+    }
+    return sellersSafeList;
+}
+
+function saveSellerSafeRange() {
+    disableButton('btnSaveSellerSafeRange');
+    var sellersSafeList = prepareSellerSafeList();
+    var safeDTO = {};
+    safeDTO.List = sellersSafeList
+    $.ajax({
+        url: "/Safes/SaveRange",
+        data: safeDTO,
+        type: "POST",
+
+        success: function (result) {
+            //$('#formModal').modal('hide');
+            toastr.success('تم الحفظ بنجاح');
+            enableButton('btnSaveSellerSafeRange');
+            //clearData();
+            //getAll();
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+}
 
 ////////////////////////////>>>>>End Clients/Sellers Details
 

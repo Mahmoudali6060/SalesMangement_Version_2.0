@@ -15,6 +15,8 @@ namespace Safes
         SafeDTO GetAll(int currentPage, string dateFrom,string dateTo,AccountTypesEnum accountTypesId);
         Safe GetById(long id);
         long Add(Safe entity);
+        bool SaveRange(List<Safe> safeList);
+
         long Add(Safe entity, EntitiesDbContext context);
         bool Update(Safe entity);
         bool Delete(long id);

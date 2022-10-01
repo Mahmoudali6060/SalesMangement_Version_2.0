@@ -36,7 +36,7 @@ namespace Safes
                 safeList = _safeEntity
                 .Where(x => x.IsHidden == false
                 && x.Date.Date >= DateTime.Parse(dateFrom).Date && x.Date.Date <= DateTime.Parse(dateTo).Date
-                &&(accountTypesId>0 &&x.AccountTypeId==(int) accountTypesId)
+                && (accountTypesId > 0 && x.AccountTypeId == (int)accountTypesId)
                 )
                 .OrderByDescending(x => x.Id)
                 .AsEnumerable();
@@ -69,6 +69,24 @@ namespace Safes
             _context.SaveChanges();
             return safe.Id;
         }
+
+        public bool SaveRange(List<Safe> safeList)
+        {
+            foreach (var item in safeList)
+            {
+                if (item.Id > 0)
+                {
+                    _context.Entry(item).State = EntityState.Modified;
+                }
+                else
+                {
+                    _context.Entry(item).State = EntityState.Added;
+                }
+            }
+            _context.SaveChanges();
+            return true;
+        }
+
         public long Add(Safe safe, EntitiesDbContext context)
         {
             context.Entry(safe).State = EntityState.Added;

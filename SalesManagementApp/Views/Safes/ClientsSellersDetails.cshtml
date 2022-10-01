@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "العملاء والموردين";
 }
 
@@ -44,14 +43,14 @@
             <div class="row">
                 <div id="admin" class="col-lg-6">
                     <div class="card material-table">
-                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="addSafe_Seller();"> سجل جديد</button>
+                        @*<button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="addSafe_Seller();"> سجل جديد</button>*@
                         @*<div class="row">
-                            <div class="col-lg-6">
-                                <input type="text" class="form-control col-lg-6" id="search" name="search" placeholder="ادخل كلمة البحث" />
-                            </div>
-                            <div class="col-lg-3">
-                                <input type="button" class="btn btn-info" onclick="filter();" value="بحث" />
-                            </div>
+                        <div class="col-lg-6">
+                        <input type="text" class="form-control col-lg-6" id="search" name="search" placeholder="ادخل كلمة البحث" />
+                        </div>
+                        <div class="col-lg-3">
+                        <input type="button" class="btn btn-info" onclick="filter();" value="بحث" />
+                        </div>
                         </div>*@
 
                         <div class="row">
@@ -60,7 +59,7 @@
                             </div>
                         </div>
 
-                        <table id="safes-table" class="table table-bordered table-hover">
+                        <table id="safes-table-seller"  class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>م </th>
@@ -73,6 +72,17 @@
                             </thead>
                             <tbody class="tbody_sellersSafeList"></tbody>
                         </table>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <i class="icon-plus-circle" onclick="addSellerSafeRow()">اضافة صف جديد</i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <button type="button" style="margin:10px;" class="btn btn-info" id="btnSaveSellerSafeRange" onclick="saveSellerSafeRange();"> حفظ الكل </button>
+                            </div>
+                        </div>
+                        <br />
                         <div class="row">
                             <div class="col-lg-8">
                                 <button onclick="next_Seller()">التالي</button>
@@ -89,7 +99,7 @@
                 </div>
                 <div id="admin" class="col-lg-6">
                     <div class="card material-table">
-                        <button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="addSafe_Client();"> سجل جديد</button>
+                        @*<button type="button" style="margin:10px;" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="addSafe_Client();"> سجل جديد</button>*@
                         @*<div class="row">
                         <div class="col-lg-6">
                         <input type="text" class="form-control col-lg-6" id="search" name="search" placeholder="ادخل كلمة البحث" />
@@ -104,7 +114,7 @@
                             </div>
                         </div>
 
-                        <table id="safes-table" class="table table-bordered table-hover">
+                        <table id="safes-table-client" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>م </th>
@@ -116,6 +126,17 @@
                             </thead>
                             <tbody class="tbody_safe_clientsList"></tbody>
                         </table>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <i class="icon-plus-circle" onclick="addClientSafeRow()">اضافة صف جديد</i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <button type="button" style="margin:10px;" class="btn btn-info" id="btnSaveClientSafeRange" onclick="saveClientSafeRange();"> حفظ الكل </button>
+                            </div>
+                        </div>
+                        <br />
                         <div class="row">
                             <div class="col-lg-8">
                                 <button onclick="next_Client()">التالي</button>
@@ -147,7 +168,7 @@
             <div class="modal-body">
                 <form action="" method="post">
                     <div class="form-group">
-                        <input type="hidden" class="form-control" id="Id" placeholder="Id"  />
+                        <input type="hidden" class="form-control" id="Id" placeholder="Id" />
                     </div>
                     <div class="form-group">
                         <label for="Date">التاريخ </label>
@@ -184,7 +205,7 @@
 
                     <div class="form-group Outcoming">
                         <label for="Outcoming">المبلغ </label>
-                    <input type="number" class="form-control" id="Outcoming" placeholder="المبلغ الصادر الى المزارع" />
+                        <input type="number" class="form-control" id="Outcoming" placeholder="المبلغ الصادر الى المزارع" />
                     </div>
                     <div class="form-group Incoming">
                         <label for="Incoming">المبلغ</label>
