@@ -1,6 +1,8 @@
 ﻿$(document).ready(function () {
     //$('#TransactionDate').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
     //search();//Load All Dashboard Data
+    $('#DateFrom').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
+    $('#DateTo').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
 });
 
 function search() {

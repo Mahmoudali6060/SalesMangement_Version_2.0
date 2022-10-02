@@ -1,5 +1,8 @@
 ﻿$(document).ready(function () {
     setFarmerData();
+    $('#DateFrom').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
+    $('#DateTo').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
+
     //getAll(farmerId);
 });
 

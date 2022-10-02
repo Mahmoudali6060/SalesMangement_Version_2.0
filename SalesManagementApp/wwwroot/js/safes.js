@@ -3,6 +3,8 @@
     setAccountTypeList();
     turnOnTab('formModal');//to allow tab in form modal >>>is called From shared.js
     $('#Date').val(getLocalDateForInput(new Date().toUTCString()));
+    $('#DateFrom').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
+    $('#DateTo').val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
     hideAllDropDownLists();
 
 });
@@ -623,6 +625,7 @@ function addClientSafeRow() {
     html += '</tr>';
     $('.tbody_safe_clientsList').append(html); // Append new row of selected product
     fillClientsDropDownList(clientSafeRowNum);
+    $('#ClientDate' + clientSafeRowNum).val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
     clientSafeRowNum += 1;
 }
 //Adding All Clients to drop down list
@@ -703,6 +706,7 @@ function addSellerSafeRow() {
     html += '</tr>';
     $('.tbody_sellersSafeList').append(html); // Append new row of selected product
     fillSellersDropDownListForAddRange(sellerSafeRowNum);
+    $('#SellerDate' + sellerSafeRowNum).val(getLocalDateForInput(new Date().toUTCString()));//Get Today in Date picker
     sellerSafeRowNum += 1;
 }
 //Adding All Sellers to drop down list
