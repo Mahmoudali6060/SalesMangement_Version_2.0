@@ -42,7 +42,7 @@ namespace Farmers
             return new FarmListDTO()
             {
                 Total = list.Count(),
-                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).OrderBy(x=>x.Name)
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).OrderBy(x => x.Name)
             };
         }
         public Farmer GetById(long id)
@@ -83,5 +83,13 @@ namespace Farmers
         }
 
 
+        public bool UpdateBalance(long farmerId, decimal balance, EntitiesDbContext context)
+        {
+            var exsitedFarmer = GetById(farmerId);
+            exsitedFarmer.Balance += balance;
+            context.Entry(exsitedFarmer).State = EntityState.Modified;
+            context.SaveChanges();
+            return true;
+        }
     }
 }

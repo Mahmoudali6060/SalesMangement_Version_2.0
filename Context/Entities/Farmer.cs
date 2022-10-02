@@ -10,7 +10,7 @@ namespace Database.Entities
         public string Phone { get; set; }
         public string Address { get; set; }
         public string Notes { get; set; }
-        //public decimal Balance { get; set; }
+        public decimal Balance { get; set; }
         public virtual ICollection<OrderHeader> OrderHeader { get; set; }
         public virtual ICollection<PurechasesHeader> PurechasesHeader { get; set; }
 

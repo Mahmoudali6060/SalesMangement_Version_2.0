@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Database;
 using Database.Entities;
+using Farmers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Order.DTOs;
@@ -13,6 +14,7 @@ using Order.Models;
 using Purechase;
 using Safes;
 using Salesinvoice;
+using Sellers;
 using Shared.Classes;
 using Shared.Enums;
 
@@ -26,9 +28,11 @@ namespace Order.DataServiceLayer
         private ISalesinvoicesOperationsRepo _salesinvoicesOperationsRepo;
         private IOrder_PurechaseOperationsRepo _order_PurechaseOperationsRepo;
         private ISafeOperationsRepo _safeOperationsRepo;
+        private ISellerOperationsRepo _sellerOperationsRepo;
+        private IFarmerOperationsRepo _farmerOperationsRepo;
         private IServiceProvider _serviceProvider;
         private IConfiguration _configuration;
-        public OrderOperationsDSL(IOrderHeaderOperationsRepo orderHeaderOperationsRepo, IOrderDetailsOperationsRepo orderDetailsOperationsRepo, IPurechasesOperationsRepo purechasesOperationsRepo, ISalesinvoicesOperationsRepo salesinvoicesOperationsRepo, IOrder_PurechaseOperationsRepo order_PurechaseOperationsRepo, ISafeOperationsRepo safeOperationsRepo, IServiceProvider serviceProvider, IConfiguration configuration)
+        public OrderOperationsDSL(IOrderHeaderOperationsRepo orderHeaderOperationsRepo, IOrderDetailsOperationsRepo orderDetailsOperationsRepo, IPurechasesOperationsRepo purechasesOperationsRepo, ISalesinvoicesOperationsRepo salesinvoicesOperationsRepo, IOrder_PurechaseOperationsRepo order_PurechaseOperationsRepo, ISafeOperationsRepo safeOperationsRepo, IServiceProvider serviceProvider, ISellerOperationsRepo sellerOperationsRepo, IFarmerOperationsRepo farmerOperationsRepo, IConfiguration configuration)
         {
             _orderHeaderOperationsRepo = orderHeaderOperationsRepo;
             _orderDetailsOperationsRepo = orderDetailsOperationsRepo;
@@ -37,6 +41,8 @@ namespace Order.DataServiceLayer
             _order_PurechaseOperationsRepo = order_PurechaseOperationsRepo;
             _safeOperationsRepo = safeOperationsRepo;
             _serviceProvider = serviceProvider;
+            _sellerOperationsRepo = sellerOperationsRepo;
+            _farmerOperationsRepo = farmerOperationsRepo;
             _configuration = configuration;
         }
 

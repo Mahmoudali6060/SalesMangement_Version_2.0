@@ -5,10 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Client\Farmers.csproj" />
     <ProjectReference Include="..\Context\Database.csproj" />
     <ProjectReference Include="..\Purechase\Purechase.csproj" />
     <ProjectReference Include="..\Safes\Safes.csproj" />
     <ProjectReference Include="..\Salesinvoice\Salesinvoice.csproj" />
+    <ProjectReference Include="..\Seller\Sellers.csproj" />
   </ItemGroup>
 
 </Project>

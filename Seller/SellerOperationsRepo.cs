@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace Sellers
 {
@@ -74,6 +75,15 @@ namespace Sellers
             Seller seller = GetById(id);
             _sellerEntity.Remove(seller);
             _context.SaveChanges();
+            return true;
+        }
+
+        public bool UpdateBalance(long sellerId, decimal balance, EntitiesDbContext context)
+        {
+            var exsitedSeller = GetById(sellerId);
+            exsitedSeller.Balance += balance;
+            context.Entry(exsitedSeller).State = EntityState.Modified;
+            context.SaveChanges();
             return true;
         }
     }

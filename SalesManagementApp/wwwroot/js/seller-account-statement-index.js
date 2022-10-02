@@ -214,13 +214,13 @@ function getReportContent(safeList) {
 }
 
 function prepareReportFooter(safeList) {
-    var totalIncoming = 0;
-    var totalOutcoming = 0;
+    var totalIncoming = parseFloat($("#incomingTotal").text());
+    var totalOutcoming = parseFloat($("#outcomingTotal").text());
 
-    for (let item of safeList) {
-        totalIncoming += Math.ceil(item.Incoming);
-        totalOutcoming += Math.ceil(item.Outcoming);
-    }
+    //for (let item of safeList) {
+    //    totalIncoming += Math.ceil(item.Incoming);
+    //    totalOutcoming += Math.ceil(item.Outcoming);
+    //}
     var balance = totalIncoming - totalOutcoming;
     var description;
     if (balance > 0) {

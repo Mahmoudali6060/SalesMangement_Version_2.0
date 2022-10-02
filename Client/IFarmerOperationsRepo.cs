@@ -1,4 +1,5 @@
-﻿using Database.Entities;
+﻿using Database;
+using Database.Entities;
 using Farmers.DTOs;
 using Shared.IRepository;
 using System;
@@ -15,5 +16,7 @@ namespace Farmers
         long Add(Farmer entity);
         bool Update(Farmer entity);
         bool Delete(long id);
+        bool UpdateBalance(long farmerId, decimal balance, EntitiesDbContext context);
+
     }
 }

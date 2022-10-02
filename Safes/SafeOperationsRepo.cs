@@ -199,15 +199,17 @@ namespace Safes
                       .OrderBy(x => x.Date);
             }
 
+            var allSafes = _safeEntity
+                        .Where(s => s.IsTransfered == true && s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum);
             return new SafeDTO()
             {
-                Total = _safeEntity.Where(s => s.IsTransfered == true && s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).Count(),
+                Total = safes.Count(),
                 List = safes
                 .Skip((currentPage - 1) * PageSettings.PageSize)
                 .Take(PageSettings.PageSize)
                .AsEnumerable(),
-                TotalIncoming = safes.Sum(x => Math.Ceiling(x.Incoming)),
-                TotalOutcoming = safes.Sum(x => Math.Ceiling(x.Outcoming))
+                TotalIncoming = allSafes.Sum(x => Math.Ceiling(x.Incoming)),
+                TotalOutcoming = allSafes.Sum(x => Math.Ceiling(x.Outcoming))
             };
         }
 

@@ -10,13 +10,27 @@
       "Name": "Add IsTransfer Col to PurechasesHeaders",
       "Description": "",
       "Command": "ALTER TABLE SalesManagement.PurechasesHeaders ADD IsTransfered bit;"
-    }
+    },
 
     {
       "Name": "Add IsTransfer Col to OrderHeader",
       "Description": "",
       "Command": "ALTER TABLE SalesManagement.OrderHeaders ADD IsTransfered bit;"
+    },
+
+    {
+      "Name": "Add Balance Col to Farmer table",
+      "Description": "",
+      "Command": "ALTER TABLE SalesManagement.Farmers ADD Balance decimal Not Null CONSTRAINT df_Balance_Farmer DEFAULT 0 WITH VALUES"
+    },
+    {
+      "Name": "Add Balance Col to Sellet table",
+      "Description": "",
+      "Command": "ALTER TABLE SalesManagement.Sellers ADD Balance decimal Not Null CONSTRAINT df_Balance_Seller DEFAULT 0 WITH VALUES"
     }
+
+
+
 
   }
 
