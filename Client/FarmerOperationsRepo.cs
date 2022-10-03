@@ -7,6 +7,7 @@ using Database.Entities;
 using Farmers.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Safes;
+using Salesinvoice;
 using Shared.Enums;
 
 namespace Farmers
@@ -16,10 +17,13 @@ namespace Farmers
         private EntitiesDbContext _context;
         private DbSet<Farmer> _farmerEntity;
         private readonly ISafeOperationsRepo _safeOperationsRepo;
-        public FarmerOperationsRepo(EntitiesDbContext context, ISafeOperationsRepo safeOperationsRepo)
+        private ISalesinvoicesOperationsRepo _salesinvoicesOperationsRepo;
+
+        public FarmerOperationsRepo(EntitiesDbContext context, ISafeOperationsRepo safeOperationsRepo, ISalesinvoicesOperationsRepo salesinvoicesOperationsRepo)
         {
             _context = context;
             _farmerEntity = context.Set<Farmer>();
+            _salesinvoicesOperationsRepo = salesinvoicesOperationsRepo;
             _safeOperationsRepo = safeOperationsRepo;
         }
 
@@ -75,7 +79,8 @@ namespace Farmers
 
         public bool Delete(long id)
         {
-            _safeOperationsRepo.DeleteByAccountId(id, AccountTypesEnum.Clients);
+            _safeOperationsRepo.DeleteByAccountId(id, AccountTypesEnum.Clients, _context);
+            _salesinvoicesOperationsRepo.DeleteByFarmerId(id, _context);
             Farmer farmer = GetById(id);
             _farmerEntity.Remove(farmer);
             _context.SaveChanges();

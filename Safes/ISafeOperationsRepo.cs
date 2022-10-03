@@ -27,6 +27,8 @@ namespace Safes
         bool UpdateByHeaderId(long header, decimal total, AccountTypesEnum accountTypesEnum, EntitiesDbContext context);
         bool DeleteByOrderId(long orderId, EntitiesDbContext context);
         bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
+        bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum,EntitiesDbContext context);
+
         BalanceDTO GetBalanceByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
         bool TransferToSafe(long headerId, decimal total, AccountTypesEnum accountTypesEnum, EntitiesDbContext context);
 

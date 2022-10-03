@@ -298,7 +298,7 @@ function fillDatabaseEntity() {
 function loadDatabaseEntity() {
     $('#ConnectionString').val("Server =.\\SQLEXPRESS; Database = SalesManagement; Trusted_Connection = True;");
     $('#DatabaseName').val("SalesManagement");
-    $("#FilePath").val("E://Backup_Dabase");
+    $("#FilePath").val("D://Backup_Dabase");
 }
 
 

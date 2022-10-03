@@ -148,7 +148,32 @@ namespace Salesinvoice
                 return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.SalesinvoicesDate.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderByDescending(x => x.Id);
             return _salesinvoicesHeaderEntity.Include("SalesinvoicesDetialsList").AsEnumerable().Where(x => x.SalesinvoicesDate.Date >= dateFrom.Value.Date && x.SalesinvoicesDate.Date <= dateTo.Value.Date).OrderByDescending(x => x.Id);
         }
+
+        public bool DeleteByFarmerId(long farmerId, EntitiesDbContext context)
+        {
+            IEnumerable<SalesinvoicesDetials> SalesinvoicesDetialsList = context.SalesinvoicesDetials.Where(x => x.FarmerId == farmerId);
+            foreach (var item in SalesinvoicesDetialsList)
+            {
+                context.SalesinvoicesDetials.Remove(item);
+                RemoveEmptySalesInvoiceHeader(item.SalesinvoicesHeaderId, context);
+                context.SaveChanges();
+            }
+
+            return true;
+        }
         #region Helper
+        private bool RemoveEmptySalesInvoiceHeader(long salesInvoiceHeaderId, EntitiesDbContext context)
+        {
+            IEnumerable<SalesinvoicesDetials> salesInvoiceDetails = context.SalesinvoicesDetials.Where(x => x.SalesinvoicesHeaderId == salesInvoiceHeaderId);
+            if (salesInvoiceDetails.Count() == 1)
+            {
+                var salesInvoiceHeader = context.SalesinvoicesHeaders.SingleOrDefault(x => x.Id == salesInvoiceHeaderId);
+                context.SalesinvoicesHeaders.Remove(salesInvoiceHeader);
+                return true;
+            }
+            return true;
+        }
+
         private IEnumerable<SalesinvoicesDetials> SetSalesinvoicesHeaderId(SalesinvoicesHeader salesinvoicesHeader, IEnumerable<SalesinvoicesDetials> salesinvoicesDetails)
         {
             foreach (var item in salesinvoicesDetails)

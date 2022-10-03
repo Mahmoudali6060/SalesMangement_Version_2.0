@@ -224,6 +224,18 @@ namespace Safes
             }
             return false;
         }
+        public bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum, EntitiesDbContext context)
+        {
+            List<Safe> safes = context.Safes.Where(x => x.AccountId == accountId && x.AccountTypeId == (int)accountTypesEnum).ToList();
+            if (safes != null)
+            {
+                context.Safes.RemoveRange(safes);
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
 
         public BalanceDTO GetBalanceByAccountId(long accountId, AccountTypesEnum accountTypesEnum)
         {
