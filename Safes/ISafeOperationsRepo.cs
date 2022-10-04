@@ -30,7 +30,7 @@ namespace Safes
         bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum,EntitiesDbContext context);
 
         BalanceDTO GetBalanceByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
-        bool TransferToSafe(long headerId, decimal total, AccountTypesEnum accountTypesEnum, EntitiesDbContext context);
+        bool TransferToSafe(PurechasesHeader purechasesHeader, AccountTypesEnum accountTypesEnum, EntitiesDbContext context);
 
     }
 }

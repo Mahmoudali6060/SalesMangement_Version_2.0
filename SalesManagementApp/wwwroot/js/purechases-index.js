@@ -9,7 +9,7 @@ var total = 0;
 var selectedPurechaseHeader;
 var currentPage = 1;
 var recordsTotal;
-
+var transferedText = ''
 
 //>>>CRUD Operations Methods
 //Loading Purechase Header Data
@@ -114,7 +114,7 @@ function getPurechaseDetails(id) {
     headerId = id;
     selectedPurechaseHeader = purechaseHeaders.find(x => x.Id == id);
     var balance = getBalanceByAccountId(selectedPurechaseHeader.FarmerId, 1);
-
+    (selectedPurechaseHeader.IsTransfered) ? transferedText = 'رصـــــــد' : transferedText = '';
     var html = '';
     var totalQuantity = 0;
     var totalWeight = 0;
@@ -276,6 +276,7 @@ function discount() {
         toastr.warning('هذه الفاتورة تم تخصيمها من قبل', 'تنبيه !')
     }
     selectedPurechaseHeader.IsTransfered = true;
+    transferedText = 'رصـــــــد'
     printReport()
 }
 
@@ -284,7 +285,7 @@ function printReport() {
 
     updateInPrinting();
     setIsPrintedClass();
-   
+
     var reportHeader = prepareReportHeader();
     var reportContent = prepareReportContent();
     var reportFooter = prepareReportFooter();
@@ -418,12 +419,17 @@ function prepareReportFooter() {
                                                 <td>`+ convertToIndiaNumbers($("#TotalAfterDiscount").text()) + `</td>
                                             </tr>
                                         </table>
-                                    </td>
+                                    </td>`+
 
+        `<td style="width:20%;border:none;">
+                                        <table>
+                                            <tr >
+                                                <td style="border: none;font-weight: bold; font-size: 25px;">`+ transferedText + ` </td>
+                                            </tr>
+                                        </table>
+                                    </td>`
 
-                                   
-
-                                    <td style="width:30%;border:none;">
+        + `<td style="width:30%;border:none;">
                                         <table>
                                             <tr>
                                                 <td>العمولة</td>

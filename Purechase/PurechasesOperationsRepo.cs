@@ -128,15 +128,16 @@ namespace Purechase
         {
             var todayPurchases = GetAllDaily(dateFrom, dateTo);
             var todaySalesinvoice = _salesinvoicesOperationsRepo.GetAllDaily(dateFrom, dateTo);
-            var safeList = GetAllSafes(dateFrom,dateTo);
+            var safeList = GetAllSafes(dateFrom, dateTo);
 
             decimal total = CalculateTotalPurchase(todayPurchases);
             decimal totalSalesinvoice = CalculateTotalSalesinvoice(todaySalesinvoice);
 
             DashboardDTO dashboardDTO = new DashboardDTO()
             {
-                //TotalPurchase = todayPurchases.Sum(x => Math.Ceiling(x.Total)),// + todayPurchases.Sum(x => x.Commission)+todayPurchases.Sum(x => x.Gift)+ todayPurchases.Sum(x => x.Descent)),
-                TotalPurchase = total,
+                //الاجمالي قبل الخصم
+                TotalPurchase = todayPurchases.Sum(x => Math.Ceiling(x.Total)) + todayPurchases.Sum(x => x.Commission) + todayPurchases.Sum(x => x.Gift) + todayPurchases.Sum(x => x.Descent) + todayPurchases.Sum(x => x.Expense.Value),
+                //TotalPurchase = total,//صافي الفاتورة
                 TotalCommission = (todayPurchases.Sum(x => Math.Ceiling(x.Commission))),
                 TotalGift = todayPurchases.Sum(x => Math.Ceiling(x.Gift)),
                 TotalDescent = todayPurchases.Sum(x => Math.Ceiling(x.Descent)),
@@ -155,6 +156,7 @@ namespace Purechase
 
         private decimal CalculateTotalPurchase(IEnumerable<PurechasesHeader> todayPurchases)
         {
+            //صافي الفاتورة
             decimal total = 0;
             foreach (var purchase in todayPurchases)
             {
@@ -229,7 +231,7 @@ namespace Purechase
 
             _context.Entry(purechaseHeader).State = EntityState.Modified;
             _context.SaveChanges();
-            _safeOperationsRepo.TransferToSafe(entity.Id, entity.Total, AccountTypesEnum.Clients, _context);
+            _safeOperationsRepo.TransferToSafe(entity, AccountTypesEnum.Clients, _context);
             return true;
         }
         #endregion

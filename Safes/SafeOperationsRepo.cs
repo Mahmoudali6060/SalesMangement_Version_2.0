@@ -155,15 +155,15 @@ namespace Safes
             return false;
         }
 
-        public bool TransferToSafe(long headerId, decimal total, AccountTypesEnum accountTypesEnum, EntitiesDbContext context)
+        public bool TransferToSafe(PurechasesHeader purechasesHeader, AccountTypesEnum accountTypesEnum, EntitiesDbContext context)
         {
-            Safe safe = context.Safes.FirstOrDefault(x => x.HeaderId == headerId && x.AccountTypeId == (int)accountTypesEnum);
+            Safe safe = context.Safes.FirstOrDefault(x => x.HeaderId == purechasesHeader.Id && x.AccountTypeId == (int)accountTypesEnum);
             if (safe != null)
             {
-                if (accountTypesEnum == AccountTypesEnum.Sellers) safe.Outcoming = total;
-                else safe.Incoming = total;
+                if (accountTypesEnum == AccountTypesEnum.Sellers) safe.Outcoming = purechasesHeader.Total;
+                else safe.Incoming = purechasesHeader.Total;
 
-                safe.IsTransfered = true;
+                safe.IsTransfered = purechasesHeader.IsTransfered;
                 context.Safes.Update(safe);
                 context.SaveChanges();
                 return true;
