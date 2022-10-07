@@ -683,8 +683,7 @@ function saveClientSafeRange() {
             //$('#formModal').modal('hide');
             toastr.success('تم الحفظ بنجاح');
             enableButton('btnSaveClientSafeRange');
-            //clearData();
-            //getAll();
+            getAllClientsSellers();
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -761,11 +760,9 @@ function saveSellerSafeRange() {
         type: "POST",
 
         success: function (result) {
-            //$('#formModal').modal('hide');
             toastr.success('تم الحفظ بنجاح');
             enableButton('btnSaveSellerSafeRange');
-            //clearData();
-            //getAll();
+            getAllClientsSellers();
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
