@@ -31,6 +31,7 @@ namespace Safes
 
         BalanceDTO GetBalanceByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
         bool TransferToSafe(PurechasesHeader purechasesHeader, AccountTypesEnum accountTypesEnum, EntitiesDbContext context);
+        bool UpdateBySalesinvoiceHeaderId(long salesinvoiceHeaderId, decimal total, EntitiesDbContext context);
 
     }
 }

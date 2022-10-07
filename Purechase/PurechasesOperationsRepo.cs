@@ -103,7 +103,7 @@ namespace Purechase
             DeletePurchaseDetails(purechasesHeader.Id);
             SetPurechasesHeaderId(purechasesHeader.Id, purechasesHeader.PurechasesDetialsList);
             AddPurechasesDetials(purechasesHeader.PurechasesDetialsList, _context);
-            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id, purechasesHeader.Total, AccountTypesEnum.Clients);
+            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id, purechasesHeader.Total, AccountTypesEnum.Clients,_context);
             return true;
         }
         public bool Delete(long id, EntitiesDbContext context)

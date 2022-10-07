@@ -155,6 +155,19 @@ namespace Safes
             return false;
         }
 
+        public bool UpdateBySalesinvoiceHeaderId(long salesinvoiceHeaderId, decimal total, EntitiesDbContext context)
+        {
+            Safe safe = context.Safes.FirstOrDefault(x => x.HeaderId == salesinvoiceHeaderId && x.AccountTypeId == (int)AccountTypesEnum.Sellers);
+            if (safe != null)
+            {
+                safe.Outcoming = safe.Outcoming + total;
+                context.Safes.Update(safe);
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
         public bool TransferToSafe(PurechasesHeader purechasesHeader, AccountTypesEnum accountTypesEnum, EntitiesDbContext context)
         {
             Safe safe = context.Safes.FirstOrDefault(x => x.HeaderId == purechasesHeader.Id && x.AccountTypeId == (int)accountTypesEnum);

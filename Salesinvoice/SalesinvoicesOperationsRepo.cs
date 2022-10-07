@@ -139,6 +139,7 @@ namespace Salesinvoice
                     _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers, context);//Delete old record in safe related to this Seller
                     Delete(salesinvoicesHeader.Id, context);
                 }
+                
             }
         }
 

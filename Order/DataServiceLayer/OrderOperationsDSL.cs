@@ -192,9 +192,14 @@ namespace Order.DataServiceLayer
                     {
                         OrderHeader orderHeader = _orderHeaderOperationsRepo.GetById(id, context);
                         _purechasesOperationsRepo.DeleteRelatedPurechase(id, context);//Delete related purechase
-                        _safeOperationsRepo.DeleteByOrderId(id, context);//Delete from Safe
+                        //_safeOperationsRepo.DeleteByOrderId(id, context);//Delete from Safe
                         _orderHeaderOperationsRepo.DeleteRelatedOrderDetials(id, context);//Delelte related order details
-                        _salesinvoicesOperationsRepo.DeleteSalesinvoiceDetails(orderHeader, context);
+                        var invoiceDetails = _salesinvoicesOperationsRepo.DeleteSalesinvoiceDetails(orderHeader, context);
+                        if (invoiceDetails != null && invoiceDetails.Count() > 0)
+                        {
+                            var invoiceDetailsAmount = Math.Ceiling(invoiceDetails.Sum(x => (x.Weight * x.Price) + x.Byaa + x.Mashal));
+                            _safeOperationsRepo.UpdateBySalesinvoiceHeaderId(invoiceDetails[0].SalesinvoicesHeaderId, -invoiceDetailsAmount, context);
+                        }
                         _salesinvoicesOperationsRepo.DeleteSalesinvoiceHeader(orderHeader.Created, context);//Delete related Salesinvoice                      _orderHeaderOperationsRepo.Delete(id, context);
                         _orderHeaderOperationsRepo.Delete(id, context);//Delete OrderHeader
                         transaction.Commit();
@@ -336,7 +341,7 @@ namespace Order.DataServiceLayer
 
         }
 
-     
+
         private Safe PrepareSellerSafeEntity(SalesinvoicesHeader entity, decimal total, long orderId)
         {
             return new Safe()
