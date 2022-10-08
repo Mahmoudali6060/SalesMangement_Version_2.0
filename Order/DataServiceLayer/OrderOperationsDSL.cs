@@ -192,7 +192,6 @@ namespace Order.DataServiceLayer
                     {
                         OrderHeader orderHeader = _orderHeaderOperationsRepo.GetById(id, context);
                         _purechasesOperationsRepo.DeleteRelatedPurechase(id, context);//Delete related purechase
-                        //_safeOperationsRepo.DeleteByOrderId(id, context);//Delete from Safe
                         _orderHeaderOperationsRepo.DeleteRelatedOrderDetials(id, context);//Delelte related order details
                         var invoiceDetails = _salesinvoicesOperationsRepo.DeleteSalesinvoiceDetails(orderHeader, context);
                         if (invoiceDetails != null && invoiceDetails.Count() > 0)
