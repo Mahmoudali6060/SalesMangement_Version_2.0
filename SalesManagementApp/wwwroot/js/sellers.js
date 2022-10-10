@@ -21,9 +21,9 @@ function getAll() {
         html += '<td><input type="checkbox" name="cb' + i + '" onclick="selectRow(' + "'sellers-table'" + ',event,' + i + ')"></td>';
         html += '<td>' + i + '</td>';
         html += '<td>' + item.Name + '</td>';
+        html += '<td>' + item.Balance + '</td>';
         html += '<td>' + item.Address + '</td>';
         html += '<td>' + item.Phone + '</td>';
-        //html += '<td>' + item.OppeningBalance + '</td>';
         html += '<td>' + item.Notes + '</td>';
         html += '<td>';
         html += '<i style="color:red;cursor:pointer" class="icon-trash" onclick="delele(' + item.Id + ')"></i>';
@@ -83,6 +83,8 @@ function getById(id) {
     $('#formModal').modal('show');
     $('#btnUpdate').show();
     $('#btnAdd').hide();
+    $('#Balance_div').hide();
+
 }
 //Adding new entity
 function add() {
@@ -173,10 +175,11 @@ function clearData() {
     $('#Name').val("");
     $('#Address').val("");
     $('#Phone').val("");
-    //$('#OppenningBalance').val("");
+    $('#Balance').val("");
     $('#Notes').val("");
     $('#btnUpdate').hide();
     $('#btnAdd').show();
+    $('#Balance_div').show();
     $('#Name').css('border-color', 'lightgrey');
     $('#Address').css('border-color', 'lightgrey');
     $('#Mobile').css('border-color', 'lightgrey');
@@ -223,7 +226,7 @@ function fillEntity() {
         Name: $('#Name').val(),
         Address: $('#Address').val(),
         Phone: $('#Phone').val(),
-        //OppeningBalance: $('#OppeningBalance').val(),
+        Balance: $('#Balance').val(),
         Notes: $('#Notes').val(),
     };
     return entity;

@@ -2,6 +2,7 @@
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Safes;
+using Safes.DTOs;
 using Sellers.DTOs;
 using Shared.Enums;
 using System;
@@ -41,6 +42,11 @@ namespace Sellers
                 list = list.Where(x => x.Name.Contains(keyword) || x.Address.Contains(keyword));
             }
 
+            foreach (var seller in list)
+            {
+                BalanceDTO balanceDTO = _safeOperationsRepo.GetBalanceByAccountId(seller.Id, AccountTypesEnum.Sellers);
+                seller.Balance = balanceDTO.TotalOutcoming - balanceDTO.TotalIncoming;
+            }
             return new SellerListDTO()
             {
                 Total = list.Count(),
@@ -59,6 +65,8 @@ namespace Sellers
             seller.Id = 0;
             _context.Entry(seller).State = EntityState.Added;
             _context.SaveChanges();
+            Safe safe = PrepareSellerSafeEntity(seller);
+            _safeOperationsRepo.Add(safe);
             return seller.Id;
         }
 
@@ -86,5 +94,22 @@ namespace Sellers
             context.SaveChanges();
             return true;
         }
+
+        private Safe PrepareSellerSafeEntity(Seller entity)
+        {
+            return new Safe()
+            {
+                Date = DateTime.Now.Date,
+                AccountId = entity.Id,
+                AccountTypeId = (int)AccountTypesEnum.Sellers,
+                Incoming = entity.Balance,
+                Notes = $"رصيد افتتاحي",
+                IsHidden = false,
+                IsTransfered = true,
+                HeaderId = 0,
+                OrderId = 0
+            };
+        }
+
     }
 }

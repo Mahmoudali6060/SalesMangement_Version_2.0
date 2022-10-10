@@ -83,6 +83,9 @@ namespace Order.DataServiceLayer
                         Safe farmerSafe = PrepareFarmerSafeEntity(purechasesHeader, entity.OrderHeader.Id);//Prepare Safe for Client
                         _safeOperationsRepo.Add(farmerSafe, context);//Add Client Safe row
 
+                        //[3.2]Update Farmer Balance
+                        //_farmerOperationsRepo.UpdateBalance(entity.OrderHeader.FarmerId, -purechasesHeader.Total, context);
+
                         //[4]Save Order_Purechase
                         Order_Purechase order_Purechase = PrepareOrder_Purechase(entity.OrderHeader.Id, purechasesHeader.Id);
                         _order_PurechaseOperationsRepo.Add(order_Purechase, context);
@@ -95,6 +98,8 @@ namespace Order.DataServiceLayer
                             _safeOperationsRepo.DeleteByHeaderId(updatedSalesinvoicesHeader.Id, AccountTypesEnum.Sellers, context);//Delete old record in safe related to this Seller
                             var sellerSafe = PrepareSellerSafeEntity(updatedSalesinvoicesHeader, updatedSalesinvoicesHeader.Total, entity.OrderHeader.Id);
                             _safeOperationsRepo.Add(sellerSafe, context);
+                            //_sellerOperationsRepo.UpdateBalance(salesinvoicesHeader.SellerId, updatedSalesinvoicesHeader.Total, context);
+
                         }
                         transaction.Commit();
                         return true;

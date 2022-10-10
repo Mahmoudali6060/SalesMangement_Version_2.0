@@ -58,9 +58,9 @@ namespace Safes
         {
             if (string.IsNullOrWhiteSpace(dateFrom) && string.IsNullOrWhiteSpace(dateTo))
             {
-                return _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum).AsEnumerable();
+                return _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum && s.IsTransfered==true).AsEnumerable();
             }
-            return _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum && s.Date >= DateTime.Parse(dateFrom) && s.Date <= DateTime.Parse(dateTo)).AsEnumerable();
+            return _safeEntity.Where(s => s.AccountId == accountId && s.AccountTypeId == (int)accountTypesEnum && s.Date >= DateTime.Parse(dateFrom) && s.Date <= DateTime.Parse(dateTo) && s.IsTransfered == true).AsEnumerable();
         }
 
         public long Add(Safe safe)

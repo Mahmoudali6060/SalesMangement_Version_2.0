@@ -684,9 +684,11 @@ function saveClientSafeRange() {
             toastr.success('تم الحفظ بنجاح');
             enableButton('btnSaveClientSafeRange');
             getAllClientsSellers();
+            clientSafeNumList = [];
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
+            enableButton('btnSaveClientSafeRange');
         }
     });
 }
@@ -763,9 +765,11 @@ function saveSellerSafeRange() {
             toastr.success('تم الحفظ بنجاح');
             enableButton('btnSaveSellerSafeRange');
             getAllClientsSellers();
+            sellerSafeNumList = [];
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
+            enableButton('btnSaveSellerSafeRange');
         }
     });
 }
