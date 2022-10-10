@@ -238,6 +238,12 @@ function cancel() {
 function addFarmer() {
     if (!validateFarmForm()) return false;
     var entity = fillFarmerEntity();
+    let exsitedFarmer = farmers.find(x => x.Name == entity.Name);
+    if (exsitedFarmer) {
+        toastr.error('هذا العميل موجمود فعليا', 'خطأ !')
+        return;
+    }
+
     $.ajax({
         url: "/Farmers/Add",
         data: entity,
@@ -316,6 +322,11 @@ function addFarmerToDropDownList(farmer) {
 function addSeller() {
     if (!validateSellerForm()) return false;
     var entity = fillSellerEntity();
+    let exsitedItem = sellers.find(x => x.Name == entity.Name);
+    if (exsitedItem) {
+        toastr.error('هذا التاجر موجمود فعليا', 'خطأ !')
+        return;
+    }
     $.ajax({
         url: "/Sellers/Add",
         data: entity,
