@@ -102,9 +102,9 @@ namespace Sellers
                 Date = DateTime.Now.Date,
                 AccountId = entity.Id,
                 AccountTypeId = (int)AccountTypesEnum.Sellers,
-                Incoming = entity.Balance,
+                Outcoming = entity.Balance,
                 Notes = $"رصيد افتتاحي",
-                IsHidden = false,
+                IsHidden = true,
                 IsTransfered = true,
                 HeaderId = 0,
                 OrderId = 0
