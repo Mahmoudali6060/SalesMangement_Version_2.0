@@ -117,10 +117,8 @@ function update() {
     entity.Id = $('#Id').val(),
         $.ajax({
             url: "/Sellers/Update",
-            data: JSON.stringify(entity),
+            data: entity,
             type: "POST",
-            contentType: "application/json;charset=utf-8",
-            dataType: "json",
             success: function (result) {
                 $('#formModal').modal('hide');
                 clearData();

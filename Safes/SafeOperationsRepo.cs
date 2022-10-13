@@ -196,6 +196,18 @@ namespace Safes
             return false;
         }
 
+        public bool DeleteByOrder(OrderHeader orderHeader,AccountTypesEnum accountTypesEnum, EntitiesDbContext context)
+        {
+            List<Safe> safes = context.Safes.Where(x => x.OrderId == orderHeader.Id && x.AccountId==orderHeader.FarmerId && x.AccountTypeId==(int) accountTypesEnum).ToList();
+            if (safes != null)
+            {
+                context.Safes.RemoveRange(safes);
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
         public SafeDTO GetByAccountId(long accountId, AccountTypesEnum accountTypesEnum, int currentPage, string dateFrom, string dateTo)
         {
             IEnumerable<Safe> safes = null;

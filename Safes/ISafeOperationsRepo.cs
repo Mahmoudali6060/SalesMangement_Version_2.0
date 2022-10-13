@@ -12,7 +12,7 @@ namespace Safes
     public interface ISafeOperationsRepo
     {
         IEnumerable<Safe> GetAll();
-        SafeDTO GetAll(int currentPage, string dateFrom,string dateTo,AccountTypesEnum accountTypesId);
+        SafeDTO GetAll(int currentPage, string dateFrom, string dateTo, AccountTypesEnum accountTypesId);
         Safe GetById(long id);
         long Add(Safe entity);
         bool SaveRange(List<Safe> safeList);
@@ -27,11 +27,12 @@ namespace Safes
         bool UpdateByHeaderId(long header, decimal total, AccountTypesEnum accountTypesEnum, EntitiesDbContext context);
         bool DeleteByOrderId(long orderId, EntitiesDbContext context);
         bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
-        bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum,EntitiesDbContext context);
+        bool DeleteByAccountId(long accountId, AccountTypesEnum accountTypesEnum, EntitiesDbContext context);
 
         BalanceDTO GetBalanceByAccountId(long accountId, AccountTypesEnum accountTypesEnum);
         bool TransferToSafe(PurechasesHeader purechasesHeader, AccountTypesEnum accountTypesEnum, EntitiesDbContext context);
         bool UpdateBySalesinvoiceHeaderId(long salesinvoiceHeaderId, decimal total, EntitiesDbContext context);
+        bool DeleteByOrder(OrderHeader orderHeader, AccountTypesEnum accountTypesEnum, EntitiesDbContext context);
 
     }
 }

@@ -127,16 +127,14 @@ function add() {
 }
 //Updating exsited entity by entityId
 function update() {
-
+    debugger;
     if (!validateForm()) return false;
     var entity = fillEntity();
 
     $.ajax({
         url: "/Farmers/Update",
-        data: JSON.stringify(entity),
+        data: entity,
         type: "POST",
-        contentType: "application/json;charset=utf-8",
-        dataType: "json",
         success: function (result) {
             $('#formModal').modal('hide');
             clearData();

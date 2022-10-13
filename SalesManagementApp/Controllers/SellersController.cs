@@ -42,7 +42,7 @@ namespace SalesManagementApp.Controllers
             return Json(_sellerOperationsRepo.Add(seller));
         }
 
-        public JsonResult Update([FromBody] Seller seller)
+        public JsonResult Update(Seller seller)
         {
             return Json(_sellerOperationsRepo.Update(seller));
         }

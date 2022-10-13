@@ -43,7 +43,7 @@ namespace SalesManagementApp.Controllers
             return Json(_farmerOperationsRepo.Add(farmer));
         }
 
-        public JsonResult Update([FromBody] Farmer farmer)
+        public JsonResult Update(Farmer farmer)
         {
             return Json(_farmerOperationsRepo.Update(farmer));
         }
