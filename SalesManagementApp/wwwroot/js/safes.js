@@ -394,7 +394,7 @@ function delele(id) {
                             type: "success"
                         },
                             function () {
-                                getAll();
+                                getAllClientsSellers();
                             });
                 })
                 .error(function (data) {

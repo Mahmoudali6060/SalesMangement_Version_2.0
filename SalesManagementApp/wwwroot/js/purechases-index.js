@@ -414,7 +414,7 @@ function prepareReportFooter() {
                                                 <td> اجمالي الخصومات</td>
                                                 <td>`+ convertToIndiaNumbers($("#TotalDiscounts").text()) + `</td>
                                             </tr>
-                                            <tr style="font-size:24px;font-weight:bold;background-color:gray;color:white">
+                                            <tr style="font-size:24px;font-weight:bold;background-color:#b5bbc0;color:black">
                                                 <td> الصافي</td>
                                                 <td>`+ convertToIndiaNumbers($("#TotalAfterDiscount").text()) + `</td>
                                             </tr>
