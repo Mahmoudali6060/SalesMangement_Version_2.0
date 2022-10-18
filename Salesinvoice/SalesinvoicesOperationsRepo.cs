@@ -139,7 +139,7 @@ namespace Salesinvoice
                     _safeOperationsRepo.DeleteByHeaderId(salesinvoicesHeader.Id, AccountTypesEnum.Sellers, context);//Delete old record in safe related to this Seller
                     Delete(salesinvoicesHeader.Id, context);
                 }
-                
+
             }
         }
 
@@ -199,7 +199,7 @@ namespace Salesinvoice
             foreach (SalesinvoicesDetials item in salesinvoicesDetialsList)
             {
                 salesHeaderId = item.SalesinvoicesHeaderId;
-                total += (item.Weight * item.Price) + (AppSettings.MashalRate + AppSettings.ByaaRate) * item.Quantity;
+                total += Math.Ceiling((item.Weight * item.Price) + (AppSettings.MashalRate + AppSettings.ByaaRate) * item.Quantity);
                 mashalTotal += AppSettings.MashalRate * item.Quantity;
                 byaaTotal += AppSettings.ByaaRate * item.Quantity;
             }
