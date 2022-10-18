@@ -146,8 +146,8 @@ namespace Purechase
                 TotalQuantity = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Quantity)),
                 TotalSalesWeight = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Weight)),
                 TotalPurchaseWeight = todayPurchases.Sum(x => x.PurechasesDetialsList.Sum(y => y.Weight)),
-                TotalClientsAccountStatement = safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Clients).Sum(x => Math.Abs(x.Incoming - x.Outcoming)),
-                TotalSellersAccountStatement = safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Sellers).Sum(x => Math.Abs(x.Outcoming - x.Incoming))
+                TotalClientsAccountStatement = Math.Abs(safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Clients).Sum(x => x.Incoming - x.Outcoming)),
+                TotalSellersAccountStatement = Math.Abs(safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Sellers).Sum(x =>x.Outcoming - x.Incoming))
 
             };
             //dashboardDTO.TotalPurchase += dashboardDTO.TotalCommission + dashboardDTO.TotalGift + dashboardDTO.TotalDescent;
