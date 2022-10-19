@@ -35,5 +35,12 @@ namespace SalesManagementApp.Controllers
             return Json(backupService.RestoreDatabase(databaseEntity.DatabaseName));
         }
 
+
+        public JsonResult FixSalesinvoiceTotal(DatabaseEntity databaseEntity)
+        {
+            BackupService backupService = new BackupService(databaseEntity.ConnectionString, databaseEntity.FilePath);
+            return Json(backupService.FixSalesinvoiceTotal(databaseEntity.DatabaseName));
+        }
+
     }
 }

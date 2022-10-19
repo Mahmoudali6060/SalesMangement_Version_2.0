@@ -269,6 +269,23 @@ function backupDatabase() {
     });
 }
 
+function fixDataIntegrity() {
+
+    var databaseEntity = fillDatabaseEntity();
+    $.ajax({
+        url: "/Database/FixSalesinvoiceTotal",
+        data: databaseEntity,
+        type: "POST",
+        success: function () {
+            $('#database-Form').modal('hide');
+            toastr.success("تم تصليح البيانات بنجاح")
+        },
+        error: function () {
+            toastr.error("حدث خطأ")
+        }
+    });
+}
+
 function restoreDatabase() {
     var databaseEntity = fillDatabaseEntity();
     $.ajax({

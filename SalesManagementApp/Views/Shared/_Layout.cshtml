@@ -98,6 +98,7 @@
                                             </div>
                                         </div>
                                     </a>
+
                                 </li>
                             </ul>
                         </li>
@@ -258,9 +259,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="reset" class="btn btn-outline-secondary btn-lg" data-dismiss="modal" value="Close">
-                        <input type="button" onclick="backupDatabase();" class="btn btn-outline-primary btn-lg" value="Backup">
-                        <input type="button" onclick="restoreDatabase();" class="btn btn-outline-primary btn-lg" value="Restore">
+                        <input type="reset" class="btn btn-outline-secondary" data-dismiss="modal" value="Close">
+                        <input type="button" onclick="backupDatabase();" class="btn btn-outline-primary" value="نسخ">
+                        <input type="button" onclick="restoreDatabase();" class="btn btn-outline-primary" value="استرجاع">
+                        <input type="button" onclick="fixDataIntegrity();" class="btn btn-outline-info" value="تعديل البيانات">
+
                     </div>
                 </form>
             </div>

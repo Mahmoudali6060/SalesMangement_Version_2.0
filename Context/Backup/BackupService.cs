@@ -54,6 +54,136 @@ namespace Database.Backup
 
         }
 
+        public bool FixSalesinvoiceTotal(string databaseName)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    var query = @"
+
+
+                    ---Transfere Salesinvoice to Safe
+                    SELECT *
+                    into #Temp_Salesinvoice
+                    FROM SalesManagement.SalesinvoicesHeaders
+                    WHERE Id  Not In
+                      (SELECT HeaderId  
+                      FROM SalesManagement.Safes where AccountTypeId=2 and HeaderId !=0
+                      )
+                      Order by Id
+                    
+                    
+                      Insert into SalesManagement.Safes
+                      (
+                            Created,
+                    		Modified,
+                    		Date,
+                    		AccountId,
+                    		AccountTypeId,
+                    		Outcoming,
+                    		Incoming,
+                    		Notes,
+                    		IsHidden,
+                    		IsTransfered,
+                    		HeaderId,
+                    		OrderId)
+                     
+                     SELECT GETDATE(),GETDATE(), SalesinvoicesDate, SellerId, 2,Total,0,('رقم الكشف :' +CONVERT(varchar(500),Id)),1,1,Id,0
+                    FROM #Temp_Salesinvoice
+                    
+                    drop table #Temp_Salesinvoice
+
+                                    ---Fix SalesinvoiceTotal
+                                    Select 
+                                    SalesHeaders.Id,
+                                    (SalesHeaders.Total) as Total,
+                                    SalesHeaders.Created,
+                                    Safes.Outcoming,
+                                    SalesHeaders.SellerId,
+                                    Seller.Name,
+                                    Sum( ceiling((salesDetials.Price * salesDetials.Weight)+salesDetials.Byaa+salesDetials.Mashal)) as DetailsTotal
+                                    into #Temp_Sales
+                                    
+                                    from  SalesManagement.SalesinvoicesHeaders SalesHeaders
+                                    Inner Join SalesManagement.SalesinvoicesDetials salesDetials on salesDetials.SalesinvoicesHeaderId=SalesHeaders.Id
+                                    Inner Join SalesManagement.Safes Safes on Safes.HeaderId=SalesHeaders.Id and Safes.AccountTypeId=2
+                                    Inner Join SalesManagement.Sellers Seller on Seller.Id=SalesHeaders.SellerId 
+                                    
+                                    Group by SalesHeaders.Id,
+                                    SalesHeaders.Total,
+                                    SalesHeaders.Created,
+                                    Safes.Outcoming,
+                                    SalesHeaders.SellerId,
+                                    Seller.Name
+                                    
+                                    
+                                    Select * from #Temp_Sales
+                                    where Total !=DetailsTotal
+                                    
+                                    
+                                    UPDATE SalesManagement.SalesinvoicesHeaders
+                                    SET Total = t.DetailsTotal
+                                    FROM #Temp_Sales t
+                                    JOIN SalesManagement.SalesinvoicesHeaders salesHeader
+                                    ON t.Id = salesHeader.Id
+                                    
+                                    drop table #Temp_Sales
+
+
+                                    ---Fix Safes Totals
+                                    Select 
+                                    SalesHeaders.Id,
+                                    (SalesHeaders.Total) as Total,
+                                    SalesHeaders.Created,
+                                    Safes.Outcoming,
+                                    SalesHeaders.SellerId,
+                                    Seller.Name,
+                                    Sum( ceiling((salesDetials.Price * salesDetials.Weight)+salesDetials.Byaa+salesDetials.Mashal)) as DetailsTotal
+                                    into #Temp_Safes
+                                    
+                                    from  SalesManagement.SalesinvoicesHeaders SalesHeaders
+                                    Inner Join SalesManagement.SalesinvoicesDetials salesDetials on salesDetials.SalesinvoicesHeaderId=SalesHeaders.Id
+                                    Inner Join SalesManagement.Safes Safes on Safes.HeaderId=SalesHeaders.Id and Safes.AccountTypeId=2
+                                    Inner Join SalesManagement.Sellers Seller on Seller.Id=SalesHeaders.SellerId 
+                                    
+                                    Group by SalesHeaders.Id,
+                                    SalesHeaders.Total,
+                                    SalesHeaders.Created,
+                                    Safes.Outcoming,
+                                    SalesHeaders.SellerId,
+                                    Seller.Name
+                                    
+                                    
+                                    Select * from #Temp_Safes
+                                    where Total !=Outcoming
+                                    
+                                    
+                                    UPDATE SalesManagement.Safes
+                                    SET Outcoming = t.Total
+                                    FROM #Temp_Safes t
+                                    JOIN SalesManagement.Safes Safes
+                                    ON t.Id = Safes.HeaderId and Safes.AccountTypeId=2
+                                    
+                                    drop table #Temp_Safes
+                                    
+                                    
+";
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+               throw ex;
+            }
+
+        }
+
         public bool RestoreDatabase(string databaseName)
         {
             try
