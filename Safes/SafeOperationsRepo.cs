@@ -28,7 +28,7 @@ namespace Safes
             return _safeEntity.Where(x => x.IsHidden == false).AsEnumerable();
         }
 
-        public SafeDTO GetAll(int currentPage, string dateFrom, string dateTo, AccountTypesEnum accountTypesId)
+        public SafeDTO GetAll(int currentPage, string dateFrom, string dateTo, AccountTypesEnum accountTypesId,string keyword)
         {
             IEnumerable<Safe> safeList = new List<Safe>();
             if (!string.IsNullOrWhiteSpace(dateFrom) && !string.IsNullOrWhiteSpace(dateTo))

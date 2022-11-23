@@ -28,7 +28,6 @@ namespace Farmers
             _safeOperationsRepo = safeOperationsRepo;
         }
 
-
         public IEnumerable<Farmer> GetAll()
         {
             return _farmerEntity.Include("PurechasesHeader").AsEnumerable().OrderBy(x => x.Name);
@@ -37,6 +36,7 @@ namespace Farmers
         {
             var list = _farmerEntity
                 .Include("PurechasesHeader")
+                .OrderBy(x => x.Name)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(keyword))
@@ -44,19 +44,17 @@ namespace Farmers
                 list = list.Where(x => x.Name.Contains(keyword) || x.Address.Contains(keyword));
             }
 
-
-
             FarmListDTO farmListDTO = new FarmListDTO()
             {
                 Total = list.Count(),
-                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).OrderBy(x => x.Name)
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
 
-            foreach (var farmer in farmListDTO.List)
-            {
-                BalanceDTO balanceDTO = _safeOperationsRepo.GetBalanceByAccountId(farmer.Id, AccountTypesEnum.Clients);
-                farmer.Balance = balanceDTO.TotalIncoming - balanceDTO.TotalOutcoming;
-            }
+            //foreach (var farmer in farmListDTO.List)
+            //{
+            //    BalanceDTO balanceDTO = _safeOperationsRepo.GetBalanceByAccountId(farmer.Id, AccountTypesEnum.Clients);
+            //    farmer.Balance = balanceDTO.TotalIncoming - balanceDTO.TotalOutcoming;
+            //}
 
             return farmListDTO;
         }
@@ -114,9 +112,7 @@ namespace Farmers
                 HeaderId = 0,
                 OrderId = 0
             };
-
         }
-
 
         public bool UpdateBalance(long farmerId, decimal balance, EntitiesDbContext context)
         {

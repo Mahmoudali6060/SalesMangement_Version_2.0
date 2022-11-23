@@ -286,6 +286,40 @@ function fixDataIntegrity() {
     });
 }
 
+function updateFarmersBalance() {
+
+    var databaseEntity = fillDatabaseEntity_Static();
+    $.ajax({
+        url: "/Database/UpdateFarmersBalance",
+        data: databaseEntity,
+        type: "POST",
+        success: function () {
+            //$('#database-Form').modal('hide');
+            //toastr.success("تم تصليح البيانات بنجاح")
+        },
+        error: function () {
+            //toastr.error("حدث خطأ")
+        }
+    });
+}
+
+function updateSellersBalance() {
+
+    var databaseEntity = fillDatabaseEntity_Static();
+    $.ajax({
+        url: "/Database/UpdateSellersBalance",
+        data: databaseEntity,
+        type: "POST",
+        success: function () {
+            //$('#database-Form').modal('hide');
+            //toastr.success("تم تصليح البيانات بنجاح")
+        },
+        error: function () {
+            //toastr.error("حدث خطأ")
+        }
+    });
+}
+
 function restoreDatabase() {
     var databaseEntity = fillDatabaseEntity();
     $.ajax({
@@ -308,6 +342,13 @@ function fillDatabaseEntity() {
         DatabaseName: $('#DatabaseName').val(),
         FilePath: $('#FilePath').val(),
         ConnectionString: $('#ConnectionString').val(),
+    };
+    return databaseEntity;
+}
+
+function fillDatabaseEntity_Static() {
+    var databaseEntity = {
+        ConnectionString:"Server=.;Database=SalesManagement;Trusted_Connection=True;",
     };
     return databaseEntity;
 }

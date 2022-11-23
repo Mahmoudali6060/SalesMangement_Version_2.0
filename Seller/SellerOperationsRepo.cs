@@ -8,8 +8,6 @@ using Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace Sellers
 {
@@ -35,6 +33,7 @@ namespace Sellers
         {
             var list = _sellerEntity
                 //.Include("SalesinvoicesHeader")
+                .OrderBy(x => x.Name)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(keyword))
@@ -42,15 +41,16 @@ namespace Sellers
                 list = list.Where(x => x.Name.Contains(keyword) || x.Address.Contains(keyword));
             }
 
-            foreach (var seller in list)
-            {
-                BalanceDTO balanceDTO = _safeOperationsRepo.GetBalanceByAccountId(seller.Id, AccountTypesEnum.Sellers);
-                seller.Balance = balanceDTO.TotalOutcoming - balanceDTO.TotalIncoming;
-            }
+            //foreach (var seller in list)
+            //{
+            //    BalanceDTO balanceDTO = _safeOperationsRepo.GetBalanceByAccountId(seller.Id, AccountTypesEnum.Sellers);
+            //    seller.Balance = balanceDTO.TotalOutcoming - balanceDTO.TotalIncoming;
+            //}
+
             return new SellerListDTO()
             {
                 Total = list.Count(),
-                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize).OrderBy(x => x.Name)
+                List = list.Skip((currentPage - 1) * PageSettings.PageSize).Take(PageSettings.PageSize)
             };
         }
 

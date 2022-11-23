@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+    updateFarmersBalance();
     getAll();//Load Data in Table when documents is ready
     turnOnTab('formModal');//to allow tab in form modal >>>is called From shared.js
 });
@@ -272,4 +273,96 @@ function preparePagination(farmerDto) {
 
 ////////////////////////////End Helper Methods
 
+///Farmers Report
+function prepareReport() {
+    getAllFarmersList();
+}
+
+function getAllFarmersList() {
+    allFarmersList = [];
+    var url = "/Farmers/List";
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            allFarmersList = JSON.parse(result);
+            printReport(allFarmersList);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    //return allSafeList;
+}
+
+
+
+function printReport(allFarmersList) {
+    var reportHeader = prepareReportHeader();//Client Name 
+    var reportContent = prepareReportContent(allFarmersList);//Draw content of report 
+    //var reportFooter = prepareReportFooter(allFarmersList);
+    var newWin = window.open('', 'Print-Window');
+    newWin.document.open();
+    var reportHead = getReportHead(' كشوفات حسابات  العملاء');
+    newWin.document.write(reportHead +
+        reportHeader + reportContent  +
+        `</body></html>`);
+
+    newWin.document.close();
+
+    //setTimeout(function () { newWin.close(); }, 300);
+
+}
+
+function prepareReportHeader() {
+    let reportHeader = `<div class="row" id="report-header" style="margin-bottom: 10px;>
+                        <div class="col-lg-12">
+                            <table style="width:100%;border:none;">
+                                <tr>
+                                    <td style="width:100%;border:none;font-size:24px;font-weight:bold;text-align: center;">
+                                        كشوفات حسابات العملاء
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>`;
+    return reportHeader;
+}
+
+function prepareReportContent(allFarmersList) {
+    return `<div class="row" id="report-content">
+                        <div class="col-lg-12" style="width:100%;">
+                            <table id="purechase-details-table" class="table-report table table-bordered table-hover" style="margin: 50px 0px;">
+                                <thead>
+                                    <tr>
+                                        <th>م</th>
+                                        <th>اسم العميل</th>
+                                        <th>الرصيد</th>
+                                        <th>ملاحظات  </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="farm-details">`+ getReportContent(allFarmersList) + `</tbody>
+                            </table>
+                        </div>
+                    </div>`;
+}
+
+function getReportContent(allFarmersList) {
+
+    var html = '';
+    for (var i = 0; i < allFarmersList.length; i++) {
+        let rowNumber = i + 1;
+        html += '<tr>';
+        html += '<td>' + convertToIndiaNumbers(rowNumber) + '</td>';
+        html += '<td>' + allFarmersList[i].Name + '</td>';
+        html += '<td>' + convertToIndiaNumbers(allFarmersList[i].Balance) + '</td>';
+        html += '<td>' + "" + '</td>';
+        html += '</tr>';
+    }
+    return html;
+}
+
+//##End Reoport Methods
 

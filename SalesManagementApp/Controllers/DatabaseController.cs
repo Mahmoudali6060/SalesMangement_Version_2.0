@@ -42,5 +42,18 @@ namespace SalesManagementApp.Controllers
             return Json(backupService.FixSalesinvoiceTotal(databaseEntity.DatabaseName));
         }
 
+
+        public JsonResult UpdateFarmersBalance(DatabaseEntity databaseEntity)
+        {
+            BackupService backupService = new BackupService(databaseEntity.ConnectionString, databaseEntity.FilePath);
+            return Json(backupService.UpdateFarmersBalance());
+        }
+
+        public JsonResult UpdateSellersBalance(DatabaseEntity databaseEntity)
+        {
+            BackupService backupService = new BackupService(databaseEntity.ConnectionString, databaseEntity.FilePath);
+            return Json(backupService.UpdateSellersBalance());
+        }
+
     }
 }

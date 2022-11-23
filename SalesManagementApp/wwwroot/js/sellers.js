@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+    updateSellersBalance();
     getAll();//Load Data in Table when documents is ready
     turnOnTab('formModal');//to allow tab in form modal >>>is called From shared.js
 });

@@ -48,9 +48,9 @@ namespace SalesManagementApp.Controllers
             return Json(safe);
         }
 
-        public JsonResult GetPagedList(int currentPage, string dateFrom, string dateTo, AccountTypesEnum accountTypesId)
+        public JsonResult GetPagedList(int currentPage, string dateFrom, string dateTo, AccountTypesEnum accountTypesId,string keyword)
         {
-            return Json(Helper.SerializeObject(_safeOperationsRepo.GetAll(currentPage, dateFrom,dateTo,accountTypesId)));
+            return Json(Helper.SerializeObject(_safeOperationsRepo.GetAll(currentPage, dateFrom,dateTo,accountTypesId, keyword)));
         }
 
         public JsonResult GetBalanceByAccountId(long accountId,AccountTypesEnum accountTypesEnum)

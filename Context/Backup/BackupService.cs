@@ -241,5 +241,86 @@ namespace Database.Backup
             string filename = string.Format("{0}-{1}.bak", databaseName, DateTime.Now.ToString("yyyy-MM-dd"));
             return Path.Combine(_backupFolderFullPath, filename);
         }
+
+        public bool UpdateFarmersBalance()
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    var query = @"
+
+                                 Select AccountId,
+                                 Sum(Incoming)-Sum(Outcoming) Balance
+                                 into #FarmerBalances
+                                 from SalesManagement.Safes
+                                 where AccountTypeId=1
+                                 Group by AccountId
+                                 Select * from #FarmerBalances
+                                 
+                                 UPDATE SalesManagement.Farmers
+                                 SET Balance = b.Balance
+                                 FROM #FarmerBalances b
+                                 JOIN SalesManagement.Farmers farmer
+                                 ON b.AccountId = farmer.Id
+                                 drop table #FarmerBalances                               
+                                 Select * from SalesManagement.Farmers
+
+                                 ";
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        public bool UpdateSellersBalance()
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    var query = @"
+
+                                
+                                    Select AccountId,
+                                    Sum(Outcoming)-Sum(Incoming) Balance
+                                    into #SellerBalances
+                                    from SalesManagement.Safes
+                                    where AccountTypeId=2
+                                    Group by AccountId
+                                    
+                                    UPDATE SalesManagement.Sellers
+                                    SET Balance = b.Balance
+                                    FROM #SellerBalances b
+                                    JOIN SalesManagement.Sellers seller
+                                    ON b.AccountId = seller.Id
+                                    drop table #SellerBalances                               
+                                    Select * from SalesManagement.Sellers
+
+                                 ";
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
     }
 }
