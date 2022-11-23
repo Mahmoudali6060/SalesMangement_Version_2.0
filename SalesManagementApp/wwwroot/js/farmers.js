@@ -297,8 +297,6 @@ function getAllFarmersList() {
     //return allSafeList;
 }
 
-
-
 function printReport(allFarmersList) {
     var reportHeader = prepareReportHeader();//Client Name 
     var reportContent = prepareReportContent(allFarmersList);//Draw content of report 

@@ -286,6 +286,24 @@ function fixDataIntegrity() {
     });
 }
 
+function fixSalesinvoiceTotal() {
+
+    var databaseEntity = fillDatabaseEntity_Static();
+    $.ajax({
+        url: "/Database/FixSalesinvoiceTotal",
+        data: databaseEntity,
+        type: "POST",
+        success: function () {
+            //$('#database-Form').modal('hide');
+            //toastr.success("تم تصليح البيانات بنجاح")
+        },
+        error: function () {
+            //toastr.error("حدث خطأ")
+        }
+    });
+}
+
+
 function updateFarmersBalance() {
 
     var databaseEntity = fillDatabaseEntity_Static();

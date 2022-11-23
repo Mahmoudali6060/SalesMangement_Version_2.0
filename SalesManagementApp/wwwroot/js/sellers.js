@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+    fixSalesinvoiceTotal();
     updateSellersBalance();
     getAll();//Load Data in Table when documents is ready
     turnOnTab('formModal');//to allow tab in form modal >>>is called From shared.js
@@ -263,3 +264,94 @@ function preparePagination(sellerDto) {
 
 ////////////////////////////End Helper Methods
 
+
+///Sellers Report
+function prepareReport() {
+    getAllSellersList();
+}
+
+function getAllSellersList() {
+    allSellersList = [];
+    var url = "/Sellers/List";
+    $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            allSellersList = JSON.parse(result);
+            printReport(allSellersList);
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    //return allSafeList;
+}
+
+function printReport(allSellersList) {
+    var reportHeader = prepareReportHeader();//Client Name 
+    var reportContent = prepareReportContent(allSellersList);//Draw content of report 
+    //var reportFooter = prepareReportFooter(allSellersList);
+    var newWin = window.open('', 'Print-Window');
+    newWin.document.open();
+    var reportHead = getReportHead(' كشوفات حسابات  التجار');
+    newWin.document.write(reportHead +
+        reportHeader + reportContent +
+        `</body></html>`);
+
+    newWin.document.close();
+
+    //setTimeout(function () { newWin.close(); }, 300);
+
+}
+
+function prepareReportHeader() {
+    let reportHeader = `<div class="row" id="report-header" style="margin-bottom: 10px;>
+                        <div class="col-lg-12">
+                            <table style="width:100%;border:none;">
+                                <tr>
+                                    <td style="width:100%;border:none;font-size:24px;font-weight:bold;text-align: center;">
+                                        كشوفات حسابات التجار
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>`;
+    return reportHeader;
+}
+
+function prepareReportContent(allSellersList) {
+    return `<div class="row" id="report-content">
+                        <div class="col-lg-12" style="width:100%;">
+                            <table id="purechase-details-table" class="table-report table table-bordered table-hover" style="margin: 50px 0px;">
+                                <thead>
+                                    <tr>
+                                        <th>م</th>
+                                        <th>اسم التاجر</th>
+                                        <th>الرصيد</th>
+                                        <th>ملاحظات  </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="farm-details">`+ getReportContent(allSellersList) + `</tbody>
+                            </table>
+                        </div>
+                    </div>`;
+}
+
+function getReportContent(allSellersList) {
+
+    var html = '';
+    for (var i = 0; i < allSellersList.length; i++) {
+        let rowNumber = i + 1;
+        html += '<tr>';
+        html += '<td>' + convertToIndiaNumbers(rowNumber) + '</td>';
+        html += '<td>' + allSellersList[i].Name + '</td>';
+        html += '<td>' + convertToIndiaNumbers(allSellersList[i].Balance) + '</td>';
+        html += '<td>' + "" + '</td>';
+        html += '</tr>';
+    }
+    return html;
+}
+
+//##End Reoport Methods
