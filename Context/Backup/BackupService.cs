@@ -254,7 +254,7 @@ namespace Database.Backup
                                  Sum(Incoming)-Sum(Outcoming) Balance
                                  into #FarmerBalances
                                  from SalesManagement.Safes
-                                 where AccountTypeId=1
+                                 where AccountTypeId=1  and IsTransfered=1
                                  Group by AccountId
                                  Select * from #FarmerBalances
                                  
