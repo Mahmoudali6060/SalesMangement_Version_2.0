@@ -263,9 +263,14 @@ namespace Database.Backup
                                  FROM #FarmerBalances b
                                  JOIN SalesManagement.Farmers farmer
                                  ON b.AccountId = farmer.Id
-                                 drop table #FarmerBalances                               
-                                 Select * from SalesManagement.Farmers
 
+                                 Update SalesManagement.Farmers 
+								 Set Balance=0
+								 Where Id not in (select AccountId from #FarmerBalances)
+                                 drop table #FarmerBalances                               
+
+                                 drop table #FarmerBalances                               
+                                
                                  ";
                     using (var command = new SqlCommand(query, connection))
                     {
