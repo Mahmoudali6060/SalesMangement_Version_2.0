@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Purechase;
+using Purechase.DTOs;
 using Shared.Classes;
 
 namespace SalesManagementApp.Controllers
 {
+    [Route("Transaction")]
     public class TransactionController : Controller
     {
 
@@ -23,10 +25,19 @@ namespace SalesManagementApp.Controllers
             return View();
         }
 
-        public JsonResult List(string dateFrom,string dateTo)
+        [HttpPost]
+        [Route("GetDashboardData")]
+        public JsonResult GetDashboardData(DateSearchDTO dateSearchDTO)
         {
-            var dashboard = Helper.SerializeObject(_purechasesOperationsRepo.GetDashboardData(DateTime.Parse(dateFrom), DateTime.Parse(dateTo)));
+            var dashboard = Helper.SerializeObject(_purechasesOperationsRepo.GetDashboardData(DateTime.Parse(dateSearchDTO.DateFrom), DateTime.Parse(dateSearchDTO.DateTo)));
             return Json(dashboard);
+        }
+
+        [HttpGet]
+        [Route("TestAPI")]
+        public JsonResult TestAPI()
+        {
+            return Json("Test");
         }
 
     }

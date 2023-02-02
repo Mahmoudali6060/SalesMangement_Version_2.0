@@ -6,18 +6,16 @@
 });
 
 function search() {
-    
-    let dateFrom = $('#DateFrom').val();
-    let dateTo = $('#DateTo').val();
+    let entity = {
+        dateFrom: $('#DateFrom').val(),
+        dateTo : $('#DateTo').val()
+    }
 
-    var url = `/Transaction/List?dateFrom=${dateFrom}&&dateTo=${dateTo}`;
+    var url = `/Transaction/GetDashboardData`;
     $.ajax({
         url: url,
-        type: "GET",
-        contentType: "application/json;charset=utf-8",
-        dataType: "json",
-        async: false,
-        cache: false,
+        data: entity,
+        type: "POST",
         success: function (result) {
             dashboard = JSON.parse(result);
             SetDashboardData(dashboard);

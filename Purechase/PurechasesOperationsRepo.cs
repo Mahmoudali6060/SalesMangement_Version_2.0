@@ -103,7 +103,7 @@ namespace Purechase
             DeletePurchaseDetails(purechasesHeader.Id);
             SetPurechasesHeaderId(purechasesHeader.Id, purechasesHeader.PurechasesDetialsList);
             AddPurechasesDetials(purechasesHeader.PurechasesDetialsList, _context);
-            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id, purechasesHeader.Total, AccountTypesEnum.Clients,_context);
+            _safeOperationsRepo.UpdateByHeaderId(purechasesHeader.Id, purechasesHeader.Total, AccountTypesEnum.Clients, _context);
             return true;
         }
         public bool Delete(long id, EntitiesDbContext context)
@@ -145,7 +145,7 @@ namespace Purechase
                 TotalSalesinvoice = totalSalesinvoice,//todaySalesinvoice.Sum(x => Math.Ceiling(x.Total)), //CalculateTotalSalesinvoice(todaySalesinvoice),
                 TotalQuantity = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Quantity)),
                 TotalSalesWeight = todaySalesinvoice.Sum(x => x.SalesinvoicesDetialsList.Sum(y => y.Weight)),
-                TotalPurchaseWeight = todayPurchases.Sum(x => x.PurechasesDetialsList.Sum(y => y.Weight)),
+                //TotalPurchaseWeight = todayPurchases.Sum(x => x.PurechasesDetialsList.Sum(y => y.Weight)),
                 TotalClientsAccountStatement = Math.Abs(safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Clients).Sum(x => x.Incoming - x.Outcoming)),
                 TotalSellersAccountStatement = Math.Abs(safeList.Where(x => x.AccountTypeId == (int)AccountTypesEnum.Sellers).Sum(x =>x.Outcoming - x.Incoming))
 
