@@ -10,7 +10,7 @@ namespace Shared.Classes
         public const decimal CommissionRate = 0.10M;
         public const decimal GiftRate = 1M;
         public const decimal Decentate = 1.5M;
-        public const decimal ByaaRate = 4M;
-        public const decimal MashalRate = 4M;
+        public const decimal ByaaRate = 5M;
+        public const decimal MashalRate = 5M;
     }
 }
